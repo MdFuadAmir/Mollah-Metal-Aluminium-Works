@@ -14,7 +14,13 @@ const Navbar = () => {
       <li>
         <NavLink
           to={"/"}
-          className={`inline-block hover:text-orange-500 font-semibold duration-200 hover:border-b-2`}
+          className={({ isActive }) =>
+            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+              isActive
+                ? "border-b-orange-500 text-orange-500"
+                : "border-transparent text-gray-700 dark:text-gray-200 hover:text-orange-500 hover:border-b-orange-500"
+            }`
+          }
         >
           Home
         </NavLink>
@@ -22,7 +28,13 @@ const Navbar = () => {
       <li>
         <NavLink
           to={"/products"}
-          className={`inline-block hover:text-orange-500 font-semibold duration-200 hover:border-b-2 `}
+          className={({ isActive }) =>
+            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+              isActive
+                ? "border-b-orange-500 text-orange-500"
+                : "border-transparent text-gray-700 dark:text-gray-200 hover:text-orange-500 hover:border-b-orange-500"
+            }`
+          }
         >
           Products
         </NavLink>
@@ -30,7 +42,13 @@ const Navbar = () => {
       <li>
         <NavLink
           to={"/about"}
-          className={`inline-block hover:text-orange-500 font-semibold duration-200 hover:border-b-2 `}
+          className={({ isActive }) =>
+            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+              isActive
+                ? "border-b-orange-500 text-orange-500"
+                : "border-transparent text-gray-700 dark:text-gray-200 hover:text-orange-500 hover:border-b-orange-500"
+            }`
+          }
         >
           About
         </NavLink>
@@ -38,7 +56,13 @@ const Navbar = () => {
       <li>
         <NavLink
           to={"/contact"}
-          className={`inline-block hover:text-orange-500 font-semibold duration-200 hover:border-b-2`}
+          className={({ isActive }) =>
+            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+              isActive
+                ? "border-b-orange-500 text-orange-500"
+                : "border-transparent text-gray-700 dark:text-gray-200 hover:text-orange-500 hover:border-b-orange-500"
+            }`
+          }
         >
           Contact
         </NavLink>
@@ -50,7 +74,7 @@ const Navbar = () => {
   );
   return (
     <div>
-      <div className="flex justify-between items-center py-2 px-4 md:px-10 lg:px-20 bg-gray-200 dark:bg-gray-800 shadow-md shadow-gray-300 dark:shadow-gray-700">
+      <div className="fixed top-0 left-0 z-50 w-full flex justify-between items-center py-2 px-4 md:px-10 lg:px-20 bg-gray-200 dark:bg-gray-800 shadow-md shadow-gray-300 dark:shadow-gray-700 ">
         <div className="flex items-center gap-6">
           {/* mobile menu section */}
           <div className="lg:hidden" onClick={() => setOpen(!open)}>
@@ -90,7 +114,7 @@ const Navbar = () => {
           </button> */}
           {/* dashboard */}
           <div className="w-12 h-12 rounded-full border dark:border-white">
-            <RiAccountCircleFill className="w-full h-full dark:text-white"/>
+            <RiAccountCircleFill className="w-full h-full dark:text-white" />
           </div>
         </div>
       </div>
