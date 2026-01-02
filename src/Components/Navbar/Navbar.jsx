@@ -1,4 +1,4 @@
-import { NavLink } from "react-router";
+import { Link, NavLink } from "react-router";
 import MMAW from "../../Shared/MMAW/MMAW";
 import { FaShoppingCart } from "react-icons/fa";
 import { MdMenu } from "react-icons/md";
@@ -85,18 +85,13 @@ const Navbar = () => {
         </div>
         {/* menu section */}
         <div className="hidden lg:block">
-          <ul className="flex gap-4 items-center text-gray-600">
-            {navLinks}
-          </ul>
+          <ul className="flex gap-4 items-center text-gray-600">{navLinks}</ul>
         </div>
         {/* icon section */}
         <div className="flex justify-center items-center gap-8">
           {/* cart */}
           <NavLink to={"/"}>
-            <FaShoppingCart
-              size={25}
-              className="relative text-white"
-            />
+            <FaShoppingCart size={25} className="relative text-white" />
             <p className="absolute p-1 text-[8px] rounded-full bg-red-500 text-white -mt-2 ml-3 font-mono">
               1077
             </p>
@@ -110,14 +105,16 @@ const Navbar = () => {
           </button> */}
           {/* dashboard */}
           <div className="w-12 h-12 rounded-full border border-white">
+            <Link to={'/dashboard'}>
             <RiAccountCircleFill className="w-full h-full text-white" />
+            </Link>
           </div>
         </div>
       </div>
       {/* mobile menu */}
       <div
-        className={`lg:hidden bg-black/30  backdrop-blur-sm  px-4 overflow-hidden transition-all duration-300 w-56 text-center rounded-b-xl mt-12
-  ${open ? "max-h-fit py-4" : "max-h-0"}`}
+        className={`lg:hidden bg-black/30  backdrop-blur-sm  px-4 overflow-hidden transition-all duration-300 w-56 text-center rounded-b-xl
+  ${open ? "mt-12 max-h-fit py-4" : "max-h-0"}`}
       >
         <ul className="flex flex-col items-center gap-6 mt-6 text-gray-700  font-semibold">
           {navLinks}

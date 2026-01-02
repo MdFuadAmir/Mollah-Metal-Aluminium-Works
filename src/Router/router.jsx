@@ -4,6 +4,8 @@ import Home from "../Pages/Home/Home/Home";
 import Products from "../Pages/Products/Products";
 import AboutUs from "../Pages/AboutUs/AboutUs";
 import ContactUs from "../Pages/ContactUs/ContactUs";
+import DashboardLayout from "../Layouts/DashboardLayout";
+import DashboardForAll from "../Pages/Dashboard/Common/DashboardForAll/DashboardForAll";
 
 const router = createBrowserRouter([
   {
@@ -42,5 +44,15 @@ const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path:'/dashboard',
+    element:<DashboardLayout/>,
+    children:[
+      {
+        index:true,
+        Component: DashboardForAll,
+      },
+    ]
+  }
 ]);
 export default router;
