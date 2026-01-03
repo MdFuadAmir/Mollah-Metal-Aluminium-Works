@@ -38,7 +38,7 @@ const DashboardLayout = () => {
           </div>
 
           <div className="flex flex-col justify-between">
-            <div className="min-h-screen p-4 md:p-8">
+            <div className="min-h-screen p-4 md:p-8 bg-black/20">
               <Outlet />
             </div>
           </div>

@@ -97,12 +97,12 @@ const Navbar = () => {
             </p>
           </NavLink>
           {/* login */}
-          <button className="text-green-500 px-4 py-1 rounded border hover:bg-green-200">
+          <Link to={'/login'} className="text-green-500 px-4 py-1 rounded border hover:bg-green-200">
             Login
-          </button>
-          {/* <button className="text-red-500 px-4 py-1 rounded border hover:bg-red-200">
+          </Link>
+          {/* <Link className="text-red-500 px-4 py-1 rounded border hover:bg-red-200">
             LogOut
-          </button> */}
+          </Link> */}
           {/* dashboard */}
           <div className="w-12 h-12 rounded-full border border-white">
             <Link to={'/dashboard'}>
