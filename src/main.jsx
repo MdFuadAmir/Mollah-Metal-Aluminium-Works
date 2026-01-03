@@ -4,13 +4,18 @@ import "./index.css";
 import { RouterProvider } from "react-router";
 import router from "./Router/Router.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import AuthProvider from "./Context/AuthProvider.jsx";
 const queryClient = new QueryClient();
+import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <div className="tagesschrift-regular">
       <QueryClientProvider client={queryClient}>
+        <AuthProvider>
         <RouterProvider router={router} />
+        <Toaster/>
+        </AuthProvider>
       </QueryClientProvider>
     </div>
   </StrictMode>

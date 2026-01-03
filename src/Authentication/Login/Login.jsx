@@ -1,8 +1,39 @@
-import { NavLink } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { ImArrowLeft } from "react-icons/im";
 import SocialLogin from "../SocialLogin/SocialLogin";
+import { useForm } from "react-hook-form";
+import useAuth from "../../Hooks/useAuth";
+import useAxios from "../../Hooks/useAxios";
+import toast from "react-hot-toast";
+
 const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const { login } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location?.state?.from || "/";
+  const axiosInstance = useAxios();
+
+  const onSubmit = (data) => {
+    login(data.email, data.password)
+      .then(async () => {
+        await axiosInstance.patch("/users/last-login", {
+          email: data.email,
+        });
+        toast.success("Login Successfully");
+        navigate(from);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+        console.log(error);
+        
+      });
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
@@ -14,28 +45,41 @@ const Login = () => {
         </div>
 
         {/* Form */}
-        <form className="space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
-            {/* <label className="text-gray-300 text-sm">Email</label> */}
             <div className="flex items-center gap-3 bg-black/60 px-4 py-2 rounded">
               <FaEnvelope className="text-gray-300" />
               <input
                 type="email"
+                {...register("email", { required: true })}
                 placeholder="Enter your email"
                 className="bg-transparent outline-none text-white w-full"
               />
+              {errors?.email?.type === "required" && (
+                <span className="text-red-500 text-sm">Email is Required</span>
+              )}
             </div>
           </div>
 
           <div>
-            {/* <label className="text-gray-300 text-sm">Password</label> */}
             <div className="flex items-center gap-3 bg-black/60 px-4 py-2 rounded">
               <FaLock className="text-gray-300" />
               <input
                 type="password"
+                {...register("password", { required: true, minLength: 6 })}
                 placeholder="Enter your password"
                 className="bg-transparent outline-none text-white w-full"
               />
+              {errors?.password?.type === "required" && (
+                <span className="text-red-500 text-sm">
+                  Password is Required
+                </span>
+              )}
+              {errors?.password?.type === "minLength" && (
+                <span className="text-red-500 text-sm">
+                  Password must be 6 charecters
+                </span>
+              )}
             </div>
           </div>
 
@@ -52,7 +96,7 @@ const Login = () => {
           </NavLink>
         </p>
         {/* social login */}
-        <SocialLogin/>
+        <SocialLogin />
         <p className="text-center text-gray-300 text-sm mt-6 flex items-center gap-2">
           Back To Home?{" "}
           <NavLink

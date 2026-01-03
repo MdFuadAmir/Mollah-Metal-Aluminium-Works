@@ -15,7 +15,6 @@ import ManageOrders from "../Pages/Dashboard/Admin/ManageOrders/ManageOrders";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Authentication/Login/Login";
 import SignUp from "../Authentication/SignUp/SignUp";
-import SocialLogin from "../Authentication/SocialLogin/SocialLogin";
 
 const router = createBrowserRouter([
   {

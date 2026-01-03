@@ -5,8 +5,23 @@ import { MdMenu } from "react-icons/md";
 import { useState } from "react";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { RiAccountCircleFill } from "react-icons/ri";
+import useAuth from "../../Hooks/useAuth";
+import toast from "react-hot-toast";
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { user, logOut } = useAuth();
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        console.log("logout");
+        toast.success("LogOut Successfully !");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error(error.message);
+      });
+  };
 
   const navLinks = (
     <>
@@ -97,17 +112,34 @@ const Navbar = () => {
             </p>
           </NavLink>
           {/* login */}
-          <Link to={'/login'} className="text-green-500 px-4 py-1 rounded border hover:bg-green-200">
-            Login
-          </Link>
-          {/* <Link className="text-red-500 px-4 py-1 rounded border hover:bg-red-200">
-            LogOut
-          </Link> */}
-          {/* dashboard */}
-          <div className="w-12 h-12 rounded-full border border-white">
-            <Link to={'/dashboard'}>
-            <RiAccountCircleFill className="w-full h-full text-white" />
+          {!user ? (
+            <Link
+              to={"/login"}
+              className="text-green-500 px-4 py-1 rounded border hover:bg-green-200/40 duration-300"
+            >
+              Login
             </Link>
+          ) : (
+            <Link
+              onClick={handleLogOut}
+              className="text-red-500 px-4 py-1 rounded border hover:bg-red-200/40 duration-300"
+            >
+              LogOut
+            </Link>
+          )}
+          {/* dashboard */}
+          <div className="rounded-full p-1 border border-white">
+            {user ? (
+              <Link to={"/dashboard"}>
+                <img
+                  src={user?.photoURL}
+                  alt="photo"
+                  className="w-10 h-10 rounded-full"
+                />
+              </Link>
+            ) : (
+              <RiAccountCircleFill className="w-10 h-10 text-white" />
+            )}
           </div>
         </div>
       </div>

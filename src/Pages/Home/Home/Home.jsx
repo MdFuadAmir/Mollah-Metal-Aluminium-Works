@@ -12,6 +12,7 @@ const Home = () => {
       <Products />
       <AboutUs />
       <ContactUs />
+     
     </div>
   );
 };
