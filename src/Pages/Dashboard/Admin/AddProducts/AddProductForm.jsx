@@ -1,188 +1,323 @@
-import { useState } from "react";
-
-const AddProductForm = () => {
-  const [preview, setPreview] = useState(null);
-
-  const handleImage = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setPreview(URL.createObjectURL(file));
-  }
-};
-
+const categories = [
+  { title: "হাঁড়ি" },
+  { title: "Mobiles" },
+  { title: "Fashion" },
+  { title: "Home" },
+  { title: "Grocery" },
+  { title: "Beauty" },
+  { title: "Baby" },
+  { title: "Men's" },
+  { title: "Women's" },
+  { title: "Computers" },
+  { title: "Kitchen" },
+  { title: "Sports" },
+  { title: "Shoes" },
+  { title: "Watches" },
+  { title: "Bags" },
+  { title: "Gaming" },
+];
+const AddProductForm = ({
+  register,
+  handleSubmit,
+  errors,
+  onSubmit,
+  productImages,
+  uploading,
+  handleMultiImageUpload,
+  selectedCategory
+}) => {
   return (
     <div className="max-w-4xl mx-auto bg-black/50 p-8 rounded-xl text-white">
-      <h2 className="text-2xl font-bold mb-6">
-        নতুন পণ্য যোগ করুন
-      </h2>
+      <h2 className="text-2xl font-bold mb-6">নতুন পণ্য যোগ করুন</h2>
 
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
         {/* 1. Product Name */}
         <div>
-          <label className="text-gray-300 text-sm">পণ্যের নাম</label>
+          <label className="text-gray-300 text-sm">পণ্যের নাম *</label>
           <input
             type="text"
+            {...register("productName", {
+              required: "Product name is required",
+            })}
             placeholder="অ্যালুমিনিয়াম হাঁড়ি"
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
           />
+          {errors.productName && (
+            <p className="text-red-600 text-sm">{errors.productName.message}</p>
+          )}
         </div>
 
         {/* 2. Product Size */}
         <div>
-          <label className="text-gray-300 text-sm">পণ্যের সাইজ</label>
+          <label className="text-gray-300 text-sm">পণ্যের সাইজ *</label>
           <input
             type="text"
-            placeholder="ছোট / মাঝারি / বড়"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+            {...register("size", {
+              required: "Product size is required",
+            })}
+            placeholder="10 / 12 / 14"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
           />
+          {errors.size && (
+            <p className="text-red-600 text-sm">{errors.size.message}</p>
+          )}
         </div>
-
-        {/* 3. Approx Weight */}
-        <div>
-          <label className="text-gray-300 text-sm">
-           পণ্যের আনুমানিক ওজন (কেজি)
-          </label>
-          <input
-            type="text"
-            placeholder="২.৫"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
-          />
-        </div>
-
         {/* 4. Brand */}
         <div>
-          <label className="text-gray-300 text-sm">ব্র্যান্ড নাম</label>
+          <label className="text-gray-300 text-sm">ব্র্যান্ড নাম *</label>
           <input
             type="text"
+            {...register("brandName", {
+              required: "Product brandName is required",
+            })}
             placeholder="Mollah Metal Aluminium Works"
+            defaultValue={"Mollah Metal Aluminium Works"}
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
           />
+          {errors.brandName && (
+            <p className="text-red-600 text-sm">{errors.brandName.message}</p>
+          )}
         </div>
 
         {/* 5. Price */}
         <div>
           <label className="text-gray-300 text-sm">
-            খুচরা মূল্য (প্রতি কেজি)
+            খুচরা মূল্য (প্রতি কেজি) *
           </label>
           <input
             type="number"
+            {...register("retailPrice", {
+              required: "Product retailPrice is required",
+            })}
             placeholder="৳ ৩৫০"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+          />
+          {errors.retailPrice && (
+            <p className="text-red-600 text-sm">{errors.retailPrice.message}</p>
+          )}
+        </div>
+        {/* 6. discount price for retail price */}
+        <div>
+          <label className="text-gray-300 text-sm">
+            ছাড়ের পর খুচরা মূল্য (প্রতি কেজি)
+          </label>
+          <input
+            type="number"
+            {...register("retailDiscountPrice")}
+            placeholder="৳ ৩০০"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
           />
         </div>
 
-        {/* 6. Wholesale */}
+        {/* 7. Wholesale */}
         <div>
           <label className="text-gray-300 text-sm">
-            পাইকারি মূল্য (প্রতি কেজি)
+            পাইকারি মূল্য (প্রতি কেজি) *
           </label>
           <input
-            type="text"
+            type="number"
+            {...register("wholesalePrice", {
+              required: "Product wholesalePrice is required",
+            })}
             placeholder="৳ ৩০০"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
           />
+          {errors.wholesalePrice && (
+            <p className="text-red-600 text-sm">
+              {errors.wholesalePrice.message}
+            </p>
+          )}
+        </div>
+
+        {/* 8. discount price */}
+        <div>
+          <label className="text-gray-300 text-sm">
+            ছাড়ের পর পাইকারি মূল্য (প্রতি কেজি)
+          </label>
+          <input
+            type="number"
+            {...register("holeSellDiscountPrice")}
+            placeholder="৳ ৩০০"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+          />
+        </div>
+        {/* 9. Extra: Stock Qty */}
+        <div>
+          <label className="text-gray-300 text-sm">স্টক পরিমাণ (কেজি) *</label>
+          <input
+            type="text"
+            {...register("stokc", {
+              required: "Product stokc is required",
+            })}
+            placeholder="১০০"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+          />
+          {errors.stokc && (
+            <p className="text-red-600 text-sm">{errors.stokc.message}</p>
+          )}
         </div>
 
         {/* 10. Category */}
         <div>
-          <label className="text-gray-300 text-sm">ক্যাটাগরি</label>
-          <select className="w-full mt-1 p-2 rounded bg-black/70 outline-none">
-            <option>ক্যাটাগরি নির্বাচন করুন</option>
-            <option>হাঁড়ি</option>
-            <option>ডেকচি</option>
-            <option>কড়াই</option>
-            <option>ঢাকনা</option>
-            <option>কাস্টম পণ্য</option>
+          <label className="text-gray-300 text-sm">ক্যাটাগরি *</label>
+          <select
+            {...register("categories", {
+              required: "Product categories is required",
+            })}
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+          >
+            <option value="">ক্যাটাগরি নির্বাচন করুন</option>
+            <option value="হাঁড়ি">হাঁড়ি</option>
+            <option value="ডেকচি">ডেকচি</option>
+            <option value="কড়াই">কড়াই</option>
+            <option value="ঢাকনা">ঢাকনা</option>
+            <option value="ঢাকনা">কুকারিজ</option>
           </select>
+          {errors.categories && (
+            <p className="text-red-600 text-sm">{errors.categories.message}</p>
+          )}
         </div>
-
-        {/* Extra: Stock Qty */}
+        {/* 10. Product Status */}
         <div>
-          <label className="text-gray-300 text-sm">
-            স্টক পরিমাণ (কেজি)
-          </label>
-          <input
-            type="number"
-            placeholder="১০০"
+          <label className="text-gray-300 text-sm">পণ্যের স্ট্যাটাস *</label>
+          <select
+            {...register("status", {
+              required: "Product status is required",
+            })}
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
-          />
-        </div>
-
-        {/* 7. Short Description */}
-        <div className="md:col-span-2">
-          <label className="text-gray-300 text-sm">
-            সংক্ষিপ্ত বিবরণ
-          </label>
-          <textarea
-            rows="2"
-            placeholder="পণ্যের সংক্ষিপ্ত বর্ণনা"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
-          />
-        </div>
-
-        {/* 8. Long Description */}
-        <div className="md:col-span-2">
-          <label className="text-gray-300 text-sm">
-            বিস্তারিত বিবরণ
-          </label>
-          <textarea
-            rows="4"
-            placeholder="পণ্যের বিস্তারিত বর্ণনা লিখুন"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
-          />
-        </div>
-
-        {/* 9. Return Policy */}
-        <div className="md:col-span-2">
-          <label className="text-gray-300 text-sm">
-            রিটার্ন পলিসি
-          </label>
-          <textarea
-            rows="3"
-            placeholder="পণ্য ফেরত দেওয়ার নিয়ম"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
-          />
-        </div>
-
-        {/* Image Upload */}
-        <div className="md:col-span-2">
-          <label className="text-gray-300 text-sm">
-            পণ্যের ছবি আপলোড করুন
-          </label>
-          <input
-            type="file"
-            onChange={handleImage}
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
-          />
-
-          {/* Review Image */}
-          {preview && (
-      <img
-        src={preview}
-        alt="Preview"
-        className="w-32 h-32 rounded"
-      />
-    )}
-        </div>
-
-        {/* Product Status */}
-        <div>
-          <label className="text-gray-300 text-sm">
-            পণ্যের স্ট্যাটাস
-          </label>
-          <select className="w-full mt-1 p-2 rounded bg-black/70 outline-none">
+          >
             <option>in-stock</option>
             <option>out-of-stock</option>
           </select>
+          {errors.status && (
+            <p className="text-red-600 text-sm">{errors.status.message}</p>
+          )}
+        </div>
+        {/* //=============== category spacific field =================// */}
+        {/* 3. Approx Weight */}
+        {
+
+        }
+        <div>
+          <label className="text-gray-300 text-sm">
+            পণ্যের আনুমানিক ওজন (কেজি) *
+          </label>
+          <input
+            type="text"
+            {...register("avgWaight", {
+              required: "Product avgWaight is required",
+            })}
+            placeholder="2.5 kg / 0.700 grm "
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+          />
+          {errors.avgWaight && (
+            <p className="text-red-600 text-sm">{errors.avgWaight.message}</p>
+          )}
+        </div>
+
+        {/* 11. Short Description */}
+        <div className="md:col-span-2">
+          <label className="text-gray-300 text-sm">সংক্ষিপ্ত বিবরণ *</label>
+          <textarea
+            rows="2"
+            {...register("shortDescription", {
+              required: "Product shortDescription is required",
+              maxLength: {
+                value: 70,
+                message: "Maximum 70 characters allowed",
+              },
+            })}
+            placeholder="পণ্যের সংক্ষিপ্ত বর্ণনা"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+          />
+          {errors.shortDescription && (
+            <p className="text-red-600 text-sm">
+              {errors.shortDescription.message}
+            </p>
+          )}
+        </div>
+
+        {/* 12. Long Description */}
+        <div className="md:col-span-2">
+          <label className="text-gray-300 text-sm">বিস্তারিত বিবরণ *</label>
+          <textarea
+            rows="4"
+            {...register("longDescription", {
+              required: "Product longDescription is required",
+              minLength: {
+                value: 50,
+                message: "Minimum 50 characters required",
+              },
+            })}
+            placeholder="পণ্যের বিস্তারিত বর্ণনা লিখুন"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+          />
+          {errors.longDescription && (
+            <p className="text-red-600 text-sm">
+              {errors.longDescription.message}
+            </p>
+          )}
+        </div>
+
+        {/* 13. Return Policy */}
+        <div className="md:col-span-2">
+          <label className="text-gray-300 text-sm">রিটার্ন পলিসি *</label>
+          <textarea
+            rows="3"
+            {...register("returnPolecy", {
+              required: "Product returnPolecy is required",
+            })}
+            placeholder="পণ্য ফেরত দেওয়ার নিয়ম"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+          />
+          {errors.returnPolecy && (
+            <p className="text-red-600 text-sm">
+              {errors.returnPolecy.message}
+            </p>
+          )}
+        </div>
+
+        {/* 14. Image Upload */}
+        <div className="flex flex-wrap gap-4 my-6">
+          {/* Upload Input (NO register) */}
+          <input
+            type="file"
+            multiple
+            onChange={handleMultiImageUpload}
+            className="w-full px-4 py-3 rounded-lg border cursor-pointer dark:text-gray-200 dark:bg-gray-700"
+          />
+          {/* Hidden form field */}
+          <input
+            type="hidden"
+            {...register("images", { required: "At least 1 image needed" })}
+          />
+          {/* preview */}
+          {productImages.map((img, idx) => (
+            <div key={idx} className="relative">
+              <img
+                src={img}
+                alt=""
+                className="w-24 h-24 rounded object-cover border"
+              />
+            </div>
+          ))}
+
+          {errors.images && (
+            <p className="text-red-600 text-sm">{errors.images.message}</p>
+          )}
         </div>
 
         {/* Submit */}
         <div className="md:col-span-2">
           <button
             type="submit"
+            disabled={uploading}
             className="w-full bg-orange-500 hover:bg-orange-600 transition py-2 rounded font-semibold text-black"
           >
-            পণ্য যোগ করুন
+            {uploading ? "Image Uploading..." : "পণ্য যোগ করুন"}
           </button>
         </div>
       </form>

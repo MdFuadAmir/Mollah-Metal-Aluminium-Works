@@ -1,16 +1,15 @@
 import { Outlet } from "react-router";
 import Navbar from "../Components/Navbar/Navbar";
 import Footer from "../Components/Footer/Footer";
-import bg from "../assets/bg-images/body.jpg"
+import bg from "../assets/bg-images/body.jpg";
 const RootLayout = () => {
   return (
     <div className="relative">
-       {/* Fixed Background */}
+      {/* Fixed Background */}
       <div
         className="fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage:
-            `url(${bg})`,
+          backgroundImage: `url(${bg})`,
         }}
       >
         <div className="absolute inset-0 bg-black/30 " />

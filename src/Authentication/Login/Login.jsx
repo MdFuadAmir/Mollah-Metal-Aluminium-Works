@@ -14,10 +14,10 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const { login } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const from = location?.state?.from || "/";
   const axiosInstance = useAxios();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location?.state?.from || "/";
 
   const onSubmit = (data) => {
     login(data.email, data.password)
@@ -26,7 +26,7 @@ const Login = () => {
           email: data.email,
         });
         toast.success("Login Successfully");
-        navigate(from);
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         toast.error(error.message);

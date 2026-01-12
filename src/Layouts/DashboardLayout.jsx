@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router";
+import { Link, Outlet, useNavigate } from "react-router";
 import bg from "../assets/bg-images/body.jpg";
 import MMAW from "../Shared/MMAW/MMAW";
 import { FaAlignJustify, FaSignOutAlt } from "react-icons/fa";
@@ -7,11 +7,37 @@ import UserMenu from "../Pages/Dashboard/User/UserMenu/UserMenu";
 import DashboardMenu from "../Pages/Dashboard/Common/DashboardMenu/DashboardMenu";
 import { MdAssessment } from "react-icons/md";
 import { ImUserTie } from "react-icons/im";
+import useAuth from "../Hooks/useAuth";
+import toast from "react-hot-toast";
+import useRole from "../Hooks/useRole";
+import Loading from "../Components/Loading/Loading";
+import ModaratorMenu from "../Pages/Dashboard/Modarator/ModaratorMenu/ModaratorMenu";
+
 const DashboardLayout = () => {
+  const { logOut } = useAuth();
+  const [role,roleLoading] = useRole();
+  const navigate = useNavigate();
+
   const closeSidebar = () => {
     const drawer = document.getElementById("my-drawer-2");
     if (drawer) drawer.checked = false;
   };
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        toast.success("LogOut Successfully !");
+        navigate("/login", { replace: true })
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
+  if(roleLoading){
+    return <Loading/>
+  }
+
   return (
     <div className="relative">
       {/* Fixed Background */}
@@ -60,8 +86,9 @@ const DashboardLayout = () => {
                   icon={MdAssessment}
                   onClick={closeSidebar}
                 />
-                <AdminMenu closeSidebar={closeSidebar} />
-                <UserMenu closeSidebar={closeSidebar} />
+                {role === "admin" && <AdminMenu closeSidebar={closeSidebar} />}
+                {role === "modarator" && <ModaratorMenu closeSidebar={closeSidebar} />}
+                {role === "user" && <UserMenu closeSidebar={closeSidebar} />}
               </div>
             </div>
             {/* navber bottom */}
@@ -74,7 +101,7 @@ const DashboardLayout = () => {
               />
               <li>
                 <Link
-                  // onClick={handleLogOut}
+                  onClick={handleLogOut}
                   className="flex font-bold items-center rounded gap-1 text-red-500"
                 >
                   <FaSignOutAlt className="text-lg" /> LogOut

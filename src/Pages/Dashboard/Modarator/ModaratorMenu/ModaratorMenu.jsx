@@ -8,23 +8,9 @@ import {
 } from "react-icons/fa";
 import DashboardMenu from "../../Common/DashboardMenu/DashboardMenu";
 
-const AdminMenu = ({ closeSidebar }) => {
+const ModaratorMenu = ({ closeSidebar }) => {
   return (
     <div className="space-y-2">
-      <DashboardMenu
-        labal={"Admin & Moderators"}
-        to={"/dashboard/manage-admin&moderators"}
-        icon={FaUsersCog}
-        onClick={closeSidebar}
-      />
-      <DashboardMenu
-        labal={"Manage Users"}
-        to={"/dashboard/manage-users"}
-        icon={FaUsersCog}
-        onClick={closeSidebar}
-      />
-    
-
       <DashboardMenu
         labal={"Add Products"}
         to={"/dashboard/add-products"}
@@ -54,8 +40,8 @@ const AdminMenu = ({ closeSidebar }) => {
       />
 
       <DashboardMenu
-        labal={"All Receipts"}
-        to={"/dashboard/all-receipts"}
+        labal={"All Vautchers"}
+        to={"/dashboard/all-vautchers"}
         icon={FaFileInvoice}
         onClick={closeSidebar}
       />
@@ -63,4 +49,4 @@ const AdminMenu = ({ closeSidebar }) => {
   );
 };
 
-export default AdminMenu;
+export default ModaratorMenu;

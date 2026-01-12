@@ -13,8 +13,8 @@ const SignUp = () => {
   const { signUp, updateUserProfile } = useAuth();
   const [isUploading, setIsUploading] = useState();
   const [profilePic, setProfilePic] = useState();
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
   const from = location?.state?.from || "/";
   const axiosInstance = useAxios();
 
@@ -47,6 +47,8 @@ const SignUp = () => {
           email: user?.email,
           role: "user",
           status: "verified",
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString(),
         };
         const userRes = await axiosInstance.post("/users", userInfo);
         if (userRes.data.success && userRes.data.insertedId) {
@@ -62,7 +64,7 @@ const SignUp = () => {
         updateUserProfile(updateProfile)
           .then(() => {
             toast.success("update user info");
-            navigate(from);
+            navigate(from, { replace: true });
           })
           .catch((error) => {
             toast.error(error.message);

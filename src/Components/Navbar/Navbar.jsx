@@ -14,13 +14,14 @@ const Navbar = () => {
   const handleLogOut = () => {
     logOut()
       .then(() => {
-        console.log("logout");
         toast.success("LogOut Successfully !");
       })
       .catch((error) => {
-        console.log(error);
         toast.error(error.message);
       });
+  };
+  const handleLoginFirst = () => {
+    toast.error("Please login !");
   };
 
   const navLinks = (
@@ -138,7 +139,10 @@ const Navbar = () => {
                 />
               </Link>
             ) : (
-              <RiAccountCircleFill className="w-10 h-10 text-white" />
+              <RiAccountCircleFill
+                onClick={handleLoginFirst}
+                className="w-10 h-10 text-white cursor-pointer"
+              />
             )}
           </div>
         </div>

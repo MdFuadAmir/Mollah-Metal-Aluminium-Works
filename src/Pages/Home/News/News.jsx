@@ -2,7 +2,7 @@ import Marquee from "react-fast-marquee";
 
 const News = () => {
   return (
-    <div className="flex items-center">
+    <div className="flex items-center overflow-hidden" data-aos="fade-down">
       <p className="text-orange-500 font-bold uppercase bg-gray-700/40 py-3 px-2">News:-</p>
       <Marquee className="text-white" autoFill pauseOnHover>
         <p className="bg-gray-700/40 py-3 mr-8 px-4">

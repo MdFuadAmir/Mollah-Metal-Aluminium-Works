@@ -15,6 +15,12 @@ import ManageOrders from "../Pages/Dashboard/Admin/ManageOrders/ManageOrders";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Authentication/Login/Login";
 import SignUp from "../Authentication/SignUp/SignUp";
+import Forbidden from "../Components/Forbidden/Forbidden";
+import Admin from "../Routes/Admin";
+import Moderator from "../Routes/Modarator";
+import ManageAdminModerator from "../Pages/Dashboard/Admin/ManageAdminModerator/ManageAdminModerator";
+import Profile from "../Pages/Dashboard/Common/Profile/Profile";
+
 
 const router = createBrowserRouter([
   {
@@ -37,11 +43,15 @@ const router = createBrowserRouter([
         path: "/contact",
         element: <ContactUs />,
       },
+      {
+        path: "/forbidden",
+        element: <Forbidden />,
+      },
     ],
   },
   {
     path: "/",
-    element: <AuthLayout/>,
+    element: <AuthLayout />,
     children: [
       {
         path: "/login",
@@ -58,33 +68,41 @@ const router = createBrowserRouter([
     element: <DashboardLayout />,
     children: [
       {
-        index: true,
+        index: true, 
         Component: DashboardForAll,
       },
       {
+        path: "profile",
+        element: <Profile/>,
+      },
+      {
+        path: "manage-admin&moderators",
+        element: <Admin><ManageAdminModerator /></Admin>,
+      },
+      {
         path: "manage-users",
-        Component: ManageUsers,
+        element: <Admin><ManageUsers /></Admin>,
       },
       {
         path: "add-products",
-        Component: AddProducts,
+        element: <Admin><Moderator><AddProducts /></Moderator></Admin>,
       },
       {
         path: "our-products",
-        Component: OurProducts,
+        element: <Admin><Moderator><OurProducts /></Moderator></Admin>,
       },
       {
         path: "manage-orders",
-        Component: ManageOrders,
+        element: <Admin><Moderator><ManageOrders /></Moderator></Admin>,
       },
       {
         path: "completed-orders",
-        Component: CompletedOrders,
+        element: <Admin><Moderator><CompletedOrders /></Moderator></Admin>,
       },
 
       {
-        path: "all-vautchers",
-        Component: AllVautchers,
+        path: "all-receipts",
+        element: <Admin><Moderator><AllVautchers /></Moderator></Admin>,
       },
     ],
   },

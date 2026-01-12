@@ -7,35 +7,35 @@ const slides = [
     subtitle: "Trusted Aluminium Kitchen Utensils Factory",
     desc: "Quality aluminium hari, dhama, toyahari, korai and dhakna.",
     image:
-      "",
+      "https://i.ibb.co.com/6JgzqwxH/5532919.jpg",
   },
   {
     title: "New Product Update",
     subtitle: "Latest Aluminium Korai & Dhakna",
     desc: "Strong, lightweight and long-lasting kitchen utensils.",
     image:
-      "",
+      "https://i.ibb.co.com/6JgzqwxH/5532919.jpg",
   },
   {
     title: "Wholesale Supply Available",
     subtitle: "Bulk Order Accepted",
     desc: "Best price for wholesalers and retailers.",
     image:
-      "",
+      "https://i.ibb.co.com/6JgzqwxH/5532919.jpg",
   },
   {
     title: "Custom Size Orders",
     subtitle: "As Per Your Requirement",
     desc: "Custom aluminium hari, dhama & korai manufacturing.",
     image:
-      "",
+      "https://i.ibb.co.com/6JgzqwxH/5532919.jpg",
   },
   {
     title: "Factory Direct Production",
     subtitle: "Quality You Can Trust",
     desc: "Experienced workers & strict quality control.",
     image:
-      "",
+      "https://i.ibb.co.com/6JgzqwxH/5532919.jpg",
   },
 ];
 

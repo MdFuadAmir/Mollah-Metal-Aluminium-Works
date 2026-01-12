@@ -6,8 +6,8 @@ import { useLocation, useNavigate } from "react-router";
 
 const SocialLogin = () => {
   const { loginWithGoogle } = useAuth();
-  const location = useLocation();
   const navigate = useNavigate();
+  const location = useLocation();
   const from = location?.state?.from || "/";
   const axiosInstance = useAxios();
 
@@ -19,14 +19,15 @@ const SocialLogin = () => {
         const userInfo = {
           name: user?.displayName,
           email: user?.email,
-          photo: user?.photoURL,
           role: "user",
           status: "verified",
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString(),
         };
         await axiosInstance.post("/users", userInfo);
         toast.success("Login Success !!");
         console.log("Current_user", userInfo);
-        navigate(from);
+        navigate(from, { replace: true });
       })
       .catch((error) => {
         toast.error(error.message);
