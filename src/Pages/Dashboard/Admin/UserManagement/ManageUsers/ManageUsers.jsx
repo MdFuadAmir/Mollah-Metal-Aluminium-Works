@@ -139,7 +139,7 @@ const ManageUsers = () => {
 
             {users.length === 0 && (
               <tr>
-                <td colSpan="7" className="text-center py-6 text-gray-400">
+                <td colSpan="7" className="text-center py-6 text-red-400">
                   কোনো ইউজার পাওয়া যায়নি
                 </td>
               </tr>
