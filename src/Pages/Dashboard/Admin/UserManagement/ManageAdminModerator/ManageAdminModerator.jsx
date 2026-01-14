@@ -9,17 +9,17 @@ const ManageAdminModerator = () => {
   const { user } = useAuth();
 
   const {
-    data: users = [],
+    data: users,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["users"],
-    enabled: !!user,
+    queryKey: ["admin-moderators"],
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(
+      const {data} = await axiosSecure.get(
         `/users/admin-moderators`
       );
-      return res.data;
+      return data;
     },
   });
   if (isLoading) return <Loading />;
@@ -38,6 +38,7 @@ const ManageAdminModerator = () => {
               <th className="px-4 py-3">#</th>
               <th className="px-4 py-3">নাম</th>
               <th className="px-4 py-3">ইমেইল</th>
+              <th className="px-4 py-3">মোবাইল</th>
               <th className="px-4 py-3">রোল</th>
               <th className="px-4 py-3">স্ট্যাটাস</th>
               <th className="px-4 py-3 text-center">একশন</th>
@@ -45,21 +46,23 @@ const ManageAdminModerator = () => {
           </thead>
 
           <tbody>
-            {users.map((user, index) => (
+            {users.map((us, index) => (
               <tr
-                key={user._id}
+                key={us._id}
                 className="border-b border-gray-700 hover:bg-black/30"
               >
                 <td className="px-4 py-3">{index + 1}</td>
 
-                <td className="px-4 py-3">{user.name || "N/A"}</td>
+                <td className="px-4 py-3">{us.name || "N/A"}</td>
 
-                <td className="px-4 py-3 text-gray-300">{user.email}</td>
+                <td className="px-4 py-3 text-gray-300">{us.email}</td>
+
+                <td className="px-4 py-3 text-gray-300">{us.phone}</td>
 
                 <td className="px-4 py-3 capitalize">
-                  {user.role === "admin" ? (
+                  {us.role === "admin" ? (
                     <span className="text-green-400 font-semibold">Admin</span>
-                  ) : user.role === "moderator" ? (
+                  ) : us.role === "moderator" ? (
                     <span className="text-blue-400">Moderator</span>
                   ) : (
                     "N/A"
@@ -67,7 +70,7 @@ const ManageAdminModerator = () => {
                 </td>
 
                 <td className="px-4 py-3">
-                  {user.status === "verified" ? (
+                  {us.status === "verified" ? (
                     <span className="text-green-400 font-semibold">
                       Verified
                     </span>
@@ -78,7 +81,7 @@ const ManageAdminModerator = () => {
 
                 <td className="px-4 py-3">
                   <div className="flex justify-center gap-3">
-                    {user.role !== "admin" && (
+                    {us.role !== "admin" && (
                       <button className="flex items-center gap-1 bg-green-600/80 hover:bg-green-700 px-3 py-1 rounded text-xs">
                         <FaUserShield />
                         Make Admin

@@ -19,20 +19,20 @@ const Login = () => {
   const location = useLocation();
   const from = location?.state?.from || "/";
 
-  const onSubmit = (data) => {
-    login(data.email, data.password)
-      .then(async () => {
-        await axiosInstance.patch("/users/last-login", {
-          email: data.email,
-        });
-        toast.success("Login Successfully");
-        navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        
-      });
-  };
+  const onSubmit = async (data) => {
+  try {
+    await login(data.email, data.password);
+    toast.success("Login Successfully");
+    navigate(from, { replace: true });
+    axiosInstance.patch("/users/last-login", {
+      email: data.email,
+    }).catch(() => {
+      console.log("Last login update failed");
+    });
+  } catch (error) {
+    toast.error(error.message);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

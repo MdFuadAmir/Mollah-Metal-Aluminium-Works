@@ -1,28 +1,57 @@
-import { FaUserShield, FaBan } from "react-icons/fa";
-import { useQuery } from "@tanstack/react-query";
+import { FaUserShield, FaBan, FaEye } from "react-icons/fa";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 import Loading from "../../../../../Components/Loading/Loading";
 import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 const ManageUsers = () => {
-  const [search, setSearch] = useState("");
   const axiosSecure = useAxiosSecure();
+  const [selectedUser, setSelectedUser] = useState(null);
   const { user } = useAuth();
-
+  const queryClient = useQueryClient();
+  // ====== get user from database
   const {
-    data: users = [],
+    data: users,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["users", search],
-    enabled: !!user,
+    queryKey: ["normal-users"],
+    enabled: !!user?.email,
     queryFn: async () => {
-      // const res = await axiosSecure.get(`/users?search=${search}`);
-      const res = await axiosSecure.get(`/users/normal-users?search=${search}`);
-      return res.data;
+      const { data } = await axiosSecure.get(`/users/normal-users`);
+      return data;
     },
   });
+  // ====== toggle block/unblock
+  const toggleStatus = async (data) => {
+    console.log(data);
+    try {
+      await axiosSecure.patch(`/users/toggle-status/${data._id}`);
+      toast.success(
+        `User ${user.status === "verified" ? "Blocked" : "Unblocked"}`
+      );
+      queryClient.invalidateQueries(["normal-users"]);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+  // ======= toggleRole
+  const toggleRole = async (user) => {
+    try {
+      const res = await axiosSecure.patch(`/users/make-moderator/${user._id}`);
+      if (res.data.modifiedCount > 0) {
+        toast.success("User promoted to Moderator");
+        queryClient.invalidateQueries(["normal-users"]);
+      } else {
+        toast.error("Role change failed");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   if (isLoading) return <Loading />;
   if (isError)
     return <p className="text-red-400">ডাটা লোড করতে সমস্যা হয়েছে</p>;
@@ -30,18 +59,6 @@ const ManageUsers = () => {
   return (
     <div className="text-white p-6 md:p-8">
       <h2 className="text-2xl font-bold mb-6">ইউজার ম্যানেজমেন্ট</h2>
-      <div className="mb-4">
-        <input
-          type="text"
-          placeholder="ইমেইল দিয়ে সার্চ করুন"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full md:w-80 px-4 py-2 rounded bg-black/50 
-               text-gray-300 border border-gray-600 
-               focus:outline-none"
-        />
-      </div>
-
       <div className="overflow-x-auto bg-black/40 rounded-xl shadow">
         <table className="w-full text-sm text-left">
           <thead className="bg-black/70 text-gray-300">
@@ -49,6 +66,7 @@ const ManageUsers = () => {
               <th className="px-4 py-3">#</th>
               <th className="px-4 py-3">নাম</th>
               <th className="px-4 py-3">ইমেইল</th>
+              <th className="px-4 py-3">মোবাইল</th>
               <th className="px-4 py-3">রোল</th>
               <th className="px-4 py-3">স্ট্যাটাস</th>
               <th className="px-4 py-3 text-center">একশন</th>
@@ -56,27 +74,27 @@ const ManageUsers = () => {
           </thead>
 
           <tbody>
-            {users.map((user, index) => (
+            {users.map((us, index) => (
               <tr
-                key={user._id}
+                key={us._id}
                 className="border-b border-gray-700 hover:bg-black/30"
               >
                 <td className="px-4 py-3">{index + 1}</td>
-
-                <td className="px-4 py-3">{user.name || "N/A"}</td>
-
-                <td className="px-4 py-3 text-gray-300">{user.email}</td>
-
-                <td className="px-4 py-3 capitalize">
-                  {user.role === "admin" ? (
-                    <span className="text-green-400 font-semibold">Admin</span>
-                  ) : (
-                    <span className="text-blue-400">User</span>
-                  )}
+                {/* name */}
+                <td className="px-4 py-3">{us?.name || "N/A"}</td>
+                {/* email */}
+                <td className="px-4 py-3 text-gray-300">{us.email}</td>
+                {/* phone */}
+                <td className="px-4 py-3 text-gray-300">
+                  {us.phone ? us.phone : "N/A"}
                 </td>
-
+                {/* role */}
+                <td className="px-4 py-3 capitalize text-blue-500">
+                  {us.role}
+                </td>
+                {/* status */}
                 <td className="px-4 py-3">
-                  {user.status === "verified" ? (
+                  {us.status === "verified" ? (
                     <span className="text-green-400 font-semibold">
                       Verified
                     </span>
@@ -84,19 +102,35 @@ const ManageUsers = () => {
                     <span className="text-red-400 font-semibold">Blocked</span>
                   )}
                 </td>
-
+                {/* actions */}
                 <td className="px-4 py-3">
                   <div className="flex justify-center gap-3">
-                    {user.role !== "admin" && (
-                      <button className="flex items-center gap-1 bg-green-600/80 hover:bg-green-700 px-3 py-1 rounded text-xs">
-                        <FaUserShield />
-                        Make Admin
-                      </button>
-                    )}
-
-                    <button className="flex items-center gap-1 bg-red-600/80 hover:bg-red-700 px-3 py-1 rounded text-xs">
+                    {/* vtew details */}
+                    <button
+                      onClick={() => setSelectedUser(us)}
+                      className="flex items-center gap-1 bg-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-700"
+                    >
+                      <FaEye /> View
+                    </button>
+                    {/* make moderator */}
+                    <button
+                      onClick={() => toggleRole(us)}
+                      className="flex items-center gap-1 bg-green-600/80 hover:bg-green-800 px-3 py-1 rounded text-xs"
+                    >
+                      <FaUserShield />
+                      Moderator
+                    </button>
+                    {/* block/unblock */}
+                    <button
+                      onClick={() => toggleStatus(us)}
+                      className={`flex items-center gap-1 px-3 py-1 rounded text-xs ${
+                        us.status === "verified"
+                          ? "bg-red-600/80 hover:bg-red-800"
+                          : "bg-yellow-600 hover:bg-yellow-700"
+                      }`}
+                    >
                       <FaBan />
-                      Block
+                      {us.status === "verified" ? "Block" : "Unblock"}
                     </button>
                   </div>
                 </td>
@@ -105,7 +139,7 @@ const ManageUsers = () => {
 
             {users.length === 0 && (
               <tr>
-                <td colSpan="6" className="text-center py-6 text-gray-400">
+                <td colSpan="7" className="text-center py-6 text-gray-400">
                   কোনো ইউজার পাওয়া যায়নি
                 </td>
               </tr>
@@ -113,6 +147,63 @@ const ManageUsers = () => {
           </tbody>
         </table>
       </div>
+      {/* user details view modal */}
+      {selectedUser && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+          <div className="bg-gray-900 p-6 rounded-xl w-96 space-y-1">
+            <h3 className="text-lg font-bold mb-3 text-center">User Details</h3>
+            <p>
+              <b>Name:</b>{" "}
+              <span className="text-gray-500">
+                {selectedUser.name || "N/A"}
+              </span>
+            </p>
+            <p>
+              <b>Email:</b>{" "}
+              <span className="text-gray-500">{selectedUser.email}</span>
+            </p>
+            <p>
+              <b>Phone:</b>{" "}
+              <span className="text-gray-500">
+                {selectedUser.phone || "N/A"}
+              </span>
+            </p>
+            <p>
+              <b>City:</b>{" "}
+              <span className="text-gray-500">
+                {selectedUser.city || "N/A"}
+              </span>
+            </p>
+            <p>
+              <b>Post Code:</b>{" "}
+              <span className="text-gray-500">
+                {selectedUser.postCode || "N/A"}
+              </span>
+            </p>
+            <p>
+              <b>Address:</b>{" "}
+              <span className="text-gray-500">
+                {selectedUser.address || "N/A"}
+              </span>
+            </p>
+            <p>
+              <b>Role:</b>{" "}
+              <span className="text-gray-500">{selectedUser.role}</span>
+            </p>
+            <p>
+              <b>Status:</b>{" "}
+              <span className="text-gray-500">{selectedUser.status}</span>
+            </p>
+
+            <button
+              onClick={() => setSelectedUser(null)}
+              className="mt-4 bg-gray-700 hover:bg-gray-600 px-4 py-1 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
