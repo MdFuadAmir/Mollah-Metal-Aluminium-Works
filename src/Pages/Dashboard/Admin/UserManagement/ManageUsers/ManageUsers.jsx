@@ -1,51 +1,46 @@
 import { FaUserShield, FaBan } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
-import Loading from "../../../../Components/Loading/Loading";
-import useAuth from "../../../../Hooks/useAuth";
+import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
+import Loading from "../../../../../Components/Loading/Loading";
+import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
-
 
 const ManageUsers = () => {
   const [search, setSearch] = useState("");
   const axiosSecure = useAxiosSecure();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
   const {
-  data: users = [],
-  isLoading,
-  isError,
-} = useQuery({
-  queryKey: ["users", search],
-  enabled: !!user,
-  queryFn: async () => {
-    const res = await axiosSecure.get(
-      `/users?search=${search}`
-    );
-    return res.data;
-  },
-});
+    data: users = [],
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["users", search],
+    enabled: !!user,
+    queryFn: async () => {
+      // const res = await axiosSecure.get(`/users?search=${search}`);
+      const res = await axiosSecure.get(`/users/normal-users?search=${search}`);
+      return res.data;
+    },
+  });
   if (isLoading) return <Loading />;
   if (isError)
     return <p className="text-red-400">ডাটা লোড করতে সমস্যা হয়েছে</p>;
 
   return (
-    <div className="text-white">
+    <div className="text-white p-6 md:p-8">
       <h2 className="text-2xl font-bold mb-6">ইউজার ম্যানেজমেন্ট</h2>
       <div className="mb-4">
-  <input
-    type="text"
-    placeholder="ইমেইল দিয়ে সার্চ করুন"
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="w-full md:w-80 px-4 py-2 rounded bg-black/50 
+        <input
+          type="text"
+          placeholder="ইমেইল দিয়ে সার্চ করুন"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full md:w-80 px-4 py-2 rounded bg-black/50 
                text-gray-300 border border-gray-600 
                focus:outline-none"
-  />
-</div>
-
-
-      
+        />
+      </div>
 
       <div className="overflow-x-auto bg-black/40 rounded-xl shadow">
         <table className="w-full text-sm text-left">

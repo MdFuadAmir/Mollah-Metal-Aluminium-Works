@@ -1,176 +1,208 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuth from "../../../../Hooks/useAuth";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../../Components/Loading/Loading";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
-
-  const [profile, setProfile] = useState({
-    name: "Mahfuzur Rahman",
-    email: "user@mmaw.com",
-    phone: "017xxxxxxxx",
-    address: "Dhaka, Bangladesh",
-    city: "Dhaka",
-    postCode: "1207",
-    photo: "https://i.pravatar.cc/150",
+  const [photoURL, setPhotoURL] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm();
+  // ===== GET PROFILE =====
+  const { data: profile, isLoading } = useQuery({
+    queryKey: ["profile", user?.email],
+    queryFn: async () => {
+      const { data } = await axiosSecure.get(
+        `/users/profile?email=${user?.email}`
+      );
+      return data;
+    },
   });
-
-  const handleChange = (e) => {
-    setProfile({
-      ...profile,
-      [e.target.name]: e.target.value,
-    });
-    console.log(e);
+  // ===== image uploading =====
+  const handleUploadeImage = async (e) => {
+    const image = e.target.files[0];
+    if (!image) return;
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("image", image);
+    const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${
+      import.meta.env.VITE_image_upload_key
+    }`;
+    const res = await axios.post(imageUploadUrl, formData);
+    setPhotoURL(res?.data?.data?.display_url);
+    setUploading(false);
   };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfile({
-        ...profile,
-        photo: URL.createObjectURL(file),
+  // ===== SET DEFAULT VALUES =====
+  useEffect(() => {
+    if (profile) {
+      reset({
+        name: profile?.name || user?.displayName || "",
+        email: profile?.email || user?.email || "",
+        phone: profile?.phone || "",
+        city: profile?.city || "",
+        postCode: profile?.postCode || "",
+        address: profile?.address || "",
+        photoURL: profile?.photoURL || user?.photoURL,
       });
+    }
+  }, [profile, user, reset]);
+
+  // ===== SUBMIT =====
+  const onSubmit = async (formData) => {
+    try {
+      const payload = {
+      ...formData,
+      photoURL: photoURL || profile?.photoURL || user?.photoURL,
+    };
+      await axiosSecure.put("/users/profile", payload);
+      toast.success("Profile updated successfully");
+      setIsEdit(false);
+    } catch (error) {
+      toast.error(error.message);
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Updated Profile:", profile);
-    setIsEdit(false);
-  };
-
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
-    <div className="min-h-screen p-6 text-white">
-      <div className="max-w-6xl mx-auto bg-gray-950/60 rounded-xl shadow-md grid grid-cols-1 md:grid-cols-4">
-        {/* Sidebar */}
-        <div className="col-span-1 p-6 md:border-r">
-          <div className="flex flex-col items-center">
-            <img
-              src={profile.photo}
-              alt="profile"
-              className="w-24 h-24 rounded-full mb-3 object-cover p-1 border-2 border-green-500"
-            />
+    <div className="min-h-screen  p-6 md:p-8 text-white">
+      <div className="max-w-6xl mx-auto bg-gray-950/60 rounded-xl shadow-md grid grid-cols-1 md:grid-cols-4 p-6">
+        {/* sidebar */}
+        <div className="col-span-1 flex flex-col items-center md:border-r-2 p-2">
+          <img
+            src={
+              profile?.photoURL
+                ? profile?.photoURL
+                : user?.photoURL
+                ? user?.photoURL
+                : "N/A"
+            }
+            alt="photo"
+            className="w-24 h-24 rounded-full border-2 border-green-500 p-1"
+          />
 
-            {isEdit && (
-              <label className="text-xs cursor-pointer text-blue-500">
-                Change Photo
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={handleImageChange}
-                />
-              </label>
-            )}
-
-            <h2 className="font-semibold text-lg mt-2 text-center">
-              {profile.name}
-            </h2>
-            <p className="text-sm text-gray-400">{profile.email}</p>
+          {isEdit && (
+            <label className="text-xs cursor-pointer text-blue-500 mt-1">
+              Change Photo
+              <input type="file" hidden onChange={handleUploadeImage}/>
+            </label>
+          )}
+          <div className="mt-4 text-center">
+            <h1 className="text-lg font-bold">
+              {profile?.displayName
+                ? profile?.displayName
+                : user?.displayName
+                ? user?.displayName
+                : "N/A"}
+            </h1>
+            <p className="text-gray-500">{profile?.email}</p>
           </div>
-
-          <ul className="mt-6 space-y-3 text-sm">
-            <li className="font-medium text-blue-600 cursor-pointer">
-              Personal Information
-            </li>
-            {/* ✅ Edit Button */}
-            <li>
-              <button
-                onClick={() => setIsEdit(true)}
-                className="mt-2 w-full px-4 py-2 bg-gray-800 rounded-md hover:bg-gray-700"
-              >
-                Edit Profile
-              </button>
-            </li>
-          </ul>
+          <button
+            onClick={() => {
+              setIsEdit(true);
+            }}
+            className="w-full px-4 py-2 rounded-lg mt-6 bg-gray-800 hover:bg-gray-700 duration-300"
+          >
+            Edit Profile
+          </button>
         </div>
-
-        {/* Main Content */}
+        {/* main content */}
         <div className="col-span-3 p-6">
           <h3 className="text-2xl font-semibold mb-6">Profile Information</h3>
-
+          {/* ========== form ======== */}
           <form
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
             className="grid grid-cols-1 md:grid-cols-2 gap-4"
           >
+            {/* name */}
             <div>
               <label className="text-sm font-medium">Full Name</label>
               <input
                 type="text"
-                name="name"
+                {...register("name")}
                 disabled={!isEdit}
-                value={profile.name}
-                onChange={handleChange}
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
-
+            {/* email */}
+            <div>
+              <label className="text-sm font-medium">Email</label>
+              <input
+                type="text"
+                {...register("email")}
+                disabled
+                className="w-full cursor-not-allowed mt-1 p-2 border rounded-md disabled:bg-gray-800"
+              />
+            </div>
+            {/* phone */}
             <div>
               <label className="text-sm font-medium">Phone</label>
               <input
                 type="text"
-                name="phone"
+                {...register("phone")}
                 disabled={!isEdit}
-                value={profile.phone}
-                onChange={handleChange}
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
-
-            <div>
-              <label className="text-sm font-medium">Email</label>
-              <input
-                type="email"
-                value={profile.email}
-                disabled
-                className="w-full mt-1 p-2 border rounded-md bg-gray-800 cursor-not-allowed"
-              />
-            </div>
-
+            {/* city */}
             <div>
               <label className="text-sm font-medium">City</label>
               <input
                 type="text"
-                name="city"
+                {...register("city")}
                 disabled={!isEdit}
-                value={profile.city}
-                onChange={handleChange}
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
-
-            <div className="md:col-span-2">
-              <label className="text-sm font-medium">Address</label>
-              <textarea
-                name="address"
-                disabled={!isEdit}
-                value={profile.address}
-                onChange={handleChange}
-                className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
-              />
-            </div>
-
+            {/* postCode */}
             <div>
-              <label className="text-sm font-medium">Post Code</label>
+              <label className="text-sm font-medium">PostCode</label>
               <input
                 type="text"
-                name="postCode"
+                {...register("postCode")}
                 disabled={!isEdit}
-                value={profile.postCode}
-                onChange={handleChange}
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
-
+            {/* address */}
+            <div className="md:col-span-2">
+              <label className="text-sm font-medium">Full Address</label>
+              <input
+                type="text"
+                {...register("address")}
+                disabled={!isEdit}
+                className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800 overflow-scroll"
+              />
+            </div>
+            {/* saved & cancled btn */}
             {isEdit && (
               <div className="md:col-span-2 mt-4 flex gap-3">
                 <button
                   type="submit"
-                  className="px-6 py-2 bg-blue-600 rounded-md hover:bg-blue-700"
+                  disabled={uploading || isSubmitting}
+                  className="px-6 py-2 bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-500"
                 >
-                  Save Changes
+                  {uploading ? <p className="animate-bounce">Uploading..</p> : "Save Changes"}
                 </button>
                 <button
                   type="button"
-                  onClick={() => setIsEdit(false)}
+                  disabled={isSubmitting}
+                  onClick={() => {
+                    reset();
+                    setIsEdit(false);
+                  }}
                   className="px-6 py-2 bg-gray-700 rounded-md hover:bg-gray-600"
                 >
                   Cancel

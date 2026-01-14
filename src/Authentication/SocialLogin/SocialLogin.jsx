@@ -15,7 +15,7 @@ const SocialLogin = () => {
     loginWithGoogle()
       .then(async (result) => {
         const user = result.user;
-        console.log("current-user:", user);
+        console.log(user);
         const userInfo = {
           name: user?.displayName,
           email: user?.email,
@@ -26,12 +26,10 @@ const SocialLogin = () => {
         };
         await axiosInstance.post("/users", userInfo);
         toast.success("Login Success !!");
-        console.log("Current_user", userInfo);
         navigate(from, { replace: true });
       })
       .catch((error) => {
         toast.error(error.message);
-        console.log(error);
       });
   };
   return (

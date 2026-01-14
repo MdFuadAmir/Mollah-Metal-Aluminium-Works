@@ -9,8 +9,8 @@ const DashboardMenu = ({ to, labal, icon: Icon, onClick }) => {
         onClick={onClick}
         className={({ isActive }) =>
           isActive
-            ? "text-lg font-semibold text-orange-500 underline"
-            : "text-white text-lg  hover:text-orange-500 hover:underline"
+            ? "text-md font-semibold text-orange-500 underline"
+            : "text-white text-md  hover:text-orange-500 hover:underline"
         }
       >
         {Icon && <Icon className="text-lg" />} {labal}

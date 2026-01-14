@@ -58,7 +58,7 @@ const SignUp = () => {
         }
         // update user
         const updateProfile = {
-          displayName: data?.name,
+          displayName: data?.fullName,
           photoURL: profilePic,
         };
         updateUserProfile(updateProfile)

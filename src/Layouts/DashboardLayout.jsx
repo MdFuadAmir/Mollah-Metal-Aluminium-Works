@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate } from "react-router";
 import bg from "../assets/bg-images/body.jpg";
 import MMAW from "../Shared/MMAW/MMAW";
-import { FaAlignJustify, FaSignOutAlt } from "react-icons/fa";
+import { FaAlignJustify, FaSignOutAlt,FaUserCircle } from "react-icons/fa";
 import AdminMenu from "../Pages/Dashboard/Admin/AdminMenu/AdminMenu";
 import UserMenu from "../Pages/Dashboard/User/UserMenu/UserMenu";
 import DashboardMenu from "../Pages/Dashboard/Common/DashboardMenu/DashboardMenu";
@@ -54,7 +54,7 @@ const DashboardLayout = () => {
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content flex flex-col">
           {/* Mobile Navbar */}
-          <div className="navbar bg-black/50  sticky top-0 z-50 lg:hidden flex flex-row-reverse">
+          <div className="navbar bg-gray-900  sticky top-0 z-50 lg:hidden flex flex-row-reverse">
             <label htmlFor="my-drawer-2" className="btn btn-square btn-ghost">
               <FaAlignJustify size={20} className="text-white" />
             </label>
@@ -64,7 +64,7 @@ const DashboardLayout = () => {
           </div>
 
           <div className="flex flex-col justify-between">
-            <div className="min-h-screen p-4 md:p-8 bg-black/20">
+            <div className="min-h-screen bg-black/20">
               <Outlet />
             </div>
           </div>
@@ -75,7 +75,7 @@ const DashboardLayout = () => {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <ul className="menu bg-black/50 text-gray-300 min-h-full w-64 p-4 flex flex-col justify-between">
+          <ul className="menu bg-gray-900/90 overflow-scroll text-gray-300 min-h-full w-64 p-4 flex flex-col justify-between">
             {/* navber top */}
             <div>
               <MMAW />
@@ -92,11 +92,11 @@ const DashboardLayout = () => {
               </div>
             </div>
             {/* navber bottom */}
-            <div className="bg-gray-700/50 p-4 rounded-lg space-y-2">
+            <div className="bg-black/80 p-4 rounded-lg space-y-2 mt-6">
               <DashboardMenu
                 labal={"Profile"}
                 to={"/dashboard/profile"}
-                icon={ImUserTie}
+                icon={FaUserCircle}
                 onClick={closeSidebar}
               />
               <li>
