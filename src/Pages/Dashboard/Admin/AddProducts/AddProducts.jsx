@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import AddProductForm from "./AddProductForm";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { useState } from "react";
@@ -15,11 +15,11 @@ const AddProducts = () => {
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
+    control,
     reset
   } = useForm();
 
-  const selectedCategory = watch("category");
+  const selectedCategory = useWatch({control, name: "category"});
 
     const handleMultiImageUpload = async (e) => {
     const files = Array.from(e.target.files);
@@ -49,6 +49,7 @@ const AddProducts = () => {
       ...data,
       rating: 0,
     };
+    console.log(data);
     const res = await axiosSecure.post(`/products`, finalData);
     if (res.data.insertedId) {
       toast.success("Product add successfully !");
@@ -56,7 +57,7 @@ const AddProducts = () => {
     }
   };
   return (
-    <div className="text-gray-300">
+    <div className="text-gray-300 py-12">
       <AddProductForm
         register={register}
         handleSubmit={handleSubmit}

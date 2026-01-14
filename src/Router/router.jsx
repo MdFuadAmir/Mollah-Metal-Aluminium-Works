@@ -15,8 +15,6 @@ import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Authentication/Login/Login";
 import SignUp from "../Authentication/SignUp/SignUp";
 import Forbidden from "../Components/Forbidden/Forbidden";
-import Admin from "../Routes/Admin";
-import Moderator from "../Routes/Modarator";
 import ManageAdminModerator from "../Pages/Dashboard/Admin/UserManagement/ManageAdminModerator/ManageAdminModerator";
 import Profile from "../Pages/Dashboard/Common/Profile/Profile";
 import Processing from "../Pages/Dashboard/Admin/OrdersManagement/Processing/Processing";
@@ -24,6 +22,7 @@ import Returned from "../Pages/Dashboard/Admin/OrdersManagement/Returned/Returne
 import Cancelled from "../Pages/Dashboard/Admin/OrdersManagement/Cancelled/Cancelled";
 import Delivered from "../Pages/Dashboard/Admin/OrdersManagement/Delivered/Delivered";
 import Shipping from "../Pages/Dashboard/Admin/OrdersManagement/Shipping/Shipping";
+import RoleGuard from "../Routes/RoleGuard";
 
 const router = createBrowserRouter([
   {
@@ -81,107 +80,89 @@ const router = createBrowserRouter([
       {
         path: "manage-admin&moderators",
         element: (
-          <Admin>
+          <RoleGuard allow={["admin"]}>
             <ManageAdminModerator />
-          </Admin>
+          </RoleGuard>
         ),
       },
       {
         path: "manage-users",
         element: (
-          <Admin>
+          <RoleGuard allow={["admin"]}>
             <ManageUsers />
-          </Admin>
+          </RoleGuard>
         ),
       },
       {
         path: "add-products",
         element: (
-          <Admin>
-            <Moderator>
-              <AddProducts />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <AddProducts />
+          </RoleGuard>
         ),
       },
       {
         path: "our-products",
         element: (
-          <Admin>
-            <Moderator>
-              <OurProducts />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <OurProducts />
+          </RoleGuard>
         ),
       },
       {
         path: "pending-orders",
         element: (
-          <Admin>
-            <Moderator>
-              <ManageOrders />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <ManageOrders />
+          </RoleGuard>
         ),
       },
       {
         path: "processing-orders",
         element: (
-          <Admin>
-            <Moderator>
-              <Processing />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <Processing />
+          </RoleGuard>
         ),
       },
       {
         path: "shipped-orders",
         element: (
-          <Admin>
-            <Moderator>
-              <Shipping />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <Shipping />
+          </RoleGuard>
         ),
       },
       {
         path: "delivered-orders",
         element: (
-          <Admin>
-            <Moderator>
-              <Delivered />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <Delivered />
+          </RoleGuard>
         ),
       },
       {
-        path: "Cancelled-orders",
+        path: "cancelled-orders",
         element: (
-          <Admin>
-            <Moderator>
-              <Cancelled />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <Cancelled />
+          </RoleGuard>
         ),
       },
       {
         path: "returned-orders",
         element: (
-          <Admin>
-            <Moderator>
-              <Returned />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <Returned />
+          </RoleGuard>
         ),
       },
       {
         path: "all-receipts",
         element: (
-          <Admin>
-            <Moderator>
-              <AllVautchers />
-            </Moderator>
-          </Admin>
+          <RoleGuard allow={["admin", "moderator"]}>
+            <AllVautchers />
+          </RoleGuard>
         ),
       },
     ],

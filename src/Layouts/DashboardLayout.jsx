@@ -87,7 +87,7 @@ const DashboardLayout = () => {
                   onClick={closeSidebar}
                 />
                 {role === "admin" && <AdminMenu closeSidebar={closeSidebar} />}
-                {role === "modarator" && <ModaratorMenu closeSidebar={closeSidebar} />}
+                {role === "moderator" && <ModaratorMenu closeSidebar={closeSidebar} />}
                 {role === "user" && <UserMenu closeSidebar={closeSidebar} />}
               </div>
             </div>

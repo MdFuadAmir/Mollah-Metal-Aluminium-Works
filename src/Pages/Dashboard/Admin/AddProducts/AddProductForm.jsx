@@ -1,21 +1,3 @@
-const categories = [
-  { title: "হাঁড়ি" },
-  { title: "Mobiles" },
-  { title: "Fashion" },
-  { title: "Home" },
-  { title: "Grocery" },
-  { title: "Beauty" },
-  { title: "Baby" },
-  { title: "Men's" },
-  { title: "Women's" },
-  { title: "Computers" },
-  { title: "Kitchen" },
-  { title: "Sports" },
-  { title: "Shoes" },
-  { title: "Watches" },
-  { title: "Bags" },
-  { title: "Gaming" },
-];
 const AddProductForm = ({
   register,
   handleSubmit,
@@ -24,7 +6,7 @@ const AddProductForm = ({
   productImages,
   uploading,
   handleMultiImageUpload,
-  selectedCategory
+  selectedCategory,
 }) => {
   return (
     <div className="max-w-4xl mx-auto bg-black/50 p-8 rounded-xl text-white">
@@ -49,23 +31,7 @@ const AddProductForm = ({
             <p className="text-red-600 text-sm">{errors.productName.message}</p>
           )}
         </div>
-
-        {/* 2. Product Size */}
-        <div>
-          <label className="text-gray-300 text-sm">পণ্যের সাইজ *</label>
-          <input
-            type="text"
-            {...register("size", {
-              required: "Product size is required",
-            })}
-            placeholder="10 / 12 / 14"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-          {errors.size && (
-            <p className="text-red-600 text-sm">{errors.size.message}</p>
-          )}
-        </div>
-        {/* 4. Brand */}
+        {/* 2. Brand */}
         <div>
           <label className="text-gray-300 text-sm">ব্র্যান্ড নাম *</label>
           <input
@@ -81,11 +47,10 @@ const AddProductForm = ({
             <p className="text-red-600 text-sm">{errors.brandName.message}</p>
           )}
         </div>
-
-        {/* 5. Price */}
+        {/* 3. Price */}
         <div>
           <label className="text-gray-300 text-sm">
-            খুচরা মূল্য (প্রতি কেজি) *
+            খুচরা মূল্য (প্রতি কেজি/পিস) *
           </label>
           <input
             type="number"
@@ -99,10 +64,10 @@ const AddProductForm = ({
             <p className="text-red-600 text-sm">{errors.retailPrice.message}</p>
           )}
         </div>
-        {/* 6. discount price for retail price */}
+        {/* 4. discount price for retail price */}
         <div>
           <label className="text-gray-300 text-sm">
-            ছাড়ের পর খুচরা মূল্য (প্রতি কেজি)
+            ছাড়ের পর খুচরা মূল্য (প্রতি কেজি/পিস)
           </label>
           <input
             type="number"
@@ -112,10 +77,10 @@ const AddProductForm = ({
           />
         </div>
 
-        {/* 7. Wholesale */}
+        {/* 5. Wholesale */}
         <div>
           <label className="text-gray-300 text-sm">
-            পাইকারি মূল্য (প্রতি কেজি) *
+            পাইকারি মূল্য (প্রতি কেজি/পিস) *
           </label>
           <input
             type="number"
@@ -132,10 +97,10 @@ const AddProductForm = ({
           )}
         </div>
 
-        {/* 8. discount price */}
+        {/* 6. discount price */}
         <div>
           <label className="text-gray-300 text-sm">
-            ছাড়ের পর পাইকারি মূল্য (প্রতি কেজি)
+            ছাড়ের পর পাইকারি মূল্য (প্রতি কেজি/পিস)
           </label>
           <input
             type="number"
@@ -144,9 +109,11 @@ const AddProductForm = ({
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
           />
         </div>
-        {/* 9. Extra: Stock Qty */}
+        {/* 7. Extra: Stock Qty */}
         <div>
-          <label className="text-gray-300 text-sm">স্টক পরিমাণ (কেজি) *</label>
+          <label className="text-gray-300 text-sm">
+            স্টক পরিমাণ (কেজি/পিস) *
+          </label>
           <input
             type="text"
             {...register("stokc", {
@@ -160,47 +127,107 @@ const AddProductForm = ({
           )}
         </div>
 
-        {/* 10. Category */}
+        {/* 8. Category */}
         <div>
           <label className="text-gray-300 text-sm">ক্যাটাগরি *</label>
           <select
-            {...register("categories", {
-              required: "Product categories is required",
+            {...register("category", {
+              required: "Product category is required",
             })}
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+            defaultValue=""
           >
-            <option value="">ক্যাটাগরি নির্বাচন করুন</option>
-            <option value="হাঁড়ি">হাঁড়ি</option>
-            <option value="ডেকচি">ডেকচি</option>
-            <option value="কড়াই">কড়াই</option>
-            <option value="ঢাকনা">ঢাকনা</option>
-            <option value="ঢাকনা">কুকারিজ</option>
+            <option value="" disabled>
+              ক্যাটাগরি নির্বাচন করুন
+            </option>
+            {/* Piece based */}
+            <option value="cookware">Cookware (পিস হিসাবে বিক্রি)</option>
+            {/* KG based */}
+            <option value="metal">Metal Products (কেজি হিসাবে বিক্রি)</option>
           </select>
-          {errors.categories && (
-            <p className="text-red-600 text-sm">{errors.categories.message}</p>
+
+          {errors.category && (
+            <p className="text-red-600 text-sm">{errors.category.message}</p>
           )}
         </div>
-        {/* 10. Product Status */}
+        {/* 8. sub Category 1*/}
+        {selectedCategory === "cookware" && (
+          <div>
+            <label className="text-gray-300 text-sm">সাব ক্যাটাগরি *</label>
+            <select
+              {...register("subCategory", {
+                required: "Sub category is required",
+              })}
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Cookware নির্বাচন করুন
+              </option>
+              <option value="electronic">ইলেকট্রনিক আইটেম</option>
+              <option value="plastic">প্লাস্টিক আইটেম</option>
+              <option value="steel">স্টিল আইটেম</option>
+              <option value="aluminium">অ্যালুমিনিয়াম আইটেম</option>
+              <option value="combo">কম্বো প্যাকেজ</option>
+            </select>
+
+            {errors.subCategory && (
+              <p className="text-red-600 text-sm">
+                {errors.subCategory.message}
+              </p>
+            )}
+          </div>
+        )}
+        {/* 8. sub Category 2*/}
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">সাব ক্যাটাগরি *</label>
+            <select
+              {...register("subCategory", {
+                required: "Sub category is required",
+              })}
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
+              defaultValue=""
+            >
+              <option value="" disabled>
+                Metal Products নির্বাচন করুন
+              </option>
+              <option value="aluminium">অ্যালুমিনিয়াম</option>
+              <option value="steel">স্টিল</option>
+              <option value="combo">কম্বো প্যাকেজ</option>
+            </select>
+
+            {errors.subCategory && (
+              <p className="text-red-600 text-sm">
+                {errors.subCategory.message}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* 9. Product Status */}
         <div>
           <label className="text-gray-300 text-sm">পণ্যের স্ট্যাটাস *</label>
           <select
             {...register("status", {
               required: "Product status is required",
             })}
+            defaultValue=""
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
           >
-            <option>in-stock</option>
-            <option>out-of-stock</option>
+            <option value="" disabled>
+              পণ্যের স্ট্যাটাস নির্বাচন করুন
+            </option>
+            <option value="in-stock">in-stock</option>
+            <option value="out-of-stock">out-of-stock</option>
           </select>
+
           {errors.status && (
             <p className="text-red-600 text-sm">{errors.status.message}</p>
           )}
         </div>
         {/* //=============== category spacific field =================// */}
-        {/* 3. Approx Weight */}
-        {
-
-        }
+        {/* 10. Approx Weight */}
         <div>
           <label className="text-gray-300 text-sm">
             পণ্যের আনুমানিক ওজন (কেজি) *
@@ -217,8 +244,23 @@ const AddProductForm = ({
             <p className="text-red-600 text-sm">{errors.avgWaight.message}</p>
           )}
         </div>
+        {/* 11. Product Size */}
+        <div>
+          <label className="text-gray-300 text-sm">পণ্যের সাইজ *</label>
+          <input
+            type="text"
+            {...register("size", {
+              required: "Product size is required",
+            })}
+            placeholder="10 / 12 / 14"
+            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+          />
+          {errors.size && (
+            <p className="text-red-600 text-sm">{errors.size.message}</p>
+          )}
+        </div>
 
-        {/* 11. Short Description */}
+        {/* 12. Short Description */}
         <div className="md:col-span-2">
           <label className="text-gray-300 text-sm">সংক্ষিপ্ত বিবরণ *</label>
           <textarea
@@ -240,7 +282,7 @@ const AddProductForm = ({
           )}
         </div>
 
-        {/* 12. Long Description */}
+        {/* 13. Long Description */}
         <div className="md:col-span-2">
           <label className="text-gray-300 text-sm">বিস্তারিত বিবরণ *</label>
           <textarea
@@ -262,7 +304,7 @@ const AddProductForm = ({
           )}
         </div>
 
-        {/* 13. Return Policy */}
+        {/* 14. Return Policy */}
         <div className="md:col-span-2">
           <label className="text-gray-300 text-sm">রিটার্ন পলিসি *</label>
           <textarea
@@ -280,7 +322,7 @@ const AddProductForm = ({
           )}
         </div>
 
-        {/* 14. Image Upload */}
+        {/* 15. Image Upload */}
         <div className="flex flex-wrap gap-4 my-6">
           {/* Upload Input (NO register) */}
           <input
