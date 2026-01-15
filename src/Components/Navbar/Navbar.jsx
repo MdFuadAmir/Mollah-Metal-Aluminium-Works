@@ -86,7 +86,7 @@ const Navbar = () => {
   );
   return (
     <div>
-      <div className="fixed top-0 left-0 z-50 w-full flex justify-between items-center py-2 px-4 md:px-10 lg:px-20 bg-black/30  backdrop-blur-sm">
+      <div className="fixed top-0 left-0 z-50 w-full flex justify-between items-center py-2 px-4 md:px-10 lg:px-20 bg-black/60  backdrop-blur-sm">
         <div className="flex items-center gap-6">
           {/* mobile menu section */}
           <div className="lg:hidden" onClick={() => setOpen(!open)}>

@@ -95,7 +95,7 @@ const ViewProductModal = ({ product, closeModal }) => {
             value={`৳ ${product.holeSellDiscountPrice}`}
           />
 
-          <Info label="স্টক পরিমাণ" value={`${product.stokc} কেজি`} />
+          <Info label="স্টক পরিমাণ" value={`${product.stokc}`} />
           <Info label="স্ট্যাটাস" value={product.status} />
         </div>
       </div>

@@ -23,6 +23,7 @@ import Cancelled from "../Pages/Dashboard/Admin/OrdersManagement/Cancelled/Cance
 import Delivered from "../Pages/Dashboard/Admin/OrdersManagement/Delivered/Delivered";
 import Shipping from "../Pages/Dashboard/Admin/OrdersManagement/Shipping/Shipping";
 import RoleGuard from "../Routes/RoleGuard";
+import ProductDetails from "../Pages/Products/ProductDetails";
 
 const router = createBrowserRouter([
   {
@@ -31,23 +32,27 @@ const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Home />,
+        Component: Home,
       },
       {
         path: "/products",
-        element: <Products />,
+        Component: Products,
+      },
+      {
+        path: "/product/:id",
+        Component: ProductDetails,
       },
       {
         path: "/about",
-        element: <AboutUs />,
+        Component: AboutUs,
       },
       {
         path: "/contact",
-        element: <ContactUs />,
+        Component: ContactUs,
       },
       {
         path: "/forbidden",
-        element: <Forbidden />,
+        Component: Forbidden,
       },
     ],
   },

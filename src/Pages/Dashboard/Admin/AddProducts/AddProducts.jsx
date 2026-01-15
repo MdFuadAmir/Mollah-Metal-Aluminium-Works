@@ -16,12 +16,12 @@ const AddProducts = () => {
     formState: { errors },
     setValue,
     control,
-    reset
+    reset,
   } = useForm();
 
-  const selectedCategory = useWatch({control, name: "category"});
+  const selectedCategory = useWatch({ control, name: "category" });
 
-    const handleMultiImageUpload = async (e) => {
+  const handleMultiImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (productImages.length + files.length > 5) {
       toast.error("Maximum 5 images allowed");
@@ -44,18 +44,20 @@ const AddProducts = () => {
     setUploading(false);
   };
 
-   const onSubmit = async (data) => {
+  const onSubmit = async (data) => {
     const finalData = {
       ...data,
       rating: 0,
     };
-    console.log(data);
     const res = await axiosSecure.post(`/products`, finalData);
     if (res.data.insertedId) {
       toast.success("Product add successfully !");
       reset();
+      setProductImages([]);
+      setValue("images", []);
     }
   };
+
   return (
     <div className="text-gray-300 py-12">
       <AddProductForm

@@ -116,7 +116,7 @@ const AddProductForm = ({
           </label>
           <input
             type="text"
-            {...register("stokc", {
+            {...register("stock", {
               required: "Product stokc is required",
             })}
             placeholder="১০০"
@@ -252,7 +252,7 @@ const AddProductForm = ({
             {...register("size", {
               required: "Product size is required",
             })}
-            placeholder="10 / 12 / 14"
+            placeholder="10 / 12 / sm / md / lg "
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
           />
           {errors.size && (

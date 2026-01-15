@@ -1,0 +1,65 @@
+import { Link } from "react-router";
+import { MdFavorite } from "react-icons/md";
+import { FaCartPlus } from "react-icons/fa";
+import { IoStar } from "react-icons/io5";
+const Product = ({ prod }) => {
+  return (
+    <Link
+      to={`/product/${prod._id}`}
+      key={prod._id}
+      className="bg-gray-800 rounded-xl overflow-hidden shadow-md shadow-gray-700 transition"
+    >
+      {/* Image */}
+      <div className="h-56 overflow-hidden">
+        <img
+          src={prod.images?.[0]}
+          alt={prod.productName}
+          className="h-full w-full  hover:scale-110 transition duration-500"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="p-4">
+        <h3 className="text-lg font-semibold text-white mt-1">
+          {prod.productName}
+        </h3>
+        <div className="flex justify-between items-end gap-2">
+          <div className="space-y-2">
+            {prod.retailDiscountPrice ? (
+              <div className="flex gap-2 items-center mt-2">
+                <p className="text-gray-500 text-sm line-through font-semibold font-mono">
+                  ৳{prod.retailPrice}
+                </p>
+                <p className="text-emerald-400 text-md font-bold font-mono">
+                  ৳{prod.retailDiscountPrice}
+                </p>
+              </div>
+            ) : (
+              <p className="text-emerald-400 font-bold text-md">
+                ৳{prod.retailPrice}
+              </p>
+            )}
+            <div className="flex items-center gap-1 text-orange-500">
+              <IoStar />
+              <IoStar />
+              <IoStar />
+              <IoStar />
+              <IoStar />
+              <span className="text-gray-500">(100)</span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center gap-3">
+            <Link className="text-xl text-red-500 bg-gray-700 shadow-lg shadow-gray-800 rounded-full p-2 hover:scale-105 duration-200">
+              <MdFavorite />
+            </Link>
+            <Link className="text-xl bg-gray-700 shadow-lg shadow-gray-800 text-white rounded-full p-2 hover:scale-105 duration-200">
+              <FaCartPlus />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default Product;
