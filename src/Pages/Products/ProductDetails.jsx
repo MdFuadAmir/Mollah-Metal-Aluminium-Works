@@ -4,6 +4,7 @@ import Loading from "../../Components/Loading/Loading";
 import useAxios from "../../Hooks/useAxios";
 import { useState } from "react";
 import Reviews from "./Reviews";
+import { MdFavorite } from "react-icons/md";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -18,12 +19,15 @@ const ProductDetails = () => {
       return data;
     },
   });
-  const stock = Number(product?.stock);
+  const stock =
+    product?.category === "cookware"
+      ? Number(product?.Pstock)
+      : Number(product?.Kgstock);
   if (isLoading) {
     return <Loading />;
   }
   return (
-    <div className="max-w-4xl mx-auto bg-gray-900 p-4 rounded-lg overflow-auto">
+    <div className="max-w-4xl mx-auto bg-gray-900 p-4 rounded-lg overflow-auto md:my-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* image */}
         <div>
@@ -56,66 +60,119 @@ const ProductDetails = () => {
         </div>
         {/* text area */}
         <div className="space-y-3 text-gray-300">
+          {/* name */}
           <h2 className="text-xl font-bold text-white">
             {product?.productName}
           </h2>
           {/* Price */}
           <div>
-            {product.retailDiscountPrice ? (
-              <div className="flex gap-2 items-center mt-2">
-                <p className="text-gray-500 line-through font-mono">
-                  ৳{product.retailPrice}
-                </p>
-                <p className="text-emerald-400 text-lg font-bold font-mono">
-                  ৳{product.retailDiscountPrice}
-                </p>
+            {product?.category === "metal" && (
+              <div>
+                {product.KgretailDiscountPrice ? (
+                  <div className="flex gap-2 items-center mt-2">
+                    <p className="text-gray-500 text-sm line-through font-semibold font-mono">
+                      ৳{product.KgretailPrice}
+                    </p>
+                    <p className="text-emerald-400 text-md font-bold font-mono">
+                      ৳{product.KgretailDiscountPrice}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-emerald-400 font-bold text-md">
+                    ৳{product.KgretailPrice}
+                  </p>
+                )}
               </div>
-            ) : (
-              <p className="text-emerald-400 text-lg font-bold font-mono">
-                ৳{product.retailPrice}
-              </p>
+            )}
+            {product?.category === "cookware" && (
+              <div>
+                {product.PretailDiscountPrice ? (
+                  <div className="flex gap-2 items-center mt-2">
+                    <p className="text-gray-500 text-sm line-through font-semibold font-mono">
+                      ৳{product.PretailPrice}
+                    </p>
+                    <p className="text-emerald-400 text-md font-bold font-mono">
+                      ৳{product.PretailDiscountPrice}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-emerald-400 font-bold text-md">
+                    ৳{product.PretailPrice}
+                  </p>
+                )}
+              </div>
             )}
           </div>
           {/* Brand */}
           <p className="text-sm">
             <span className="text-gray-400">Brand:</span>
             <span className="font-semibold text-gray-100 ml-1">
-              {product?.brandName}
+              {product?.brand}
             </span>
           </p>
           {/* Stock */}
-          <p className="text-sm">
-            <span className="text-gray-400">Stock:</span>
-            <span
-              className={`font-semibold font-mono ml-1 ${
-                product?.stock > 0 ? "text-green-400" : "text-red-400"
-              }`}
-            >
-              {product?.stock > 0
-                ? `${product.stock} available`
-                : "Out of Stock"}
-            </span>
-          </p>
-
-          {/* Size */}
-          {product.size && (
+          {product?.category === "metal" && (
             <p className="text-sm">
-              <span className="text-gray-400">Size:</span>
-              <span className="font-semibold text-gray-100 font-mono ml-1">
-                {product?.size}
+              <span className="text-gray-400">Stock:</span>
+              <span
+                className={`font-semibold font-mono ml-1 ${
+                  product?.Kgstock > 0 ? "text-green-400" : "text-red-400"
+                }`}
+              >
+                {product?.Kgstock > 0
+                  ? `${product.Kgstock}Kg (available)`
+                  : "Out of Stock"}
               </span>
             </p>
+          )}
+          {product?.category === "cookware" && (
+            <p className="text-sm">
+              <span className="text-gray-400">Stock:</span>
+              <span
+                className={`font-semibold font-mono ml-1 ${
+                  product?.Pstock > 0 ? "text-green-400" : "text-red-400"
+                }`}
+              >
+                {product?.Pstock > 0
+                  ? `${product.Pstock} Pic (available)`
+                  : "Out of Stock"}
+              </span>
+            </p>
+          )}
+          {/* Size */}
+          {product?.category === "metal" && (
+            <div>
+              {product.Kgsize && (
+                <p className="text-sm">
+                  <span className="text-gray-400">Size:</span>
+                  <span className="font-semibold text-gray-100 font-mono ml-1">
+                    {product?.Kgsize}
+                  </span>
+                </p>
+              )}
+            </div>
+          )}
+          {product?.category === "cookware" && (
+            <div>
+              {product.Psize && (
+                <p className="text-sm">
+                  <span className="text-gray-400">Size:</span>
+                  <span className="font-semibold text-gray-100 font-mono ml-1">
+                    {product?.Psize}
+                  </span>
+                </p>
+              )}
+            </div>
           )}
           {/* avgWaight */}
           {product.avgWaight && (
             <p className="text-sm">
-              <span className="text-gray-400">AVG Waight/Product:</span>
+              <span className="text-gray-400">Approx Waight/Product:</span>
               <span className="font-semibold text-gray-100 font-mono ml-1">
                 {product?.avgWaight} kg
               </span>
             </p>
           )}
-
           {/* Category */}
           <p className="text-sm">
             <span className="text-gray-400">Category:</span>
@@ -130,29 +187,34 @@ const ProductDetails = () => {
               {product?.subCategory}
             </span>
           </p>
+          {/* short description */}
           <p className="text-sm">
             <span className="text-gray-400">Description:</span>
             <span className="font-semibold text-white ml-1">
               {product?.shortDescription}
             </span>
           </p>
-          {/* reating */}
+          {/* reating todo*/}
           <p className="text-sm">
             <span className="text-gray-400">Rating:</span>
             <span className="font-semibold text-orange-400 ml-1">
               star <span className=" font-mono">(12)</span>
             </span>
           </p>
-          <div className="flex justify-center">
+          {/* add to cart btn */}
+          <div className="flex justify-between items-center gap-4 mt-4">
             <button
               disabled={stock === 0}
               className={`${
                 stock === 0
                   ? "bg-gray-300 cursor-not-allowed text-gray-500"
                   : "hover:bg-gray-700"
-              } mt-4 px-6 py-2 rounded-lg border-2  w-full`}
+              } px-6 py-2 rounded-lg border-2  w-fit`}
             >
               Add To Cart
+            </button>
+            <button className="text-xl cursor-pointer text-red-500 bg-gray-700 shadow-lg shadow-gray-800 rounded-full p-2 hover:scale-105 duration-200">
+              <MdFavorite />
             </button>
           </div>
         </div>
@@ -172,7 +234,7 @@ const ProductDetails = () => {
       </div>
       {/* review */}
       <div className="text-white mt-12">
-        <Reviews/>
+        <Reviews />
       </div>
     </div>
   );

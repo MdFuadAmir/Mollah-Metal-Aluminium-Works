@@ -5,17 +5,16 @@ import Loading from "../../../../Components/Loading/Loading";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import UpdateProductModal from "./UpdateProductModal";
 import ViewProductModal from "./ViewProductModal";
 import EmptyProductCard from "./EmptyProductCard";
+import { useNavigate } from "react-router";
 
 const OurProducts = () => {
   const axiosInstance = useAxios();
   const axiosSecure = useAxiosSecure();
-  const [selectedProduct, setSelectedProduct] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
   const [viewProduct, setViewProduct] = useState(null);
-
+  const navigate = useNavigate();
+  // get products
   const {
     data: products = [],
     isLoading,
@@ -27,7 +26,11 @@ const OurProducts = () => {
       return res.data;
     },
   });
-
+  // update product
+  const handleUpdate = (product) => {
+    navigate(`/dashboard/product/edit/${product._id}`);
+  };
+  // delete product
   const handleDelete = async (id, productName) => {
     toast(
       (t) => (
@@ -36,6 +39,7 @@ const OurProducts = () => {
             আপনি কি নিশ্চিত এই পণ্যটি ডিলিট করতে চান?
           </p>
           <p className="text-sm">{productName}</p>
+          <p className="text-sm">{id}</p>
 
           <div className="flex justify-center gap-3">
             <button
@@ -63,38 +67,36 @@ const OurProducts = () => {
           </div>
         </div>
       ),
-      { duration: 6000 }
+      {
+        duration: 9000,
+        style: {
+          background: "#111827",
+          color: "#fff",
+          border: "1px solid #374151",
+        },
+      }
     );
   };
-
-  const handleOpenUpdate = (product) => {
-    setSelectedProduct(product);
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedProduct(null);
-    setOpenModal(false);
-  };
-
   if (isLoading) return <Loading />;
 
   return (
     <div className="p-6 text-white">
-      <h2 className="text-2xl font-bold mb-6">আমাদের সকল পণ্য</h2>
+      <h2 className="text-2xl font-bold mb-6">
+        আমাদের সকল পণ্য <span className="font-mono">({products.length})</span>
+      </h2>
 
       <div className="overflow-x-auto bg-black/50 rounded-xl">
         <table className="w-full text-sm">
-          <thead className="bg-gray-900 text-gray-300">
+          <thead className="bg-gray-900 text-gray-300 sticky top-0">
             <tr>
               <th className="px-4 py-3 text-left">Image</th>
+              <th className="px-4 py-3 text-left">Product ID</th>
               <th className="px-4 py-3 text-left">Product Name</th>
-              <th className="px-4 py-3 text-left">পাইকারি মূল্য</th>
               <th className="px-4 py-3 text-left">খুচরা মূল্য</th>
+              <th className="px-4 py-3 text-left">ছাড়ের পর মূল্য</th>
               <th className="px-4 py-3 text-center">Actions</th>
             </tr>
           </thead>
-
           <tbody>
             {products.length === 0 ? (
               <tr>
@@ -116,22 +118,25 @@ const OurProducts = () => {
                       className="w-12 h-12 rounded object-cover"
                     />
                   </td>
-
+                  {/*  */}
+                  <td className="px-4 py-3 font-medium">{product._id}</td>
                   {/* Name */}
                   <td className="px-4 py-3 font-medium">
                     {product.productName}
                   </td>
-
-                  {/* Wholesale */}
-                  <td className="px-4 py-3 font-mono">
-                    ৳ {product.wholesalePrice}
-                  </td>
-
                   {/* Retail */}
                   <td className="px-4 py-3 font-mono">
-                    ৳ {product.retailPrice}
+                    ৳{" "}
+                    {product.category === "metal"
+                      ? product?.KgretailPrice
+                      : product?.PretailPrice}
                   </td>
-
+                  {/* discount price */}
+                  <td className="px-4 py-3 font-mono">
+                    ৳ {product.category === "metal"
+                      ? product?.KgretailDiscountPrice
+                      : product?.PretailDiscountPrice}
+                  </td>
                   {/* Actions */}
                   <td className="px-4 py-3">
                     <div className="flex justify-center gap-2">
@@ -152,8 +157,8 @@ const OurProducts = () => {
 
                       {/* Update */}
                       <button
+                        onClick={() => handleUpdate(product)}
                         title="Update"
-                        onClick={() => handleOpenUpdate(product)}
                         className="p-2 bg-blue-600 hover:bg-blue-700 rounded"
                       >
                         <FaEdit />
@@ -177,16 +182,6 @@ const OurProducts = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Update Modal */}
-      {openModal && (
-        <UpdateProductModal
-          product={selectedProduct}
-          closeModal={handleCloseModal}
-          axiosSecure={axiosSecure}
-          refetch={refetch}
-        />
-      )}
     </div>
   );
 };

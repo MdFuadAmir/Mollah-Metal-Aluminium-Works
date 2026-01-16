@@ -5,6 +5,8 @@ import { IoStar } from "react-icons/io5";
 const Product = ({ prod }) => {
   return (
     <Link
+      data-aos="fade-up"
+      data-aos-duration="1000"
       to={`/product/${prod._id}`}
       key={prod._id}
       className="bg-gray-800 rounded-xl overflow-hidden shadow-md shadow-gray-700 transition"
@@ -25,19 +27,41 @@ const Product = ({ prod }) => {
         </h3>
         <div className="flex justify-between items-end gap-2">
           <div className="space-y-2">
-            {prod.retailDiscountPrice ? (
-              <div className="flex gap-2 items-center mt-2">
-                <p className="text-gray-500 text-sm line-through font-semibold font-mono">
-                  ৳{prod.retailPrice}
-                </p>
-                <p className="text-emerald-400 text-md font-bold font-mono">
-                  ৳{prod.retailDiscountPrice}
-                </p>
+            {prod?.category === "metal" && (
+              <div>
+                {prod.KgretailDiscountPrice ? (
+                  <div className="flex gap-2 items-center mt-2">
+                    <p className="text-gray-500 text-sm line-through font-semibold font-mono">
+                      ৳{prod.KgretailPrice}
+                    </p>
+                    <p className="text-emerald-400 text-md font-bold font-mono">
+                      ৳{prod.KgretailDiscountPrice}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-emerald-400 font-bold text-md">
+                    ৳{prod.KgretailPrice}
+                  </p>
+                )}
               </div>
-            ) : (
-              <p className="text-emerald-400 font-bold text-md">
-                ৳{prod.retailPrice}
-              </p>
+            )}
+            {prod?.category === "cookware" && (
+              <div>
+                {prod.PretailDiscountPrice ? (
+                  <div className="flex gap-2 items-center mt-2">
+                    <p className="text-gray-500 text-sm line-through font-semibold font-mono">
+                      ৳{prod.PretailPrice}
+                    </p>
+                    <p className="text-emerald-400 text-md font-bold font-mono">
+                      ৳{prod.PretailDiscountPrice}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-emerald-400 font-bold text-md">
+                    ৳{prod.PretailPrice}
+                  </p>
+                )}
+              </div>
             )}
             <div className="flex items-center gap-1 text-orange-500">
               <IoStar />

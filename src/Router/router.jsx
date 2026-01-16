@@ -24,6 +24,7 @@ import Delivered from "../Pages/Dashboard/Admin/OrdersManagement/Delivered/Deliv
 import Shipping from "../Pages/Dashboard/Admin/OrdersManagement/Shipping/Shipping";
 import RoleGuard from "../Routes/RoleGuard";
 import ProductDetails from "../Pages/Products/ProductDetails";
+import UpdateProduct from "../Pages/Dashboard/Admin/OurProducts/UpdateProduct";
 
 const router = createBrowserRouter([
   {
@@ -111,6 +112,14 @@ const router = createBrowserRouter([
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
             <OurProducts />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "product/edit/:id",
+        element: (
+          <RoleGuard allow={["admin", "moderator"]}>
+            <UpdateProduct />
           </RoleGuard>
         ),
       },

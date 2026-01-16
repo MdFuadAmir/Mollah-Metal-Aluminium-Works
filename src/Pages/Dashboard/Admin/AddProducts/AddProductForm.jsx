@@ -11,7 +11,6 @@ const AddProductForm = ({
   return (
     <div className="max-w-4xl mx-auto bg-black/50 p-8 rounded-xl text-white">
       <h2 className="text-2xl font-bold mb-6">নতুন পণ্য যোগ করুন</h2>
-
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -36,98 +35,18 @@ const AddProductForm = ({
           <label className="text-gray-300 text-sm">ব্র্যান্ড নাম *</label>
           <input
             type="text"
-            {...register("brandName", {
+            {...register("brand", {
               required: "Product brandName is required",
             })}
             placeholder="Mollah Metal Aluminium Works"
             defaultValue={"Mollah Metal Aluminium Works"}
             className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
           />
-          {errors.brandName && (
+          {errors.brand && (
             <p className="text-red-600 text-sm">{errors.brandName.message}</p>
           )}
         </div>
-        {/* 3. Price */}
-        <div>
-          <label className="text-gray-300 text-sm">
-            খুচরা মূল্য (প্রতি কেজি/পিস) *
-          </label>
-          <input
-            type="number"
-            {...register("retailPrice", {
-              required: "Product retailPrice is required",
-            })}
-            placeholder="৳ ৩৫০"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-          {errors.retailPrice && (
-            <p className="text-red-600 text-sm">{errors.retailPrice.message}</p>
-          )}
-        </div>
-        {/* 4. discount price for retail price */}
-        <div>
-          <label className="text-gray-300 text-sm">
-            ছাড়ের পর খুচরা মূল্য (প্রতি কেজি/পিস)
-          </label>
-          <input
-            type="number"
-            {...register("retailDiscountPrice")}
-            placeholder="৳ ৩০০"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-        </div>
-
-        {/* 5. Wholesale */}
-        <div>
-          <label className="text-gray-300 text-sm">
-            পাইকারি মূল্য (প্রতি কেজি/পিস) *
-          </label>
-          <input
-            type="number"
-            {...register("wholesalePrice", {
-              required: "Product wholesalePrice is required",
-            })}
-            placeholder="৳ ৩০০"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-          {errors.wholesalePrice && (
-            <p className="text-red-600 text-sm">
-              {errors.wholesalePrice.message}
-            </p>
-          )}
-        </div>
-
-        {/* 6. discount price */}
-        <div>
-          <label className="text-gray-300 text-sm">
-            ছাড়ের পর পাইকারি মূল্য (প্রতি কেজি/পিস)
-          </label>
-          <input
-            type="number"
-            {...register("holeSellDiscountPrice")}
-            placeholder="৳ ৩০০"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-        </div>
-        {/* 7. Extra: Stock Qty */}
-        <div>
-          <label className="text-gray-300 text-sm">
-            স্টক পরিমাণ (কেজি/পিস) *
-          </label>
-          <input
-            type="text"
-            {...register("stock", {
-              required: "Product stokc is required",
-            })}
-            placeholder="১০০"
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-          {errors.stokc && (
-            <p className="text-red-600 text-sm">{errors.stokc.message}</p>
-          )}
-        </div>
-
-        {/* 8. Category */}
+        {/* 3. Category */}
         <div>
           <label className="text-gray-300 text-sm">ক্যাটাগরি *</label>
           <select
@@ -150,7 +69,7 @@ const AddProductForm = ({
             <p className="text-red-600 text-sm">{errors.category.message}</p>
           )}
         </div>
-        {/* 8. sub Category 1*/}
+        {/* 4. sub Category 1*/}
         {selectedCategory === "cookware" && (
           <div>
             <label className="text-gray-300 text-sm">সাব ক্যাটাগরি *</label>
@@ -178,7 +97,7 @@ const AddProductForm = ({
             )}
           </div>
         )}
-        {/* 8. sub Category 2*/}
+        {/* 4. sub Category 2*/}
         {selectedCategory === "metal" && (
           <div>
             <label className="text-gray-300 text-sm">সাব ক্যাটাগরি *</label>
@@ -196,7 +115,6 @@ const AddProductForm = ({
               <option value="steel">স্টিল</option>
               <option value="combo">কম্বো প্যাকেজ</option>
             </select>
-
             {errors.subCategory && (
               <p className="text-red-600 text-sm">
                 {errors.subCategory.message}
@@ -204,62 +122,231 @@ const AddProductForm = ({
             )}
           </div>
         )}
-
-        {/* 9. Product Status */}
-        <div>
-          <label className="text-gray-300 text-sm">পণ্যের স্ট্যাটাস *</label>
-          <select
-            {...register("status", {
-              required: "Product status is required",
-            })}
-            defaultValue=""
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none"
-          >
-            <option value="" disabled>
-              পণ্যের স্ট্যাটাস নির্বাচন করুন
-            </option>
-            <option value="in-stock">in-stock</option>
-            <option value="out-of-stock">out-of-stock</option>
-          </select>
-
-          {errors.status && (
-            <p className="text-red-600 text-sm">{errors.status.message}</p>
-          )}
-        </div>
+        {/* //========= Pricing ==============// */}
+        {/* 5. retail Price */}
+        {selectedCategory === "cookware" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              খুচরা মূল্য (প্রতি পিস) *
+            </label>
+            <input
+              type="number"
+              {...register("PretailPrice", {
+                required: "Product retailPrice is required",
+              })}
+              placeholder="৳ ৩৫০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.PretailPrice && (
+              <p className="text-red-600 text-sm">
+                {errors.PretailPrice.message}
+              </p>
+            )}
+          </div>
+        )}
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              খুচরা মূল্য (প্রতি কেজি) *
+            </label>
+            <input
+              type="number"
+              {...register("KgretailPrice", {
+                required: "Product retailPrice is required",
+              })}
+              placeholder="৳ ৩৫০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.KgretailPrice && (
+              <p className="text-red-600 text-sm">
+                {errors.KgretailPrice.message}
+              </p>
+            )}
+          </div>
+        )}
+        {/* 6. retail discount price  */}
+        {selectedCategory === "cookware" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              ছাড়ের পর খুচরা মূল্য (প্রতি পিস)
+            </label>
+            <input
+              type="number"
+              {...register("PretailDiscountPrice")}
+              placeholder="৳ ৩০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+          </div>
+        )}
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              ছাড়ের পর খুচরা মূল্য (প্রতি কেজি)
+            </label>
+            <input
+              type="number"
+              {...register("KgretailDiscountPrice")}
+              placeholder="৳ ৩০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+          </div>
+        )}
+        {/* 7. Wholesale price */}
+        {selectedCategory === "cookware" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              পাইকারি মূল্য (প্রতি পিস) *
+            </label>
+            <input
+              type="number"
+              {...register("PwholesalePrice", {
+                required: "Product wholesalePrice is required",
+              })}
+              placeholder="৳ ৩০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.PwholesalePrice && (
+              <p className="text-red-600 text-sm">
+                {errors.PwholesalePrice.message}
+              </p>
+            )}
+          </div>
+        )}
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              পাইকারি মূল্য (প্রতি কেজি) *
+            </label>
+            <input
+              type="number"
+              {...register("KgwholesalePrice", {
+                required: "Product wholesalePrice is required",
+              })}
+              placeholder="৳ ৩০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.KgwholesalePrice && (
+              <p className="text-red-600 text-sm">
+                {errors.KgwholesalePrice.message}
+              </p>
+            )}
+          </div>
+        )}
+        {/* 8. Wholesale discount price */}
+        {selectedCategory === "cookware" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              ছাড়ের পর পাইকারি মূল্য (প্রতি পিস)
+            </label>
+            <input
+              type="number"
+              {...register("PWholeSellDiscountPrice")}
+              placeholder="৳ ৩০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+          </div>
+        )}
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              ছাড়ের পর পাইকারি মূল্য (প্রতি কেজি)
+            </label>
+            <input
+              type="number"
+              {...register("KgWholeSellDiscountPrice")}
+              placeholder="৳ ৩০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+          </div>
+        )}
+        {/* 9. Stock */}
+        {selectedCategory === "cookware" && (
+          <div>
+            <label className="text-gray-300 text-sm">স্টক পরিমাণ (পিস) *</label>
+            <input
+              type="text"
+              {...register("Pstock", {
+                required: "Product stokc is required",
+              })}
+              placeholder="১০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.Pstock && (
+              <p className="text-red-600 text-sm">{errors.Pstock.message}</p>
+            )}
+          </div>
+        )}
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              স্টক পরিমাণ (কেজি) *
+            </label>
+            <input
+              type="text"
+              {...register("Kgstock", {
+                required: "Product stokc is required",
+              })}
+              placeholder="১০০"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.Kgstock && (
+              <p className="text-red-600 text-sm">{errors.Kgstock.message}</p>
+            )}
+          </div>
+        )}
         {/* //=============== category spacific field =================// */}
         {/* 10. Approx Weight */}
-        <div>
-          <label className="text-gray-300 text-sm">
-            পণ্যের আনুমানিক ওজন (কেজি) *
-          </label>
-          <input
-            type="text"
-            {...register("avgWaight", {
-              required: "Product avgWaight is required",
-            })}
-            placeholder="2.5 kg / 0.700 grm "
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-          {errors.avgWaight && (
-            <p className="text-red-600 text-sm">{errors.avgWaight.message}</p>
-          )}
-        </div>
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">
+              পণ্যের আনুমানিক ওজন (কেজি) *
+            </label>
+            <input
+              type="text"
+              {...register("avgWaight", {
+                required: "Product avgWaight is required",
+              })}
+              placeholder="2.5 kg / 0.700 grm "
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.avgWaight && (
+              <p className="text-red-600 text-sm">{errors.avgWaight.message}</p>
+            )}
+          </div>
+        )}
         {/* 11. Product Size */}
-        <div>
-          <label className="text-gray-300 text-sm">পণ্যের সাইজ *</label>
-          <input
-            type="text"
-            {...register("size", {
-              required: "Product size is required",
-            })}
-            placeholder="10 / 12 / sm / md / lg "
-            className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
-          />
-          {errors.size && (
-            <p className="text-red-600 text-sm">{errors.size.message}</p>
-          )}
-        </div>
-
+        {selectedCategory === "cookware" && (
+          <div>
+            <label className="text-gray-300 text-sm">পণ্যের সাইজ *</label>
+            <input
+              type="text"
+              {...register("Psize", {
+                required: "Product size is required",
+              })}
+              placeholder="sm / md / lg / combo"
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.Psize && (
+              <p className="text-red-600 text-sm">{errors.Psize.message}</p>
+            )}
+          </div>
+        )}
+        {selectedCategory === "metal" && (
+          <div>
+            <label className="text-gray-300 text-sm">পণ্যের সাইজ *</label>
+            <input
+              type="text"
+              {...register("Kgsize", {
+                required: "Product size is required",
+              })}
+              placeholder="10 / 12 / 16 "
+              className="w-full mt-1 p-2 rounded bg-black/70 outline-none font-mono"
+            />
+            {errors.Kgsize && (
+              <p className="text-red-600 text-sm">{errors.Kgsize.message}</p>
+            )}
+          </div>
+        )}
         {/* 12. Short Description */}
         <div className="md:col-span-2">
           <label className="text-gray-300 text-sm">সংক্ষিপ্ত বিবরণ *</label>
@@ -281,7 +368,6 @@ const AddProductForm = ({
             </p>
           )}
         </div>
-
         {/* 13. Long Description */}
         <div className="md:col-span-2">
           <label className="text-gray-300 text-sm">বিস্তারিত বিবরণ *</label>
@@ -303,7 +389,6 @@ const AddProductForm = ({
             </p>
           )}
         </div>
-
         {/* 14. Return Policy */}
         <div className="md:col-span-2">
           <label className="text-gray-300 text-sm">রিটার্ন পলিসি *</label>
@@ -321,7 +406,6 @@ const AddProductForm = ({
             </p>
           )}
         </div>
-
         {/* 15. Image Upload */}
         <div className="flex flex-wrap gap-4 my-6">
           {/* Upload Input (NO register) */}
@@ -351,7 +435,6 @@ const AddProductForm = ({
             <p className="text-red-600 text-sm">{errors.images.message}</p>
           )}
         </div>
-
         {/* Submit */}
         <div className="md:col-span-2">
           <button
