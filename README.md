@@ -1,16 +1,41 @@
-# React + Vite
+# MMAW - E-Commerce Web Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![MMAW Logo](./public/logo.png)
 
-Currently, two official plugins are available:
+**MMAW** হল একটি **modern E-Commerce Web Application**, যা **MERN Stack** এবং **Firebase Authentication** ব্যবহার করে তৈরি করা হয়েছে।  
+এটি Admin, Moderator এবং User/Buyer roles সমর্থন করে এবং ব্যবহারকারীর জন্য সম্পূর্ণ ই-কমার্স experience প্রদান করে।
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### User Features
+- **Login/Register** with Firebase Authentication
+- Browse **Products** with images, retail & discount prices
+- **Wishlist**: Add/remove products, view wishlist
+- Track **Order Status**: Pending → Processing → Shipping → Delivered
+- View **Profile**, update information
+- Smooth **responsive UI** with TailwindCSS
 
-## Expanding the ESLint configuration
+### Admin Features
+- Manage **Users**: promote/demote roles, toggle active/blocked
+- Manage **Products**: Add, Update, Delete
+- View all **Orders** and track status
+- Analytics and dashboard overview
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Moderator Features
+- Manage **Products** (Add/Update/Delete)
+- View Users (without role management)
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: React, TailwindCSS, React Query, React Icons
+- **Backend**: Node.js, Express.js
+- **Database**: MongoDB
+- **Authentication**: Firebase Auth (ID Tokens verified via Firebase Admin SDK)
+- **Hosting/Env**: Vite, .env
+
+---
+

@@ -6,14 +6,6 @@ import Product from "./Product";
 
 const Products = () => {
   const axiosInstance = useAxios();
-
-  // const { data: products, isLoading } = useQuery({
-  //   queryKey: ["products"],
-  //   queryFn: async () => {
-  //     const res = await axiosInstance.get("/products");
-  //     return res.data;
-  //   },
-  // });
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
