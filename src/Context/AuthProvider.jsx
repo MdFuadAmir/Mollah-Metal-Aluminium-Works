@@ -15,40 +15,49 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const googleProvider = new GoogleAuthProvider();
-  // creat user
+
+  // create user
   const signUp = (email, password) => {
     setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
-  // sign in/ login
+
+  // login
   const login = (email, password) => {
     setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
+
   // log out
   const logOut = () => {
     setLoading(true);
     return signOut(auth);
   };
+
   // update profile
   const updateUserProfile = (profileInfo) => {
     setLoading(true);
     return updateProfile(auth.currentUser, profileInfo);
   };
-  // google sign in
+
+  // google login
   const loginWithGoogle = () => {
     setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
+  // onAuthStateChanged + token refresh
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        const token = await currentUser.getIdToken(true); // refresh token
+        setUser({ ...currentUser, accessToken: token });
+      } else {
+        setUser(null);
+      }
       setLoading(false);
     });
-    return () => {
-      unSubscribe();
-    };
+    return () => unsubscribe();
   }, []);
 
   const authInfo = {
@@ -60,9 +69,8 @@ const AuthProvider = ({ children }) => {
     updateUserProfile,
     loginWithGoogle,
   };
-  return (
-    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
-  );
+
+  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

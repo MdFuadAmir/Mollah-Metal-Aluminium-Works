@@ -1,4 +1,4 @@
-import { FaShoppingBag, FaHistory, FaTicketAlt, FaTruck } from "react-icons/fa";
+import { FaShoppingBag, FaHistory, FaTicketAlt, FaTruck, FaHeart } from "react-icons/fa";
 import DashboardMenu from "../../Common/DashboardMenu/DashboardMenu";
 
 const UserMenu = ({ closeSidebar }) => {
@@ -11,7 +11,13 @@ const UserMenu = ({ closeSidebar }) => {
         onClick={closeSidebar}
       />
       <DashboardMenu
-        labal={"My Order History"}
+        labal={"Wishlist"}
+        to={"/dashboard/wishlist"}
+        icon={FaHeart}
+        onClick={closeSidebar}
+      />
+      <DashboardMenu
+        labal={"Order History"}
         to={"/dashboard/my-order-history"}
         icon={FaHistory}
         onClick={closeSidebar}

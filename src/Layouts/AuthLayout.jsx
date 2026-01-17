@@ -1,6 +1,5 @@
 import { Outlet } from "react-router";
 import bg from "../assets/bg-images/body.jpg";
-import Login from "../Authentication/Login/Login";
 const AuthLayout = () => {
   return (
     <div className="relative">

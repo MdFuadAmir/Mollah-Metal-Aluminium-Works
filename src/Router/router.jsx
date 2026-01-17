@@ -25,6 +25,7 @@ import Shipping from "../Pages/Dashboard/Admin/OrdersManagement/Shipping/Shippin
 import RoleGuard from "../Routes/RoleGuard";
 import ProductDetails from "../Pages/Products/ProductDetails";
 import UpdateProduct from "../Pages/Dashboard/Admin/OurProducts/UpdateProduct";
+import Wishlist from "../Pages/Dashboard/User/Wishlist/Wishlist";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +83,14 @@ const router = createBrowserRouter([
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "wishlist",
+        element: (
+          <RoleGuard allow={["user"]}>
+            <Wishlist />
+          </RoleGuard>
+        ),
       },
       {
         path: "manage-admin&moderators",

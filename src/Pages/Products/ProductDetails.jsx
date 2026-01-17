@@ -4,7 +4,7 @@ import Loading from "../../Components/Loading/Loading";
 import useAxios from "../../Hooks/useAxios";
 import { useState } from "react";
 import Reviews from "./Reviews";
-import { MdFavorite } from "react-icons/md";
+import WishlistButton from "../Dashboard/User/Wishlist/WishlistButton";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const ProductDetails = () => {
     return <Loading />;
   }
   return (
-    <div className="max-w-4xl mx-auto bg-gray-900 p-4 rounded-lg overflow-auto md:my-6">
+    <div className="max-w-4xl mx-auto bg-gray-900 p-4 rounded-lg overflow-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* image */}
         <div>
@@ -213,9 +213,8 @@ const ProductDetails = () => {
             >
               Add To Cart
             </button>
-            <button className="text-xl cursor-pointer text-red-500 bg-gray-700 shadow-lg shadow-gray-800 rounded-full p-2 hover:scale-105 duration-200">
-              <MdFavorite />
-            </button>
+            {/* wishlist button */}
+            <WishlistButton productId={id}/>
           </div>
         </div>
       </div>

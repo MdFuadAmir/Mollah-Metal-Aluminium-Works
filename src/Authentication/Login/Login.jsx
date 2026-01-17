@@ -26,6 +26,7 @@ const Login = () => {
     navigate(from, { replace: true });
     axiosInstance.patch("/users/last-login", {
       email: data.email,
+      lastLogin:new Date().toDateString()
     }).catch(() => {
       console.log("Last login update failed");
     });

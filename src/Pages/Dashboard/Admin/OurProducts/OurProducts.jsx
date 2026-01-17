@@ -133,7 +133,8 @@ const OurProducts = () => {
                   </td>
                   {/* discount price */}
                   <td className="px-4 py-3 font-mono">
-                    ৳ {product.category === "metal"
+                    ৳{" "}
+                    {product.category === "metal"
                       ? product?.KgretailDiscountPrice
                       : product?.PretailDiscountPrice}
                   </td>

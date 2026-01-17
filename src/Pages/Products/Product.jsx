@@ -1,7 +1,7 @@
 import { Link } from "react-router";
-import { MdFavorite } from "react-icons/md";
 import { FaCartPlus } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
+import WishlistButton from "../Dashboard/User/Wishlist/WishlistButton";
 const Product = ({ prod }) => {
   return (
     <Link
@@ -21,7 +21,7 @@ const Product = ({ prod }) => {
       </div>
 
       {/* Content */}
-      <div className="p-4">
+      <div className="p-4 flex flex-col justify-between">
         <h3 className="text-lg font-semibold text-white mt-1">
           {prod.productName}
         </h3>
@@ -73,10 +73,8 @@ const Product = ({ prod }) => {
             </div>
           </div>
           <div className="flex flex-col items-center gap-3">
-            <Link className="text-xl text-red-500 bg-gray-700 shadow-lg shadow-gray-800 rounded-full p-2 hover:scale-105 duration-200">
-              <MdFavorite />
-            </Link>
-            <Link className="text-xl bg-gray-700 shadow-lg shadow-gray-800 text-white rounded-full p-2 hover:scale-105 duration-200">
+            <WishlistButton productId={prod._id}/>
+            <Link className="text-xl shadow-sm shadow-gray-600  text-white rounded-full p-2 hover:scale-105 duration-200">
               <FaCartPlus />
             </Link>
           </div>

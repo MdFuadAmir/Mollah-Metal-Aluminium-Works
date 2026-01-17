@@ -6,7 +6,6 @@ import AdminMenu from "../Pages/Dashboard/Admin/AdminMenu/AdminMenu";
 import UserMenu from "../Pages/Dashboard/User/UserMenu/UserMenu";
 import DashboardMenu from "../Pages/Dashboard/Common/DashboardMenu/DashboardMenu";
 import { MdAssessment } from "react-icons/md";
-import { ImUserTie } from "react-icons/im";
 import useAuth from "../Hooks/useAuth";
 import toast from "react-hot-toast";
 import useRole from "../Hooks/useRole";
@@ -17,6 +16,7 @@ const DashboardLayout = () => {
   const { logOut } = useAuth();
   const [role,roleLoading] = useRole();
   const navigate = useNavigate();
+  console.log(role);
 
   const closeSidebar = () => {
     const drawer = document.getElementById("my-drawer-2");
