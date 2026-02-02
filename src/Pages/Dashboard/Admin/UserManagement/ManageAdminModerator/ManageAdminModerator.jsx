@@ -1,13 +1,13 @@
 import { FaUserShield, FaBan, FaEye, FaUser } from "react-icons/fa";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 import Loading from "../../../../../Components/Loading/Loading";
 import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import useAxios from "../../../../../Hooks/useAxios";
 
 const ManageAdminModerator = () => {
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
   const [selectedUser, setSelectedUser] = useState(null);
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -20,14 +20,14 @@ const ManageAdminModerator = () => {
     queryKey: ["admin-moderators"],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/users/admin-moderators`);
+      const { data } = await axiosPublic.get(`/users/admin-moderators`);
       return data;
     },
   });
   // ========= make admin
   const toggleAdmin = async (data) => {
     try {
-      const res = await axiosSecure.patch(`/users/make-admin/${data._id}`);
+      const res = await axiosPublic.patch(`/users/make-admin/${data._id}`);
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to Admin");
         queryClient.invalidateQueries(["normal-moderators"]);
@@ -41,7 +41,7 @@ const ManageAdminModerator = () => {
   //  ============ make user
   const toggleUser = async (data) => {
     try {
-      const res = await axiosSecure.patch(`/users/make-user/${data._id}`);
+      const res = await axiosPublic.patch(`/users/make-user/${data._id}`);
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to User");
         queryClient.invalidateQueries(["normal-moderators"]);
@@ -211,3 +211,5 @@ const ManageAdminModerator = () => {
 };
 
 export default ManageAdminModerator;
+
+

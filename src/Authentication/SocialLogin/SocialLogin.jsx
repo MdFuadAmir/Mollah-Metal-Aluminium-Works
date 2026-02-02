@@ -9,13 +9,12 @@ const SocialLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from || "/";
-  const axiosInstance = useAxios();
+  const axiosPublic = useAxios();
 
   const handleGoogleLogin = () => {
     loginWithGoogle()
       .then(async (result) => {
         const user = result.user;
-        console.log(user);
         const userInfo = {
           name: user?.displayName,
           email: user?.email,
@@ -24,7 +23,7 @@ const SocialLogin = () => {
           createdAt: new Date().toISOString(),
           lastLogin: new Date().toISOString(),
         };
-        await axiosInstance.post("/users", userInfo);
+        await axiosPublic.post("/users", userInfo);
         toast.success("Login Success !!");
         navigate(from, { replace: true });
       })

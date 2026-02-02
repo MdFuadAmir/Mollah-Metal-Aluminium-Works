@@ -1,23 +1,24 @@
 import { useNavigate, useParams } from "react-router";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../Components/Loading/Loading";
 import { useForm } from "react-hook-form";
 import { useEffect, } from "react";
 import toast from "react-hot-toast";
+import useAxios from "../../../../Hooks/useAxios";
 
 const UpdateProduct = () => {
-  const { id } = useParams();
-  const axiosSecure = useAxiosSecure();
+    const { id } = useParams();
+  const axiosPublic = useAxios();
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["update", id],
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/products/${id}`);
+      const { data } = await axiosPublic.get(`/products/${id}`);
       return data;
     },
+    retry: false, 
   });
 
   const selectedCategory = product?.category;
@@ -28,21 +29,19 @@ const UpdateProduct = () => {
     }
   }, [product, reset]);
 
+const onSubmit = async (data) => {
+  try {
+    // Remove _id if exists
+    const { _id, ...patchData } = data;
 
-  const onSubmit =async (data) => {
-    try{
-       await axiosSecure.patch(`/products/${id}`,data); 
-       toast.success("পণ্য সফলভাবে আপডেট করা হয়েছে")
-       navigate("/dashboard/our-products")
-
-    }catch(error){
-      toast.error(error.message);
-    }
-  };
-
-  if (isLoading) {
-    return <Loading />;
+    await axiosPublic.patch(`/products/${id}`, patchData);
+    toast.success("পণ্য সফলভাবে আপডেট করা হয়েছে");
+    navigate("/dashboard/our-products");
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
   }
+};
+  if (isLoading || !product) return <Loading />;
 
   return (
     <div className="max-w-4xl mx-auto p-4 bg-black/50 my-12 rounded-xl">
@@ -312,3 +311,4 @@ const UpdateProduct = () => {
 };
 
 export default UpdateProduct;
+

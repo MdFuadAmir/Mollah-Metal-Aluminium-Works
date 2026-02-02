@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import useAuth from "../../../../Hooks/useAuth";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import toast from "react-hot-toast";
 
 const WishlistButton = ({ productId }) => {
   const { user } = useAuth();
@@ -26,15 +27,22 @@ const WishlistButton = ({ productId }) => {
   const handleClick = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!user?.email) return alert("Please login first");
+    if (!user?.email) return toast.error("Please login first");
     setLoading(true);
     try {
       const res = await axiosSecure.post("/wishlist", {
         email: user.email,
         productId,
       });
-      if (res.data.action === "added") setInWishlist(true);
-      if (res.data.action === "removed") setInWishlist(false);
+       if (res.data.action === "added") {
+        setInWishlist(true);
+        toast.success("Added to wishlist");
+      }
+
+      if (res.data.action === "removed") {
+        setInWishlist(false);
+        toast.success("Removed from wishlist");
+      }
     } catch (err) {
       console.error("Wishlist error:", err);
     } finally {

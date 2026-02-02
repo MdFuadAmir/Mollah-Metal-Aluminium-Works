@@ -2,7 +2,6 @@ import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
 import useAxios from "../../../../Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../Components/Loading/Loading";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import ViewProductModal from "./ViewProductModal";
@@ -10,10 +9,10 @@ import EmptyProductCard from "./EmptyProductCard";
 import { useNavigate } from "react-router";
 
 const OurProducts = () => {
-  const axiosInstance = useAxios();
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
   const [viewProduct, setViewProduct] = useState(null);
   const navigate = useNavigate();
+
   // get products
   const {
     data: products = [],
@@ -22,14 +21,16 @@ const OurProducts = () => {
   } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const res = await axiosInstance.get("/dashboard/products");
+      const res = await axiosPublic.get("/products");
       return res.data;
     },
   });
+
   // update product
   const handleUpdate = (product) => {
-    navigate(`/dashboard/product/edit/${product._id}`);
+    navigate(`/dashboard/product/${product._id}`);
   };
+
   // delete product
   const handleDelete = async (id, productName) => {
     toast(
@@ -39,19 +40,18 @@ const OurProducts = () => {
             আপনি কি নিশ্চিত এই পণ্যটি ডিলিট করতে চান?
           </p>
           <p className="text-sm">{productName}</p>
-          <p className="text-sm">{id}</p>
 
           <div className="flex justify-center gap-3">
             <button
               className="px-4 py-1 rounded bg-red-600 text-white text-sm"
               onClick={async () => {
                 try {
-                  await axiosSecure.delete(`/dashboard/products/${id}`);
+                  await axiosPublic.delete(`/products/${id}`);
                   toast.success("Product deleted successfully");
                   refetch();
                   toast.dismiss(t.id);
                 } catch (err) {
-                  toast.error(err.message);
+                  toast.error(err.response?.data?.message || err.message);
                 }
               }}
             >
@@ -77,6 +77,7 @@ const OurProducts = () => {
       }
     );
   };
+
   if (isLoading) return <Loading />;
 
   return (
@@ -100,7 +101,7 @@ const OurProducts = () => {
           <tbody>
             {products.length === 0 ? (
               <tr>
-                <td colSpan={5}>
+                <td colSpan={6}>
                   <EmptyProductCard />
                 </td>
               </tr>
@@ -110,7 +111,6 @@ const OurProducts = () => {
                   key={product._id}
                   className="border-b border-gray-800 hover:bg-gray-900/60"
                 >
-                  {/* Image */}
                   <td className="px-4 py-3">
                     <img
                       src={product.images?.[0]}
@@ -118,30 +118,24 @@ const OurProducts = () => {
                       className="w-12 h-12 rounded object-cover"
                     />
                   </td>
-                  {/*  */}
                   <td className="px-4 py-3 font-medium">{product._id}</td>
-                  {/* Name */}
                   <td className="px-4 py-3 font-medium">
                     {product.productName}
                   </td>
-                  {/* Retail */}
                   <td className="px-4 py-3 font-mono">
                     ৳{" "}
                     {product.category === "metal"
                       ? product?.KgretailPrice
                       : product?.PretailPrice}
                   </td>
-                  {/* discount price */}
                   <td className="px-4 py-3 font-mono">
                     ৳{" "}
                     {product.category === "metal"
                       ? product?.KgretailDiscountPrice
                       : product?.PretailDiscountPrice}
                   </td>
-                  {/* Actions */}
                   <td className="px-4 py-3">
                     <div className="flex justify-center gap-2">
-                      {/* View */}
                       <button
                         title="View"
                         onClick={() => setViewProduct(product)}
@@ -155,8 +149,6 @@ const OurProducts = () => {
                           closeModal={() => setViewProduct(null)}
                         />
                       )}
-
-                      {/* Update */}
                       <button
                         onClick={() => handleUpdate(product)}
                         title="Update"
@@ -164,8 +156,6 @@ const OurProducts = () => {
                       >
                         <FaEdit />
                       </button>
-
-                      {/* Delete */}
                       <button
                         title="Delete"
                         onClick={() =>

@@ -8,14 +8,14 @@ import WishlistButton from "../Dashboard/User/Wishlist/WishlistButton";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const axiosInstance = useAxios();
+  const axiosPublic = useAxios();
   const [mainImage, setMainImage] = useState(0);
   //   get product
   const { data: product, isLoading } = useQuery({
     queryKey: ["products", id],
     enabled: !!id,
     queryFn: async () => {
-      const { data } = await axiosInstance.get(`/products/${id}`);
+      const { data } = await axiosPublic.get(`/products/${id}`);
       return data;
     },
   });

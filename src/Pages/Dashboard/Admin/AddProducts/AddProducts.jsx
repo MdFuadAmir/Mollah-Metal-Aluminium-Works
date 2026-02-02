@@ -1,12 +1,12 @@
 import { useForm, useWatch } from "react-hook-form";
 import AddProductForm from "./AddProductForm";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import useAxios from "../../../../Hooks/useAxios";
 
 const AddProducts = () => {
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
   const [productImages, setProductImages] = useState([]);
   const [uploading, setUploading] = useState(false);
 
@@ -49,7 +49,7 @@ const AddProducts = () => {
       ...data,
       rating: 0,
     };
-    const res = await axiosSecure.post(`/products`, finalData);
+    const res = await axiosPublic.post(`/products`, finalData);
     if (res.data.insertedId) {
       toast.success("Product add successfully !");
       reset();

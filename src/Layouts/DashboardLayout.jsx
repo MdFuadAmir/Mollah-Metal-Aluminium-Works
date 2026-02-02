@@ -14,7 +14,7 @@ import ModaratorMenu from "../Pages/Dashboard/Modarator/ModaratorMenu/ModaratorM
 
 const DashboardLayout = () => {
   const { logOut } = useAuth();
-  const [role,roleLoading] = useRole();
+  const {role,roleLoading} = useRole();
   const navigate = useNavigate();
   console.log(role);
 
@@ -75,7 +75,7 @@ const DashboardLayout = () => {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <ul className="menu bg-gray-900/90 overflow-scroll text-gray-300 min-h-full w-64 p-4 flex flex-col justify-between">
+          <ul className="menu bg-gray-900 overflow-scroll text-gray-300 min-h-full w-64 p-4 flex flex-col justify-between">
             {/* navber top */}
             <div>
               <MMAW />

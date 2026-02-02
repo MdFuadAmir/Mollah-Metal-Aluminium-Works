@@ -1,13 +1,13 @@
 import { FaUserShield, FaBan, FaEye } from "react-icons/fa";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 import Loading from "../../../../../Components/Loading/Loading";
 import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import useAxios from "../../../../../Hooks/useAxios";
 
 const ManageUsers = () => {
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
   const [selectedUser, setSelectedUser] = useState(null);
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -20,7 +20,7 @@ const ManageUsers = () => {
     queryKey: ["normal-users"],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosSecure.get(`/users/normal-users`);
+      const { data } = await axiosPublic.get(`/users/normal-users`);
       return data;
     },
   });
@@ -28,7 +28,7 @@ const ManageUsers = () => {
   const toggleStatus = async (data) => {
     console.log(data);
     try {
-      await axiosSecure.patch(`/users/toggle-status/${data._id}`);
+      await axiosPublic.patch(`/users/toggle-status/${data._id}`);
       toast.success(
         `User ${user.status === "verified" ? "Blocked" : "Unblocked"}`
       );
@@ -40,7 +40,7 @@ const ManageUsers = () => {
   // ======= toggleRole
   const toggleRole = async (user) => {
     try {
-      const res = await axiosSecure.patch(`/users/make-moderator/${user._id}`);
+      const res = await axiosPublic.patch(`/users/make-moderator/${user._id}`);
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to Moderator");
         queryClient.invalidateQueries(["normal-users"]);

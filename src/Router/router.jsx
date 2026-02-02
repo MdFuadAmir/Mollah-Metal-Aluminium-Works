@@ -27,6 +27,7 @@ import ProductDetails from "../Pages/Products/ProductDetails";
 import UpdateProduct from "../Pages/Dashboard/Admin/OurProducts/UpdateProduct";
 import Wishlist from "../Pages/Dashboard/User/Wishlist/Wishlist";
 import Track from "../Pages/Dashboard/User/Track/Track";
+import Private from "../Routes/Private";
 
 const router = createBrowserRouter([
   {
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <DashboardLayout />,
+    element: <Private><DashboardLayout /></Private>,
     children: [
       {
         index: true,
@@ -134,7 +135,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "product/edit/:id",
+        path: "/dashboard/product/:id",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
             <UpdateProduct />

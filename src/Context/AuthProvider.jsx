@@ -46,12 +46,10 @@ const AuthProvider = ({ children }) => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  // onAuthStateChanged + token refresh
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
-        const token = await currentUser.getIdToken(true); // refresh token
-        setUser({ ...currentUser, accessToken: token });
+        setUser(currentUser);
       } else {
         setUser(null);
       }

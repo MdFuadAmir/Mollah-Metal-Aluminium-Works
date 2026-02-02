@@ -5,11 +5,11 @@ import Title from "../../Shared/Title/Title";
 import Product from "./Product";
 
 const Products = () => {
-  const axiosInstance = useAxios();
+  const axiosPublic = useAxios();
   const { data: products = [], isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const res = await axiosInstance.get("/products");
+      const res = await axiosPublic.get("/products");
       return res.data;
     },
   });
@@ -35,3 +35,4 @@ const Products = () => {
 };
 
 export default Products;
+

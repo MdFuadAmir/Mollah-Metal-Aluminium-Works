@@ -5,7 +5,7 @@ import ModeratorDashboard from "../../Modarator/ModeratorDashboard/ModeratorDash
 import UserDashboard from "../../User/UserDashboard/UserDashboard";
 
 const DashboardForAll = () => {
-  const [role, roleLoading] = useRole();
+  const {role, roleLoading} = useRole();
   if (roleLoading) {
     return <Loading />;
   }

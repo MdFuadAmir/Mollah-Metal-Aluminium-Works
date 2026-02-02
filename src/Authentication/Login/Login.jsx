@@ -14,26 +14,28 @@ const Login = () => {
     formState: { errors },
   } = useForm();
   const { login } = useAuth();
-  const axiosInstance = useAxios();
+  const axiosPublic = useAxios();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from || "/";
 
   const onSubmit = async (data) => {
-  try {
-    await login(data.email, data.password);
-    toast.success("Login Successfully");
-    navigate(from, { replace: true });
-    axiosInstance.patch("/users/last-login", {
-      email: data.email,
-      lastLogin:new Date().toDateString()
-    }).catch(() => {
-      console.log("Last login update failed");
-    });
-  } catch (error) {
-    toast.error(error.message);
-  }
-};
+    try {
+      await login(data.email, data.password);
+      toast.success("Login Successfully");
+      navigate(from, { replace: true });
+      axiosPublic
+        .patch("/users/last-login", {
+          email: data.email,
+          lastLogin: new Date().toDateString(),
+        })
+        .catch((error) => {
+          toast.error(error.message);
+        });
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">

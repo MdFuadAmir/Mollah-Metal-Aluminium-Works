@@ -16,7 +16,7 @@ const SignUp = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from || "/";
-  const axiosInstance = useAxios();
+  const axiosPublic = useAxios();
 
   const {
     register,
@@ -42,7 +42,6 @@ const SignUp = () => {
     signUp(data?.email, data?.password)
       .then(async (result) => {
         const user = result.user;
-        console.log("Current-user:", user);
         const userInfo = {
           email: user?.email,
           role: "user",
@@ -50,7 +49,7 @@ const SignUp = () => {
           createdAt: new Date().toISOString(),
           lastLogin: new Date().toISOString(),
         };
-        const userRes = await axiosInstance.post("/users", userInfo);
+        const userRes = await axiosPublic.post("/users", userInfo);
         if (userRes.data.success && userRes.data.insertedId) {
           toast.success("Your Account has been created");
         } else {
@@ -71,7 +70,6 @@ const SignUp = () => {
           });
       })
       .catch((error) => {
-        console.log(error);
         toast.error(error.message);
       });
   };
@@ -196,4 +194,3 @@ const SignUp = () => {
 
 export default SignUp;
 
-// consept 12/part 5
