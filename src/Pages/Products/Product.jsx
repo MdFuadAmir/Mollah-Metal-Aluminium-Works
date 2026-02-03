@@ -109,7 +109,7 @@ const handleAddToCart = async (e) => {
           </div>
           <div className="flex flex-col items-center gap-3">
             <WishlistButton productId={prod._id} />
-            <Link onClick={handleAddToCart}  className="text-xl shadow-sm shadow-gray-600  text-white rounded-full p-2 hover:scale-105 duration-200">
+            <Link onClick={handleAddToCart}  className="text-xl  text-gray-300 rounded-full p-2 hover:scale-125 duration-200">
               <FaCartPlus />
             </Link>
           </div>

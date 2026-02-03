@@ -1,111 +1,233 @@
-import { useQuery } from "@tanstack/react-query";
+// import toast from "react-hot-toast";
+// import Loading from "../../../../Components/Loading/Loading";
+// import useAuth from "../../../../Hooks/useAuth";
+// import { useWishlist } from "../../../../Hooks/useWishlist";
+// import useAxios from "../../../../Hooks/useAxios";
+
+// const Wishlist = () => {
+//   const { user } = useAuth();
+//   const axiosPublic = useAxios();
+//   const { wishlist, isLoading, removeFromWishlist } = useWishlist(user?.email);
+
+//   if (!user)
+//     return <p className="text-center mt-10">Please login to see wishlist</p>;
+
+//   const handleAddToCart = async (e) => {
+//   e.preventDefault();
+//   if (!user) {
+//     return toast.error("Please login first");
+//   }
+//   // Prepare cart data based on category
+//   const cartInfo = {
+//     productId: product._id,
+//     userEmail: user.email,
+//     sellType: product.category === "metal" ? "kg" : "piece",
+//     quantity: 1
+//   };
+//   try {
+//     const res = await axiosPublic.post("/carts", cartInfo);
+//     if (res.data.insertedId) {
+//       toast.success("Added to cart");
+//     } else {
+//       toast(res.data.message);
+//     }
+//   } catch (err) {
+//     toast.error(err.message);
+//   }
+// };
+//   if (isLoading) return <Loading />;
+
+//   return (
+//     <div className="max-w-6xl mx-auto p-4 md:p-8 text-white">
+//       <h2 className="text-2xl font-bold mb-6">
+//         My Wishlist ({wishlist.length})
+//       </h2>
+
+//       {wishlist.length === 0 ? (
+//         <p className="text-gray-400">Your wishlist is empty</p>
+//       ) : (
+//         <div className="overflow-x-auto">
+//           <table className="w-full border border-gray-700 rounded-lg overflow-hidden">
+//             <thead className="bg-gray-800 text-left">
+//               <tr>
+//                 <th className="p-3 border-b border-gray-700">Image</th>
+//                 <th className="p-3 border-b border-gray-700">Product</th>
+//                 <th className="p-3 border-b border-gray-700">Price</th>
+//                 <th className="p-3 border-b border-gray-700 text-center">
+//                   Action
+//                 </th>
+//               </tr>
+//             </thead>
+
+//             <tbody>
+//               {wishlist.map((item) => (
+//                 <tr key={item._id} className="hover:bg-gray-800 transition">
+//                   <td className="p-3 border-b border-gray-700">
+//                     <img
+//                       src={item.productDetails?.images?.[0]}
+//                       alt={item.productDetails?.productName}
+//                       className="w-16 h-16 object-cover rounded"
+//                     />
+//                   </td>
+
+//                   <td className="p-3 border-b border-gray-700">
+//                     <p className="font-medium">
+//                       {item.productDetails?.productName}
+//                     </p>
+//                   </td>
+
+//                   <td className="p-3 border-b border-gray-700 text-emerald-400 font-semibold">
+//                     ৳
+//                     {item.productDetails?.PretailDiscountPrice ||
+//                       item.productDetails?.PretailPrice}
+//                   </td>
+
+//                   <td className="p-3 border-b border-gray-700 text-center">
+//                     <button
+//                       onClick={handleAddToCart}
+//                       className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+//                     >
+//                       Remove
+//                     </button>
+//                     <button
+//                       onClick={() => removeFromWishlist.mutate(item._id)}
+//                       className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+//                     >
+//                       Remove
+//                     </button>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default Wishlist;
+
+
+
+
+
 import toast from "react-hot-toast";
-import { FaTrash } from "react-icons/fa";
-import useAuth from "../../../../Hooks/useAuth";
 import Loading from "../../../../Components/Loading/Loading";
+import useAuth from "../../../../Hooks/useAuth";
+import { useWishlist } from "../../../../Hooks/useWishlist";
 import useAxios from "../../../../Hooks/useAxios";
 
 const Wishlist = () => {
   const { user } = useAuth();
   const axiosPublic = useAxios();
+  const { wishlist, isLoading, removeFromWishlist } = useWishlist(user?.email);
 
-  const {
-    data: wishlistProducts = [],
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["wishlist", user?.email],
-    enabled: !!user?.email,
-    queryFn: async () => {
-      const res = await axiosPublic.get(`/wishlist/full/${user.email}`);
-      return res.data;
-    },
-  });
+  if (!user) {
+    return <p className="text-center mt-10">Please login to see wishlist</p>;
+  }
 
-  const handleRemove = async (productId) => {
+  if (isLoading) return <Loading />;
+
+  // ✅ ADD TO CART HANDLER
+  const handleAddToCart = async (item) => {
     try {
-      await axiosPublic.post("/wishlist", {
-        email: user.email,
-        productId,
-      });
-      toast.success("Removed from wishlist");
-      refetch();
-    } catch {
-      toast.error("Failed to remove");
+      const product = item.productDetails;
+
+      const cartInfo = {
+        productId: product._id,
+        userEmail: user.email,
+        sellType: product.category === "metal" ? "kg" : "piece",
+        quantity: 1,
+      };
+
+      const res = await axiosPublic.post("/carts", cartInfo);
+
+      if (res.data.insertedId) {
+        // 👉 remove from wishlist after successful add
+        await removeFromWishlist.mutateAsync(item._id);
+        toast.success("Added to cart & removed from wishlist");
+      } else {
+        toast(res.data.message || "Already in cart");
+      }
+    } catch (err) {
+      toast.error("Failed to add to cart");
+      console.error(err);
     }
   };
-  if (isLoading) {
-    return <Loading />;
-  }
+
   return (
-    <div className="p-6 md:p-8">
-      <h1 className="mb-6 text-2xl text-white">
-        <span className="text-orange-500">{user?.displayName}</span> Wishlist
-      </h1>
+    <div className="max-w-6xl mx-auto p-4 md:p-8 text-white">
+      <h2 className="text-2xl font-bold mb-6">
+        My Wishlist ({wishlist.length})
+      </h2>
 
-      <div className="overflow-x-auto">
-        <table className="table table-sm w-full">
-          <thead className="bg-gray-900 text-gray-200">
-            <tr>
-              <th>পণ্যের ছবি</th>
-              <th>পণ্যের নাম</th>
-              <th>মূল মূল্য</th>
-              <th>ছাড়ের মূল্য</th>
-              <th>ব্যবস্থা</th>
-            </tr>
-          </thead>
-
-          <tbody className="text-white bg-black/50">
-            {wishlistProducts.length === 0 ? (
+      {wishlist.length === 0 ? (
+        <p className="text-gray-400">Your wishlist is empty</p>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full border border-gray-700 rounded-lg">
+            <thead className="bg-gray-800">
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-center text-gray-400 py-10 text-lg"
-                >
-                  আপনার উইশলিস্ট এখনো খালি 💔
-                </td>
+                <th className="p-3 border-b border-gray-700">Image</th>
+                <th className="p-3 border-b border-gray-700">Product</th>
+                <th className="p-3 border-b border-gray-700">Price</th>
+                <th className="p-3 border-b border-gray-700 text-center">
+                  Actions
+                </th>
               </tr>
-            ) : (
-              wishlistProducts.map((product) => (
-                <tr key={product._id}>
-                  <td>
-                    <img
-                      src={product.images[0]}
-                      alt={product.productName}
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  </td>
+            </thead>
 
-                  <td className="font-semibold">{product.productName}</td>
+            <tbody>
+              {wishlist.map((item) => {
+                const product = item.productDetails;
+                return (
+                  <tr
+                    key={item._id}
+                    className="hover:bg-gray-800 transition"
+                  >
+                    <td className="p-3 border-b border-gray-700">
+                      <img
+                        src={product?.images?.[0]}
+                        alt={product?.productName}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                    </td>
 
-                  <td className="line-through text-red-400">
-                    ৳
-                    {product.KgretailPrice
-                      ? product.KgretailPrice
-                      : product.PretailPrice}
-                  </td>
+                    <td className="p-3 border-b border-gray-700">
+                      {product?.productName}
+                    </td>
 
-                  <td className="text-green-400 font-bold">
-                    ৳
-                    {product.KgretailDiscountPrice
-                      ? product.KgretailDiscountPrice
-                      : product.PretailDiscountPrice}
-                  </td>
+                    <td className="p-3 border-b border-gray-700 text-emerald-400 font-semibold">
+                      ৳
+                      {product?.PretailDiscountPrice ||
+                        product?.PretailPrice}
+                    </td>
 
-                  <td>
-                    <button
-                      onClick={() => handleRemove(product._id)}
-                      className="btn btn-sm btn-error text-white"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+                    <td className="p-3 border-b border-gray-700 text-center space-x-2">
+                      {/* ADD TO CART */}
+                      <button
+                        onClick={() => handleAddToCart(item)}
+                        className="bg-emerald-500 px-3 py-1 rounded hover:bg-emerald-600"
+                      >
+                        Add to Cart
+                      </button>
+
+                      {/* REMOVE FROM WISHLIST */}
+                      <button
+                        onClick={() => removeFromWishlist.mutate(item._id)}
+                        className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };

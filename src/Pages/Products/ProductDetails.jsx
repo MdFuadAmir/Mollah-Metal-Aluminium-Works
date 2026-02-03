@@ -7,6 +7,7 @@ import Reviews from "./Reviews";
 import WishlistButton from "../Dashboard/User/Wishlist/WishlistButton";
 import toast from "react-hot-toast";
 import useAuth from "../../Hooks/useAuth";
+import { IoStar } from "react-icons/io5";
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -31,11 +32,9 @@ const ProductDetails = () => {
 
 const handleAddToCart = async (e) => {
   e.preventDefault();
-
   if (!user) {
     return toast.error("Please login first");
   }
-
   // Prepare cart data based on category
   const cartInfo = {
     productId: product._id,
@@ -228,14 +227,14 @@ const handleAddToCart = async (e) => {
             </span>
           </p>
           {/* reating todo*/}
-          <p className="text-sm">
+          <p className="text-sm flex items-center">
             <span className="text-gray-400">Rating:</span>
-            <span className="font-semibold text-orange-400 ml-1">
-              star <span className=" font-mono">(12)</span>
+            <span className="font-semibold text-orange-400 ml-1 flex items-center gap-2">
+              <IoStar/> <span className=" font-mono">(12)</span>
             </span>
           </p>
           {/* add to cart btn */}
-          <div className="flex justify-between items-center gap-4 mt-4">
+          <div className="flex justify-between items-center gap-4 mt-6">
             <button
             onClick={handleAddToCart}
               disabled={stock === 0}

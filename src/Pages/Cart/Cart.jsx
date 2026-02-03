@@ -17,7 +17,7 @@ const Cart = () => {
     enabled: !!user?.email,
     queryFn: async () => {
       const { data } = await axiosPublic.get(
-        `/carts-with-details?email=${user.email}`
+        `/carts-with-details?email=${user.email}`,
       );
       return data;
     },
@@ -49,9 +49,7 @@ const Cart = () => {
         : Number(product.KgretailPrice);
 
       discountPrice = isWholesale
-        ? Number(
-            product.KgWholeSellDiscountPrice || product.KgwholesalePrice
-          )
+        ? Number(product.KgWholeSellDiscountPrice || product.KgwholesalePrice)
         : Number(product.KgretailDiscountPrice || product.KgretailPrice);
     } else {
       price = isWholesale
@@ -59,9 +57,7 @@ const Cart = () => {
         : Number(product.PretailPrice);
 
       discountPrice = isWholesale
-        ? Number(
-            product.PWholeSellDiscountPrice || product.PwholesalePrice
-          )
+        ? Number(product.PWholeSellDiscountPrice || product.PwholesalePrice)
         : Number(product.PretailDiscountPrice || product.PretailPrice);
     }
 
@@ -81,11 +77,19 @@ const Cart = () => {
     return sum + discountPrice * i.quantity;
   }, 0);
 
+  // ================= REMOVE FROM CART =================
+  const handleRemoveFromCart = async (id) => {
+    try {
+      await axiosPublic.delete(`/carts/${id}`);
+      refetch();
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto p-4 text-white">
-      <h2 className="text-2xl font-bold mb-6">
-        My Cart ({cartItems.length})
-      </h2>
+      <h2 className="text-2xl font-bold mb-6">My Cart ({cartItems.length})</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* ================= LEFT: CART ITEMS ================= */}
@@ -129,6 +133,12 @@ const Cart = () => {
                         Wholesale price applied
                       </span>
                     )}
+                    <button
+                      onClick={() => handleRemoveFromCart(item._id)}
+                      className="text-xs text-red-400 hover:text-red-500"
+                    >
+                      Remove
+                    </button>
                   </div>
                 </div>
 
@@ -136,9 +146,7 @@ const Cart = () => {
                   {/* Quantity */}
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={() =>
-                        handleQuantity(item._id, quantity - 1)
-                      }
+                      onClick={() => handleQuantity(item._id, quantity - 1)}
                       className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600"
                     >
                       -
@@ -155,9 +163,7 @@ const Cart = () => {
                     />
 
                     <button
-                      onClick={() =>
-                        handleQuantity(item._id, quantity + 1)
-                      }
+                      onClick={() => handleQuantity(item._id, quantity + 1)}
                       className="px-3 py-1 bg-gray-700 rounded hover:bg-gray-600"
                     >
                       +
