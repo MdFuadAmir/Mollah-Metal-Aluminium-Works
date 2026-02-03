@@ -355,8 +355,8 @@ const AddProductForm = ({
             {...register("shortDescription", {
               required: "Product shortDescription is required",
               maxLength: {
-                value: 70,
-                message: "Maximum 70 characters allowed",
+                value: 100,
+                message: "Maximum 100 characters allowed",
               },
             })}
             placeholder="পণ্যের সংক্ষিপ্ত বর্ণনা"

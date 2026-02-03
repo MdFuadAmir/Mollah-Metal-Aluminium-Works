@@ -2,29 +2,64 @@ import { Link } from "react-router";
 import { FaCartPlus } from "react-icons/fa";
 import { IoStar } from "react-icons/io5";
 import WishlistButton from "../Dashboard/User/Wishlist/WishlistButton";
+import toast from "react-hot-toast";
+import useAxios from "../../Hooks/useAxios";
+import useAuth from "../../Hooks/useAuth";
+
+
 const Product = ({ prod }) => {
+  const axiosPublic = useAxios();
+const { user } = useAuth();
+
+const handleAddToCart = async (e) => {
+  e.preventDefault();
+  if (!user) {
+    return toast.error("Please login first");
+  }
+  // Prepare cart data based on category
+  let cartInfo = {
+    productId: prod._id,
+    userEmail: user.email,
+    sellType: prod.category === "metal" ? "kg" : "piece",
+    quantity: 1
+  };
+  try {
+    const res = await axiosPublic.post("/carts", cartInfo);
+
+    if (res.data.insertedId) {
+      toast.success("Added to cart");
+    } else {
+      toast(res.data.message);
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+
   return (
     <Link
       data-aos="fade-up"
       data-aos-duration="1000"
       to={`/product/${prod._id}`}
       key={prod._id}
-      className="bg-gray-800 rounded-xl overflow-hidden shadow-md shadow-gray-700 transition"
+      className="bg-gray-900/50 border border-gray-700/50 rounded-xl overflow-hidden shadow-md transition"
     >
       {/* Image */}
-      <div className="h-56 overflow-hidden">
+      <div className="h-44 overflow-hidden p-3 rounded-t-xl">
         <img
           src={prod.images?.[0]}
           alt={prod.productName}
-          className="h-full w-full  hover:scale-110 transition duration-500"
+          className="h-full w-full rounded-xl object-cover"
         />
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col justify-between">
+      <div className="px-4 pb-4 flex flex-col justify-between">
         <h3 className="text-lg font-semibold text-white mt-1">
           {prod.productName}
         </h3>
+        <p className="text-xs text-gray-400 mb-2">{prod.shortDescription}</p>
         <div className="flex justify-between items-end gap-2">
           <div className="space-y-2">
             {prod?.category === "metal" && (
@@ -73,8 +108,8 @@ const Product = ({ prod }) => {
             </div>
           </div>
           <div className="flex flex-col items-center gap-3">
-            <WishlistButton productId={prod._id}/>
-            <Link className="text-xl shadow-sm shadow-gray-600  text-white rounded-full p-2 hover:scale-105 duration-200">
+            <WishlistButton productId={prod._id} />
+            <Link onClick={handleAddToCart}  className="text-xl shadow-sm shadow-gray-600  text-white rounded-full p-2 hover:scale-105 duration-200">
               <FaCartPlus />
             </Link>
           </div>

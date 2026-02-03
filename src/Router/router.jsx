@@ -28,6 +28,7 @@ import UpdateProduct from "../Pages/Dashboard/Admin/OurProducts/UpdateProduct";
 import Wishlist from "../Pages/Dashboard/User/Wishlist/Wishlist";
 import Track from "../Pages/Dashboard/User/Track/Track";
 import Private from "../Routes/Private";
+import Cart from "../Pages/Cart/Cart";
 
 const router = createBrowserRouter([
   {
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: "/forbidden",
         Component: Forbidden,
+      },
+      {
+        path: "/cart",
+        Component: Cart,
       },
     ],
   },

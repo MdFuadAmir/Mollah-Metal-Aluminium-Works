@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { FaTrash } from "react-icons/fa";
 import useAuth from "../../../../Hooks/useAuth";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import Loading from "../../../../Components/Loading/Loading";
+import useAxios from "../../../../Hooks/useAxios";
 
 const Wishlist = () => {
   const { user } = useAuth();
-  const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
 
   const {
     data: wishlistProducts = [],
@@ -17,14 +17,14 @@ const Wishlist = () => {
     queryKey: ["wishlist", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosSecure.get(`/wishlist/full/${user.email}`);
+      const res = await axiosPublic.get(`/wishlist/full/${user.email}`);
       return res.data;
     },
   });
 
   const handleRemove = async (productId) => {
     try {
-      await axiosSecure.post("/wishlist", {
+      await axiosPublic.post("/wishlist", {
         email: user.email,
         productId,
       });
@@ -47,7 +47,6 @@ const Wishlist = () => {
         <table className="table table-sm w-full">
           <thead className="bg-gray-900 text-gray-200">
             <tr>
-              <th>ক্রম নং</th>
               <th>পণ্যের ছবি</th>
               <th>পণ্যের নাম</th>
               <th>মূল মূল্য</th>
@@ -67,9 +66,8 @@ const Wishlist = () => {
                 </td>
               </tr>
             ) : (
-              wishlistProducts.map((product, index) => (
+              wishlistProducts.map((product) => (
                 <tr key={product._id}>
-                  <td>{index + 1}</td>
                   <td>
                     <img
                       src={product.images[0]}

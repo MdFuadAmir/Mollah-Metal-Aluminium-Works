@@ -45,9 +45,11 @@ const AddProducts = () => {
   };
 
   const onSubmit = async (data) => {
+    const sellType = data.category === "cookware" ? "piece" : data.category === "metal" ? "kg" : "";
     const finalData = {
       ...data,
       rating: 0,
+      sellType
     };
     const res = await axiosPublic.post(`/products`, finalData);
     if (res.data.insertedId) {

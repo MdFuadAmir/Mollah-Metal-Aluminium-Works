@@ -106,7 +106,7 @@ const Navbar = () => {
         {/* icon section */}
         <div className="flex justify-center items-center gap-8">
           {/* cart */}
-          <NavLink to={"/"}>
+          <NavLink to={"/cart"}>
             <FaShoppingCart size={25} className="relative text-white" />
             <p className="absolute p-1 text-[8px] rounded-full bg-red-500 text-white -mt-2 ml-3 font-mono">
               1077

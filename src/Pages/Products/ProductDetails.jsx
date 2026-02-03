@@ -5,10 +5,13 @@ import useAxios from "../../Hooks/useAxios";
 import { useState } from "react";
 import Reviews from "./Reviews";
 import WishlistButton from "../Dashboard/User/Wishlist/WishlistButton";
+import toast from "react-hot-toast";
+import useAuth from "../../Hooks/useAuth";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const axiosPublic = useAxios();
+  const { user } = useAuth();
   const [mainImage, setMainImage] = useState(0);
   //   get product
   const { data: product, isLoading } = useQuery({
@@ -23,6 +26,36 @@ const ProductDetails = () => {
     product?.category === "cookware"
       ? Number(product?.Pstock)
       : Number(product?.Kgstock);
+
+      
+
+const handleAddToCart = async (e) => {
+  e.preventDefault();
+
+  if (!user) {
+    return toast.error("Please login first");
+  }
+
+  // Prepare cart data based on category
+  const cartInfo = {
+    productId: product._id,
+    userEmail: user.email,
+    sellType: product.category === "metal" ? "kg" : "piece",
+    quantity: 1
+  };
+  try {
+    const res = await axiosPublic.post("/carts", cartInfo);
+    if (res.data.insertedId) {
+      toast.success("Added to cart");
+    } else {
+      toast(res.data.message);
+    }
+  } catch (err) {
+    toast.error(err.message);
+  }
+};
+
+
   if (isLoading) {
     return <Loading />;
   }
@@ -204,6 +237,7 @@ const ProductDetails = () => {
           {/* add to cart btn */}
           <div className="flex justify-between items-center gap-4 mt-4">
             <button
+            onClick={handleAddToCart}
               disabled={stock === 0}
               className={`${
                 stock === 0
@@ -240,3 +274,4 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+
