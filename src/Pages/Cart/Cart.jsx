@@ -2,10 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import Loading from "../../Components/Loading/Loading";
+import { useNavigate } from "react-router";
 
 const Cart = () => {
   const axiosPublic = useAxios();
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   // ================= GET CART ITEMS =================
   const {
@@ -128,7 +130,8 @@ const Cart = () => {
                       </span>
                     </p>
 
-                    {quantity >= 100 && (
+                    <div className="flex flex-col items-start space-y-2">
+                      {quantity >= 100 && (
                       <span className="text-xs text-orange-400">
                         Wholesale price applied
                       </span>
@@ -139,6 +142,7 @@ const Cart = () => {
                     >
                       Remove
                     </button>
+                    </div>
                   </div>
                 </div>
 
@@ -212,7 +216,11 @@ const Cart = () => {
             </div>
           </div>
 
-          <button className="w-full mt-4 bg-emerald-600 hover:bg-emerald-700 py-2 rounded">
+          <button
+            onClick={() => navigate("/checkout")}
+            disabled={cartItems.length === 0}
+            className={`w-full mt-4 bg-emerald-600 hover:bg-emerald-700 py-2 rounded disabled:bg-gray-800`}
+          >
             Checkout
           </button>
         </div>

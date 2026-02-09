@@ -6,36 +6,34 @@ import toast from "react-hot-toast";
 import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 
-
 const Product = ({ prod }) => {
   const axiosPublic = useAxios();
-const { user } = useAuth();
+  const { user } = useAuth();
 
-const handleAddToCart = async (e) => {
-  e.preventDefault();
-  if (!user) {
-    return toast.error("Please login first");
-  }
-  // Prepare cart data based on category
-  let cartInfo = {
-    productId: prod._id,
-    userEmail: user.email,
-    sellType: prod.category === "metal" ? "kg" : "piece",
-    quantity: 1
-  };
-  try {
-    const res = await axiosPublic.post("/carts", cartInfo);
-
-    if (res.data.insertedId) {
-      toast.success("Added to cart");
-    } else {
-      toast(res.data.message);
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      return toast.error("Please login first");
     }
-  } catch (err) {
-    toast.error(err.message);
-  }
-};
+    // Prepare cart data based on category
+    let cartInfo = {
+      productId: prod._id,
+      userEmail: user.email,
+      sellType: prod.category === "metal" ? "kg" : "piece",
+      quantity: 1,
+    };
+    try {
+      const res = await axiosPublic.post("/carts", cartInfo);
 
+      if (res.data.insertedId) {
+        toast.success("Added to cart");
+      } else {
+        toast(res.data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   return (
     <Link
@@ -100,16 +98,15 @@ const handleAddToCart = async (e) => {
             )}
             <div className="flex items-center gap-1 text-orange-500">
               <IoStar />
-              <IoStar />
-              <IoStar />
-              <IoStar />
-              <IoStar />
               <span className="text-gray-500">(100)</span>
             </div>
           </div>
           <div className="flex flex-col items-center gap-3">
             <WishlistButton productId={prod._id} />
-            <Link onClick={handleAddToCart}  className="text-xl  text-gray-300 rounded-full p-2 hover:scale-125 duration-200">
+            <Link
+              onClick={handleAddToCart}
+              className="text-xl  text-gray-300 rounded-full p-2 hover:scale-125 duration-200"
+            >
               <FaCartPlus />
             </Link>
           </div>

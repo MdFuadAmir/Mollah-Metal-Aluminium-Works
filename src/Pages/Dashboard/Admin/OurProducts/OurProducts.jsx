@@ -13,7 +13,7 @@ const OurProducts = () => {
   const [viewProduct, setViewProduct] = useState(null);
   const navigate = useNavigate();
 
-  // get products
+
   const {
     data: products = [],
     isLoading,
@@ -22,7 +22,7 @@ const OurProducts = () => {
     queryKey: ["products"],
     queryFn: async () => {
       const res = await axiosPublic.get("/products");
-      return res.data;
+      return res.data?.products || [];
     },
   });
 
@@ -83,7 +83,8 @@ const OurProducts = () => {
   return (
     <div className="p-6 text-white">
       <h2 className="text-2xl font-bold mb-6">
-        আমাদের সকল পণ্য <span className="font-mono">({products.length})</span>
+        আমাদের সকল পণ্য{" "}
+        <span className="font-mono">({products.length})</span>
       </h2>
 
       <div className="overflow-x-auto bg-black/50 rounded-xl">
@@ -98,6 +99,7 @@ const OurProducts = () => {
               <th className="px-4 py-3 text-center">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {products.length === 0 ? (
               <tr>
@@ -118,22 +120,27 @@ const OurProducts = () => {
                       className="w-12 h-12 rounded object-cover"
                     />
                   </td>
+
                   <td className="px-4 py-3 font-medium">{product._id}</td>
+
                   <td className="px-4 py-3 font-medium">
                     {product.productName}
                   </td>
+
                   <td className="px-4 py-3 font-mono">
                     ৳{" "}
                     {product.category === "metal"
                       ? product?.KgretailPrice
                       : product?.PretailPrice}
                   </td>
+
                   <td className="px-4 py-3 font-mono">
                     ৳{" "}
                     {product.category === "metal"
                       ? product?.KgretailDiscountPrice
                       : product?.PretailDiscountPrice}
                   </td>
+
                   <td className="px-4 py-3">
                     <div className="flex justify-center gap-2">
                       <button
@@ -143,12 +150,14 @@ const OurProducts = () => {
                       >
                         <FaEye />
                       </button>
+
                       {viewProduct && (
                         <ViewProductModal
                           product={viewProduct}
                           closeModal={() => setViewProduct(null)}
                         />
                       )}
+
                       <button
                         onClick={() => handleUpdate(product)}
                         title="Update"
@@ -156,6 +165,7 @@ const OurProducts = () => {
                       >
                         <FaEdit />
                       </button>
+
                       <button
                         title="Delete"
                         onClick={() =>

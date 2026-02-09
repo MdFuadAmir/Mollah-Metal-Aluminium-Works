@@ -16,7 +16,7 @@ const AddProducts = () => {
     formState: { errors },
     setValue,
     control,
-    reset,
+    // reset,
   } = useForm();
 
   const selectedCategory = useWatch({ control, name: "category" });
@@ -54,7 +54,7 @@ const AddProducts = () => {
     const res = await axiosPublic.post(`/products`, finalData);
     if (res.data.insertedId) {
       toast.success("Product add successfully !");
-      reset();
+      // reset();
       setProductImages([]);
       setValue("images", []);
     }

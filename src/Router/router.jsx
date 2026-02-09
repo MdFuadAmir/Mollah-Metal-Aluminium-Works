@@ -29,6 +29,7 @@ import Wishlist from "../Pages/Dashboard/User/Wishlist/Wishlist";
 import Track from "../Pages/Dashboard/User/Track/Track";
 import Private from "../Routes/Private";
 import Cart from "../Pages/Cart/Cart";
+import CheckOut from "../Pages/Cart/CheckOut";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,10 @@ const router = createBrowserRouter([
         path: "/cart",
         Component: Cart,
       },
+      {
+        path: "/checkout",
+        element: <Private><CheckOut /></Private>,
+      },
     ],
   },
   {
@@ -81,7 +86,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <Private><DashboardLayout /></Private>,
+    element: (
+      <Private>
+        <DashboardLayout />
+      </Private>
+    ),
     children: [
       {
         index: true,
