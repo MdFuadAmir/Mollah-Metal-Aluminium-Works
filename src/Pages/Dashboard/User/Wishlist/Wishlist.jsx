@@ -70,12 +70,14 @@ const Wishlist = () => {
                 </th>
               </tr>
             </thead>
-
             <tbody>
               {wishlist.map((item) => {
                 const product = item.productDetails;
                 return (
-                  <tr key={item._id} className="hover:bg-gray-800 transition">
+                  <tr
+                    key={item._id}
+                    className="hover:bg-gray-800 transition text-center"
+                  >
                     <td className="p-3 border-b border-gray-700">
                       <img
                         src={product?.images?.[0]}

@@ -10,27 +10,31 @@ import ManageUsers from "../Pages/Dashboard/Admin/UserManagement/ManageUsers/Man
 import OurProducts from "../Pages/Dashboard/Admin/OurProducts/OurProducts";
 import AddProducts from "../Pages/Dashboard/Admin/AddProducts/AddProducts";
 import AllVautchers from "../Pages/Dashboard/Admin/AllVautchers/AllVautchers";
-import ManageOrders from "../Pages/Dashboard/Admin/OrdersManagement/ManageOrders/ManageOrders";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Authentication/Login/Login";
 import SignUp from "../Authentication/SignUp/SignUp";
 import Forbidden from "../Components/Forbidden/Forbidden";
 import ManageAdminModerator from "../Pages/Dashboard/Admin/UserManagement/ManageAdminModerator/ManageAdminModerator";
 import Profile from "../Pages/Dashboard/Common/Profile/Profile";
-import Processing from "../Pages/Dashboard/Admin/OrdersManagement/Processing/Processing";
-import Returned from "../Pages/Dashboard/Admin/OrdersManagement/Returned/Returned";
-import Cancelled from "../Pages/Dashboard/Admin/OrdersManagement/Cancelled/Cancelled";
-import Delivered from "../Pages/Dashboard/Admin/OrdersManagement/Delivered/Delivered";
-import Shipping from "../Pages/Dashboard/Admin/OrdersManagement/Shipping/Shipping";
 import RoleGuard from "../Routes/RoleGuard";
 import ProductDetails from "../Pages/Products/ProductDetails";
 import UpdateProduct from "../Pages/Dashboard/Admin/OurProducts/UpdateProduct";
 import Wishlist from "../Pages/Dashboard/User/Wishlist/Wishlist";
-import Track from "../Pages/Dashboard/User/Track/Track";
 import Private from "../Routes/Private";
 import Cart from "../Pages/Cart/Cart";
 import CheckOut from "../Pages/Cart/CheckOut";
-
+import MyOrders from "../Pages/Dashboard/User/MyOrders/MyOrders";
+import TrackOrder from "../Pages/Dashboard/User/MyOrders/TrackOrder";
+import Invoice from "../Pages/Dashboard/User/MyOrders/Invoice";
+import Receipt from "../Pages/Dashboard/User/Receipt/Receipt";
+import {
+  PendingOrders,
+  ProcessingOrders,
+  ShippingOrders,
+  DeliveredOrders,
+  CancelledOrders,
+  ReturnedOrders,
+} from "../Pages/Dashboard/Admin/OrdersManagement/OrdersTable/OrdersTable";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -66,7 +70,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/checkout",
-        element: <Private><CheckOut /></Private>,
+        element: (
+          <Private>
+            <CheckOut />
+          </Private>
+        ),
       },
     ],
   },
@@ -109,10 +117,34 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "track",
+        path: "my-orders",
         element: (
           <RoleGuard allow={["user"]}>
-            <Track />
+            <MyOrders />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "track-order/:id",
+        element: (
+          <RoleGuard allow={["user"]}>
+            <TrackOrder />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "invoice/:id",
+        element: (
+          <RoleGuard allow={["user"]}>
+            <Invoice />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "receipt/:id",
+        element: (
+          <RoleGuard allow={["user"]}>
+            <Receipt />
           </RoleGuard>
         ),
       },
@@ -160,7 +192,7 @@ const router = createBrowserRouter([
         path: "pending-orders",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
-            <ManageOrders />
+            <PendingOrders />
           </RoleGuard>
         ),
       },
@@ -168,7 +200,7 @@ const router = createBrowserRouter([
         path: "processing-orders",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
-            <Processing />
+            <ProcessingOrders />
           </RoleGuard>
         ),
       },
@@ -176,7 +208,7 @@ const router = createBrowserRouter([
         path: "shipped-orders",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
-            <Shipping />
+            <ShippingOrders />
           </RoleGuard>
         ),
       },
@@ -184,7 +216,7 @@ const router = createBrowserRouter([
         path: "delivered-orders",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
-            <Delivered />
+            <DeliveredOrders />
           </RoleGuard>
         ),
       },
@@ -192,7 +224,7 @@ const router = createBrowserRouter([
         path: "cancelled-orders",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
-            <Cancelled />
+            <CancelledOrders />
           </RoleGuard>
         ),
       },
@@ -200,7 +232,7 @@ const router = createBrowserRouter([
         path: "returned-orders",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
-            <Returned />
+            <ReturnedOrders />
           </RoleGuard>
         ),
       },

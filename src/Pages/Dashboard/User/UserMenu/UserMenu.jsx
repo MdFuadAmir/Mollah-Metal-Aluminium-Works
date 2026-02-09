@@ -1,15 +1,9 @@
-import { FaShoppingBag, FaHistory, FaTicketAlt, FaTruck, FaHeart } from "react-icons/fa";
+import { FaShoppingBag, FaHeart } from "react-icons/fa";
 import DashboardMenu from "../../Common/DashboardMenu/DashboardMenu";
 
 const UserMenu = ({ closeSidebar }) => {
   return (
     <div className="space-y-2">
-      <DashboardMenu
-        labal={"My Orders"}
-        to={"/dashboard/my-orders"}
-        icon={FaShoppingBag}
-        onClick={closeSidebar}
-      />
       <DashboardMenu
         labal={"Wishlist"}
         to={"/dashboard/wishlist"}
@@ -17,21 +11,9 @@ const UserMenu = ({ closeSidebar }) => {
         onClick={closeSidebar}
       />
       <DashboardMenu
-        labal={"Order History"}
-        to={"/dashboard/my-order-history"}
-        icon={FaHistory}
-        onClick={closeSidebar}
-      />
-      <DashboardMenu
-        labal={"My Vautchers"}
-        to={"/dashboard/my-vautchers"}
-        icon={FaTicketAlt}
-        onClick={closeSidebar}
-      />
-      <DashboardMenu
-        labal={"Tracking Orders"}
-        to={"/dashboard/track"}
-        icon={FaTruck}
+        labal={"My Orders"}
+        to={"/dashboard/my-orders"}
+        icon={FaShoppingBag}
         onClick={closeSidebar}
       />
     </div>

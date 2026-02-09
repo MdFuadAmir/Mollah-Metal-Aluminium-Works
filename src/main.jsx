@@ -10,6 +10,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import router from "./Router/router.jsx";
 AOS.init();
+
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <div className="tagesschrift-regular">

@@ -1,102 +1,53 @@
+/* eslint-disable react-hooks/incompatible-library */
 import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import Loading from "../../Components/Loading/Loading";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  CardElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 
 // ================= PRICE HELPER ==================
 const getPrices = (product, quantity) => {
   const isWholesale = quantity >= 100;
-  let price = 0,
-    discountPrice = 0;
+  let price = 0;
+  let discountPrice = 0;
 
   if (product.category === "metal") {
     price = isWholesale
       ? Number(product.KgwholesalePrice)
       : Number(product.KgretailPrice);
-    discountPrice = isWholesale
-      ? Number(product.KgWholeSellDiscountPrice || product.KgwholesalePrice)
-      : Number(product.KgretailDiscountPrice || product.KgretailPrice);
+    const rawDiscountPrice = isWholesale
+      ? product.KgWholeSellDiscountPrice
+      : product.KgretailDiscountPrice;
+
+    discountPrice =
+      rawDiscountPrice && rawDiscountPrice !== ""
+        ? Number(rawDiscountPrice)
+        : price;
   } else {
     price = isWholesale
       ? Number(product.PwholesalePrice)
       : Number(product.PretailPrice);
-    discountPrice = isWholesale
-      ? Number(product.PWholeSellDiscountPrice || product.PwholesalePrice)
-      : Number(product.PretailDiscountPrice || product.PretailPrice);
+
+    const rawDiscountPrice = isWholesale
+      ? product.PWholeSellDiscountPrice
+      : product.PretailDiscountPrice;
+
+    discountPrice =
+      rawDiscountPrice && rawDiscountPrice !== ""
+        ? Number(rawDiscountPrice)
+        : price;
   }
-
   return { price, discountPrice };
-};
-
-// ================= STRIPE PAYMENT FORM ==================
-const StripePaymentForm = ({ cartItems, totalPrice, user, refetchCart }) => {
-  const stripe = useStripe();
-  const elements = useElements();
-  const axiosPublic = useAxios();
-
-  const handleStripePayment = async (e) => {
-    e.preventDefault();
-    if (!stripe || !elements) return;
-
-    try {
-      const amountInCents = totalPrice * 100;
-      const { data } = await axiosPublic.post("/create-payment-intent", {
-        amount: amountInCents,
-      });
-      const clientSecret = data.clientSecret;
-
-      const card = elements.getElement(CardElement);
-      const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: { card },
-      });
-
-      if (result.error) {
-        toast.error(result.error.message);
-      } else if (result.paymentIntent.status === "succeeded") {
-        await axiosPublic.post("/orders", {
-          userEmail: user.email,
-          cartItems,
-          totalPrice,
-          paymentMethod: "stripe",
-          paymentStatus: "paid",
-        });
-        toast.success("Order placed & paid successfully!");
-        refetchCart(); // clear cart
-      }
-    } catch (err) {
-      console.log(err);
-      toast.error("Payment failed");
-    }
-  };
-
-  return (
-    <form onSubmit={handleStripePayment} className="space-y-4">
-      <CardElement className="p-2 mt-4 bg-gray-800 rounded" />
-      <button
-        type="submit"
-        disabled={!stripe}
-        className="w-full bg-blue-600 hover:bg-blue-700 py-2 rounded text-white"
-      >
-        Pay with Stripe
-      </button>
-    </form>
-  );
 };
 
 // ================= CHECKOUT PAGE ==================
 const CheckOut = () => {
   const { user } = useAuth();
   const axiosPublic = useAxios();
+  const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("cash-on-delivery");
 
   const {
@@ -119,7 +70,7 @@ const CheckOut = () => {
     formState: { errors, isValid },
     watch,
   } = useForm({
-    mode: "onChange", // form validity update on change
+    mode: "onChange",
     defaultValues: {
       fullName: user?.displayName || "",
       email: user?.email || "",
@@ -129,7 +80,7 @@ const CheckOut = () => {
     },
   });
 
-  const shippingInfo = watch(); // get latest form values
+  const shippingInfo = watch();
 
   if (isLoading) return <Loading />;
 
@@ -139,36 +90,36 @@ const CheckOut = () => {
   }, 0);
 
   const handlePlaceOrder = async () => {
+    if (cartItems.length === 0) {
+      toast.error("Cart is empty");
+      return;
+    }
     try {
-      // 1️⃣ Create Order
       const orderRes = await axiosPublic.post("/orders", {
         userEmail: user.email,
         cartItems,
         totalPrice: totalDiscountPrice,
-        paymentMethod: "cash-on-delivery",
-        paymentStatus: "pending",
+        paymentMethod: paymentMethod,
+        paymentStatus:
+          paymentMethod === "cash-on-delivery" ? "pending" : "paid",
         shippingInfo,
       });
-
-      if (!orderRes.data.success) {
-        throw new Error("Order creation failed");
+      // ✅ Safely check success
+      if (orderRes?.data?.success) {
+        toast.success("Order placed successfully!");
+        refetch();
+        navigate("/products");
+      } else {
+        toast.error("Order creation failed. Try again.");
       }
-      // 2️⃣ Delete Cart
-      await axiosPublic.delete(`/carts/by-user?email=${user.email}`);
-
-      toast.success("Order placed successfully!");
-      refetch();
-    } catch (err) {
-      console.log("Place Order Error:", err.response?.data || err.message);
+    } catch {
       toast.error("Order failed. Please try again.");
     }
   };
 
-  const stripePromise = loadStripe("VITE_STRIPE_PUBLISHABLE_KEY");
-
   return (
     <div className="max-w-6xl mx-auto p-4 md:p-8 text-white space-y-6">
-      <h2 className="text-2xl font-bold">Checkout</h2>
+      <h2 className="text-3xl font-bold">Checkout</h2>
 
       {/* Payment Method Selector */}
       <div className="flex gap-4">
@@ -300,14 +251,25 @@ const CheckOut = () => {
               Place Order
             </button>
           ) : (
-            <Elements stripe={stripePromise}>
-              <StripePaymentForm
-                cartItems={cartItems}
-                totalPrice={totalDiscountPrice}
-                user={user}
-                refetchCart={refetch}
-              />
-            </Elements>
+            // <Elements stripe={stripePromise}>
+            //   <StripePaymentForm
+            //     cartItems={cartItems}
+            //     totalPrice={totalDiscountPrice}
+            //     user={user}
+            //     refetchCart={refetch}
+            //   />
+            // </Elements>
+            <button
+              onClick={handlePlaceOrder}
+              disabled={!isValid || cartItems.length === 0}
+              className={`w-full mt-4 py-2 rounded font-semibold ${
+                !isValid || cartItems.length === 0
+                  ? "bg-gray-800 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700"
+              }`}
+            >
+              Pay to Place Order
+            </button>
           )}
         </div>
       </div>

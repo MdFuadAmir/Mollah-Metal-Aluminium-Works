@@ -40,31 +40,42 @@ const Cart = () => {
 
   // ================= PRICE HELPERS =================
   const getPrices = (product, quantity) => {
-    const isWholesale = quantity >= 100;
+  const isWholesale = quantity >= 100;
+  let price = 0;
+  let discountPrice = 0;
 
-    let price = 0;
-    let discountPrice = 0;
+  if (product.category === "metal") {
+    // wholesale or retail price
+    price = isWholesale
+      ? Number(product.KgwholesalePrice)
+      : Number(product.KgretailPrice);
 
-    if (product.category === "metal") {
-      price = isWholesale
-        ? Number(product.KgwholesalePrice)
-        : Number(product.KgretailPrice);
+    // wholesale or retail discount price, fallback to normal price if empty
+    const rawDiscountPrice = isWholesale
+      ? product.KgWholeSellDiscountPrice
+      : product.KgretailDiscountPrice;
 
-      discountPrice = isWholesale
-        ? Number(product.KgWholeSellDiscountPrice || product.KgwholesalePrice)
-        : Number(product.KgretailDiscountPrice || product.KgretailPrice);
-    } else {
-      price = isWholesale
-        ? Number(product.PwholesalePrice)
-        : Number(product.PretailPrice);
+    discountPrice =
+      rawDiscountPrice && rawDiscountPrice !== ""
+        ? Number(rawDiscountPrice)
+        : price;
+  } else {
+    price = isWholesale
+      ? Number(product.PwholesalePrice)
+      : Number(product.PretailPrice);
 
-      discountPrice = isWholesale
-        ? Number(product.PWholeSellDiscountPrice || product.PwholesalePrice)
-        : Number(product.PretailDiscountPrice || product.PretailPrice);
-    }
+    const rawDiscountPrice = isWholesale
+      ? product.PWholeSellDiscountPrice
+      : product.PretailDiscountPrice;
 
-    return { price, discountPrice };
-  };
+    discountPrice =
+      rawDiscountPrice && rawDiscountPrice !== ""
+        ? Number(rawDiscountPrice)
+        : price;
+  }
+
+  return { price, discountPrice };
+};
 
   // ================= ORDER SUMMARY =================
   const totalItems = cartItems.reduce((sum, i) => sum + i.quantity, 0);
@@ -78,6 +89,7 @@ const Cart = () => {
     const { discountPrice } = getPrices(i.productDetails, i.quantity);
     return sum + discountPrice * i.quantity;
   }, 0);
+
 
   // ================= REMOVE FROM CART =================
   const handleRemoveFromCart = async (id) => {

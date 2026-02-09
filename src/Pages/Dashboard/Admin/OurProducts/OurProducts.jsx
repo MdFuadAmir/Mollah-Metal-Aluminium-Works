@@ -7,25 +7,27 @@ import { useState } from "react";
 import ViewProductModal from "./ViewProductModal";
 import EmptyProductCard from "./EmptyProductCard";
 import { useNavigate } from "react-router";
+import Pagination from "../../../../Components/Pagination/Pagination";
 
 const OurProducts = () => {
   const axiosPublic = useAxios();
+  const [page, setPage] = useState(1);
+  const limit = 30;
   const [viewProduct, setViewProduct] = useState(null);
   const navigate = useNavigate();
 
-
-  const {
-    data: products = [],
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["products"],
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: ["products", page],
     queryFn: async () => {
-      const res = await axiosPublic.get("/products");
-      return res.data?.products || [];
+      const res = await axiosPublic.get(
+        `/products?page=${page}&limit=${limit}`,
+      );
+      return res.data;
     },
+    keepPreviousData: true,
   });
-
+  const products = data?.products || [];
+  const totalPages = data?.totalPages || 1;
   // update product
   const handleUpdate = (product) => {
     navigate(`/dashboard/product/${product._id}`);
@@ -68,13 +70,13 @@ const OurProducts = () => {
         </div>
       ),
       {
-        duration: 9000,
+        duration: 3000,
         style: {
           background: "#111827",
           color: "#fff",
           border: "1px solid #374151",
         },
-      }
+      },
     );
   };
 
@@ -83,8 +85,7 @@ const OurProducts = () => {
   return (
     <div className="p-6 text-white">
       <h2 className="text-2xl font-bold mb-6">
-        আমাদের সকল পণ্য{" "}
-        <span className="font-mono">({products.length})</span>
+        আমাদের সকল পণ্য <span className="font-mono">({products.length})</span>
       </h2>
 
       <div className="overflow-x-auto bg-black/50 rounded-xl">
@@ -182,6 +183,9 @@ const OurProducts = () => {
             )}
           </tbody>
         </table>
+      </div>
+      <div className="my-12 ">
+        <Pagination page={page} setPage={setPage} totalPages={totalPages} />
       </div>
     </div>
   );
