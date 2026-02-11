@@ -25,8 +25,6 @@ const Cart = () => {
     },
   });
 
-  if (isLoading) return <Loading />;
-
   // ================= UPDATE QUANTITY =================
   const handleQuantity = async (id, newQuantity) => {
     if (newQuantity < 1) return;
@@ -39,57 +37,57 @@ const Cart = () => {
   };
 
   // ================= PRICE HELPERS =================
-  const getPrices = (product, quantity) => {
-  const isWholesale = quantity >= 100;
-  let price = 0;
-  let discountPrice = 0;
+  const getPrices = (product, quantity, sellType) => {
+    if (!product) return { price: 0, discountPrice: 0 };
 
-  if (product.category === "metal") {
-    // wholesale or retail price
-    price = isWholesale
-      ? Number(product.KgwholesalePrice)
-      : Number(product.KgretailPrice);
+    const isWholesale = quantity >= 100;
 
-    // wholesale or retail discount price, fallback to normal price if empty
-    const rawDiscountPrice = isWholesale
-      ? product.KgWholeSellDiscountPrice
-      : product.KgretailDiscountPrice;
+    let retailPrice = 0;
+    let discountPrice = 0;
+    let wholesalePrice = 0;
+    let wholesaleDiscount = 0;
 
-    discountPrice =
-      rawDiscountPrice && rawDiscountPrice !== ""
-        ? Number(rawDiscountPrice)
-        : price;
-  } else {
-    price = isWholesale
-      ? Number(product.PwholesalePrice)
-      : Number(product.PretailPrice);
+    if (sellType === "kg") {
+      retailPrice = Number(product.KgretailPrice) || 0;
+      discountPrice = Number(product.KgretailDiscountPrice) || 0;
+      wholesalePrice = Number(product.KgwholesalePrice) || 0;
+      wholesaleDiscount = Number(product.KgWholeSellDiscountPrice) || 0;
+    } else {
+      retailPrice = Number(product.PretailPrice) || 0;
+      discountPrice = Number(product.PretailDiscountPrice) || 0;
+      wholesalePrice = Number(product.PwholesalePrice) || 0;
+      wholesaleDiscount = Number(product.PWholeSellDiscountPrice) || 0;
+    }
 
-    const rawDiscountPrice = isWholesale
-      ? product.PWholeSellDiscountPrice
-      : product.PretailDiscountPrice;
+    // Final price determination
+    let finalPrice = isWholesale
+      ? wholesaleDiscount > 0
+        ? wholesaleDiscount
+        : wholesalePrice
+      : discountPrice > 0
+      ? discountPrice
+      : retailPrice;
 
-    discountPrice =
-      rawDiscountPrice && rawDiscountPrice !== ""
-        ? Number(rawDiscountPrice)
-        : price;
-  }
+    return {
+      price: isWholesale ? wholesalePrice : retailPrice,
+      discountPrice: finalPrice,
+    };
+  };
 
-  return { price, discountPrice };
-};
+  if (isLoading) return <Loading />;
 
   // ================= ORDER SUMMARY =================
-  const totalItems = cartItems.reduce((sum, i) => sum + i.quantity, 0);
+  const totalItems = cartItems.reduce((sum, i) => sum + (Number(i.quantity) || 0), 0);
 
   const totalPrice = cartItems.reduce((sum, i) => {
-    const { price } = getPrices(i.productDetails, i.quantity);
-    return sum + price * i.quantity;
+    const { price } = getPrices(i.productDetails, Number(i.quantity) || 0, i.sellType);
+    return sum + price * (Number(i.quantity) || 0);
   }, 0);
 
   const totalDiscountPrice = cartItems.reduce((sum, i) => {
-    const { discountPrice } = getPrices(i.productDetails, i.quantity);
-    return sum + discountPrice * i.quantity;
+    const { discountPrice } = getPrices(i.productDetails, Number(i.quantity) || 0, i.sellType);
+    return sum + discountPrice * (Number(i.quantity) || 0);
   }, 0);
-
 
   // ================= REMOVE FROM CART =================
   const handleRemoveFromCart = async (id) => {
@@ -109,11 +107,14 @@ const Cart = () => {
         {/* ================= LEFT: CART ITEMS ================= */}
         <div className="lg:col-span-2 space-y-4">
           {cartItems.map((item) => {
+            if (!item.productDetails) return null;
             const product = item.productDetails;
-            const quantity = item.quantity;
+            const quantity = Number(item.quantity) || 0;
 
-            const { price, discountPrice } = getPrices(product, quantity);
+            const { price, discountPrice } = getPrices(product, quantity, item.sellType);
+
             const finalPrice = discountPrice || price;
+            const safePrice = Number(finalPrice) * quantity;
 
             return (
               <div
@@ -138,22 +139,22 @@ const Cart = () => {
                       )}
                       ৳{discountPrice}
                       <span className="text-gray-400 ml-1">
-                        {product.category === "metal" ? "/ কেজি" : "/ পিস"}
+                        {item.sellType === "kg" ? "/ কেজি" : "/ পিস"}
                       </span>
                     </p>
 
                     <div className="flex flex-col items-start space-y-2">
                       {quantity >= 100 && (
-                      <span className="text-xs text-orange-400">
-                        Wholesale price applied
-                      </span>
-                    )}
-                    <button
-                      onClick={() => handleRemoveFromCart(item._id)}
-                      className="text-xs text-red-400 hover:text-red-500"
-                    >
-                      Remove
-                    </button>
+                        <span className="text-xs text-orange-400">
+                          Wholesale price applied
+                        </span>
+                      )}
+                      <button
+                        onClick={() => handleRemoveFromCart(item._id)}
+                        className="text-xs text-red-400 hover:text-red-500"
+                      >
+                        Remove
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -188,9 +189,7 @@ const Cart = () => {
 
                   <p className="text-sm font-bold">
                     Total:{" "}
-                    <span className="text-emerald-400 font-mono">
-                      ৳{finalPrice * quantity}
-                    </span>
+                    <span className="text-emerald-400 font-mono">৳{safePrice}</span>
                   </p>
                 </div>
               </div>
@@ -210,9 +209,7 @@ const Cart = () => {
 
             <div className="flex justify-between">
               <span>Total Price</span>
-              <span className="line-through text-gray-400 font-mono">
-                ৳{totalPrice}
-              </span>
+              <span className="line-through text-gray-400 font-mono">৳{totalPrice}</span>
             </div>
 
             <div className="flex justify-between text-emerald-400 font-semibold">

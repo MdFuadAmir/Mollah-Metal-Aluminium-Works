@@ -14,6 +14,7 @@ import {
   FaUndoAlt,
   FaTimesCircle,
 } from "react-icons/fa";
+import { FiInbox } from "react-icons/fi";
 import DashboardMenu from "../../Common/DashboardMenu/DashboardMenu";
 import { useState } from "react";
 
@@ -91,6 +92,12 @@ const AdminMenu = ({ closeSidebar }) => {
         {openB && (
           <div className="ml-6 mt-1 space-y-1">
             <DashboardMenu
+              labal={"Requested Orders"}
+              to={"/dashboard/requested-orders"}
+              icon={FiInbox}
+              onClick={closeSidebar}
+            />
+            <DashboardMenu
               labal={"Pending Orders"}
               to={"/dashboard/pending-orders"}
               icon={FaHourglassHalf}
@@ -134,6 +141,12 @@ const AdminMenu = ({ closeSidebar }) => {
         labal={"All Receipts"}
         to={"/dashboard/all-receipts"}
         icon={FaFileInvoice}
+        onClick={closeSidebar}
+      />
+      <DashboardMenu
+        labal={"My Orders"}
+        to={"/dashboard/my-orders"}
+        icon={FaShoppingBag}
         onClick={closeSidebar}
       />
     </div>

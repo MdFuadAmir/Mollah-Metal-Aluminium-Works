@@ -35,7 +35,7 @@ const Invoice = () => {
   return (
     <div className="max-w-4xl mx-auto p-6 text-white">
       <div id="invoice-area" className="bg-gray-900 p-6 rounded-lg space-y-4">
-        <h2 className="text-2xl font-bold text-center">INVOICE</h2>
+        <h2 className="text-2xl font-bold text-center">মোল্লা মেটাল অ্যালুমিনিয়াম ওয়ার্কস</h2>
 
         <div className="flex justify-between">
           <div>

@@ -34,7 +34,9 @@ import {
   DeliveredOrders,
   CancelledOrders,
   ReturnedOrders,
+  RequestedOrders,
 } from "../Pages/Dashboard/Admin/OrdersManagement/OrdersTable/OrdersTable";
+import OrderDetails from "../Pages/Dashboard/Admin/OrdersManagement/OrderDetails/OrderDetails";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -119,7 +121,7 @@ const router = createBrowserRouter([
       {
         path: "my-orders",
         element: (
-          <RoleGuard allow={["user"]}>
+          <RoleGuard allow={["user", "admin"]}>
             <MyOrders />
           </RoleGuard>
         ),
@@ -127,7 +129,7 @@ const router = createBrowserRouter([
       {
         path: "track-order/:id",
         element: (
-          <RoleGuard allow={["user"]}>
+          <RoleGuard allow={["user", "admin"]}>
             <TrackOrder />
           </RoleGuard>
         ),
@@ -135,7 +137,7 @@ const router = createBrowserRouter([
       {
         path: "invoice/:id",
         element: (
-          <RoleGuard allow={["user"]}>
+          <RoleGuard allow={["user", "admin"]}>
             <Invoice />
           </RoleGuard>
         ),
@@ -143,7 +145,7 @@ const router = createBrowserRouter([
       {
         path: "receipt/:id",
         element: (
-          <RoleGuard allow={["user"]}>
+          <RoleGuard allow={["user", "admin"]}>
             <Receipt />
           </RoleGuard>
         ),
@@ -185,6 +187,14 @@ const router = createBrowserRouter([
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
             <UpdateProduct />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "requested-orders",
+        element: (
+          <RoleGuard allow={["admin", "moderator"]}>
+            <RequestedOrders />
           </RoleGuard>
         ),
       },
@@ -241,6 +251,14 @@ const router = createBrowserRouter([
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
             <AllVautchers />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "order-details/:id",
+        element: (
+          <RoleGuard allow={["admin", "moderator"]}>
+            <OrderDetails />
           </RoleGuard>
         ),
       },

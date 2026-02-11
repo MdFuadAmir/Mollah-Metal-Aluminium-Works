@@ -7,9 +7,14 @@ import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { RiAccountCircleFill } from "react-icons/ri";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
+import useAxios from "../../Hooks/useAxios";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../Loading/Loading";
+
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { user, logOut } = useAuth();
+  const axiosPublic = useAxios();
 
   const handleLogOut = () => {
     logOut()
@@ -23,6 +28,18 @@ const Navbar = () => {
   const handleLoginFirst = () => {
     toast.error("Please login !");
   };
+
+  const { data: carts = [], isLoading } = useQuery({
+    queryKey: ["carts", user?.email],
+    queryFn: async () => {
+      if (!user?.email) return [];
+      const { data } = await axiosPublic.get(`/orders?email=${user.email}`);
+      return data.products || [];
+    },
+    enabled: !!user?.email,
+  });
+
+  if (isLoading) return <Loading />;
 
   const navLinks = (
     <>
@@ -108,8 +125,8 @@ const Navbar = () => {
           {/* cart */}
           <NavLink to={"/cart"}>
             <FaShoppingCart size={25} className="relative text-white" />
-            <p className="absolute p-1 text-[8px] rounded-full bg-red-500 text-white -mt-2 ml-3 font-mono">
-              1077
+            <p className="absolute p-1 px-2 text-[8px] rounded-full bg-red-500 text-white -mt-2 ml-3 font-mono">
+              {carts.length}
             </p>
           </NavLink>
           {/* login */}
