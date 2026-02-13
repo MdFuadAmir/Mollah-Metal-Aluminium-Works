@@ -121,6 +121,23 @@ const MyOrders = () => {
     );
   };
 
+  const handleReturnRequest = async (id) => {
+  try {
+    const res = await axiosPublic.patch(`/orders/return/${id}`);
+
+    if (res.data.modifiedCount > 0) {
+      toast.success("Return request sent successfully");
+      refetch();
+    } else {
+      toast.error("Return request failed");
+    }
+  } catch (error) {
+    console.error(error);
+    toast.error("Something went wrong");
+  }
+};
+
+
   if (isLoading) return <Loading />;
 
   if (!orders.length)
@@ -233,7 +250,6 @@ const MyOrders = () => {
                           Cancel
                         </button>
                       )}
-
                     {order.status !== "canceled" && (
                       <button
                         onClick={() =>
@@ -242,17 +258,6 @@ const MyOrders = () => {
                         className="px-2 py-1 bg-blue-600 rounded hover:bg-blue-700 text-xs font-semibold"
                       >
                         Track
-                      </button>
-                    )}
-
-                    {order.status !== "canceled" && (
-                      <button
-                        onClick={() =>
-                          navigate(`/dashboard/invoice/${order._id}`)
-                        }
-                        className="px-2 py-1 bg-purple-600 rounded hover:bg-purple-700 text-xs font-semibold"
-                      >
-                        Invoice
                       </button>
                     )}
 
@@ -266,6 +271,13 @@ const MyOrders = () => {
                         Receipt
                       </button>
                     )}
+                    {order.paymentStatus === "paid" &&
+                      order.status === "delivered" && (
+                        <button onClick={() => handleReturnRequest(order._id)}
+                         className="px-2 py-1 bg-red-500/50 rounded hover:bg-red-600/50 text-xs font-semibold">
+                          Return Request
+                        </button>
+                      )}
                   </div>
                 </div>
 

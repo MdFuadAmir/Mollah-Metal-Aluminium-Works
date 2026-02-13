@@ -13,19 +13,74 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import useAxios from "../../../../Hooks/useAxios";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../../Components/Loading/Loading";
 
 const ModeratorDashboard = () => {
+  const axiosPublic = useAxios();
   const today = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
+  // =====
+  const { data: statss = {}, isLoading } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/admin/stats");
+      return res.data;
+    },
+  });
+  // =====
+  const { data: orderChartData = [], isLoading: ordersLoading } = useQuery({
+    queryKey: ["order-chart"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/admin/order-stats");
+      return res.data;
+    },
+  });
+  // =====
+  const { data: recentOrders = [], isLoading: recentLoading } = useQuery({
+    queryKey: ["recent-orders"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/admin/recent-orders");
+      return res.data;
+    },
+  });
+
+  const {
+    totalProducts,
+    totalOrders,
+    deliveredOrders,
+    requestedOrders,
+  } = statss;
+
   const stats = [
-    { title: "Products", value: 540, icon: FaBox },
-    { title: "Total Orders", value: 3420, icon: FaShoppingCart },
-    { title: "Pending Orders", value: 120, icon: FaHourglassHalf },
-    { title: "Delevered Orders", value: 3300, icon: FaCheckCircle },
+    {
+      title: "Products",
+      value: totalProducts,
+      icon: FaBox,
+      path: "/dashboard/our-products",
+    },
+    {
+      title: "Total Orders",
+      value: totalOrders,
+      icon: FaShoppingCart,
+    },
+    {
+      title: "Requested Orders",
+      value: requestedOrders,
+      icon: FaHourglassHalf,
+      path: "/dashboard/requested-orders",
+    },
+    {
+      title: "Delivered Orders",
+      value: deliveredOrders,
+      icon: FaCheckCircle,
+      path: "/dashboard/delivered-orders",
+    },
   ];
 
   const orderData = [
@@ -37,15 +92,21 @@ const ModeratorDashboard = () => {
     { name: "Sat", orders: 300 },
   ];
 
+    if (isLoading || ordersLoading || recentLoading) {
+    return <Loading />;
+  }
   return (
     <div className="min-h-screen bg-black/70 px-6 md:px-8 py-12 text-white">
       {/* Header */}
       <div className="flex justify-between items-center gap-3 mb-12">
         <div>
-        <h1 className="text-xl font-bold uppercase text-green-500">
-          <span className="text-red-500/70">MMAW</span> Moderator
-        </h1>
-        <p><span className="text-gray-500">Welcome Back,</span> <span className="text-orange-500/80">Md Fuad</span></p>
+          <h1 className="text-xl font-bold uppercase text-green-500">
+            <span className="text-red-500/70">MMAW</span> Moderator
+          </h1>
+          <p>
+            <span className="text-gray-500">Welcome Back,</span>{" "}
+            <span className="text-orange-500/80">Md Fuad</span>
+          </p>
         </div>
         <p className="text-gray-400">
           Date: <span className="text-green-600 text-lg">{today}</span>
@@ -64,11 +125,11 @@ const ModeratorDashboard = () => {
         <div className="bg-gray-900 p-5 rounded-xl">
           <h3 className="mb-4 font-semibold">Orders Overview</h3>
           <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={orderData}>
+            <LineChart data={orderChartData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="orders" />
+              <Line type="monotone" dataKey="orders" stroke="#00FFAA" />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -89,24 +150,15 @@ const ModeratorDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              <OrderRow
-                id="#ORD101"
-                name="Rakib"
-                amount="৳1200"
-                status="Pending"
-              />
-              <OrderRow
-                id="#ORD102"
-                name="Fuad"
-                amount="৳3500"
-                status="Completed"
-              />
-              <OrderRow
-                id="#ORD103"
-                name="Hasan"
-                amount="৳980"
-                status="Processing"
-              />
+              {recentOrders.map((o) => (
+                <OrderRow
+                  key={o._id}
+                  id={`#${o._id}`}
+                  name={o.userEmail}
+                  amount={`৳ ${o.totalPrice}`}
+                  status={o.status}
+                />
+              ))}
             </tbody>
           </table>
         </div>
@@ -132,8 +184,8 @@ const OrderRow = ({ id, name, amount, status }) => {
     status === "Completed"
       ? "text-green-500"
       : status === "Pending"
-      ? "text-yellow-500"
-      : "text-blue-500";
+        ? "text-yellow-500"
+        : "text-blue-500";
 
   return (
     <tr className="border-b border-gray-800">

@@ -37,8 +37,6 @@ const Product = ({ prod }) => {
 
   return (
     <Link
-      data-aos="fade-up"
-      data-aos-duration="1000"
       to={`/product/${prod._id}`}
       key={prod._id}
       className="bg-gray-900/50 border border-gray-700/50 rounded-xl overflow-hidden shadow-md transition"

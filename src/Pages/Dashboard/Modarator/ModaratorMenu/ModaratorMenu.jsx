@@ -2,7 +2,6 @@ import {
   FaPlusSquare,
   FaBoxOpen,
   FaCheckCircle,
-  FaFileInvoice,
   FaHourglassHalf,
   FaCogs,
   FaTruck,
@@ -11,6 +10,7 @@ import {
   FaShoppingBag,
   FaChevronDown,
 } from "react-icons/fa";
+import { MdFeedback, MdMarkEmailUnread } from "react-icons/md";
 import DashboardMenu from "../../Common/DashboardMenu/DashboardMenu";
 import { useState } from "react";
 
@@ -89,11 +89,16 @@ const ModaratorMenu = ({ closeSidebar }) => {
           </div>
         )}
       </div>
-
       <DashboardMenu
-        labal={"All Vautchers"}
-        to={"/dashboard/all-receipts"}
-        icon={FaFileInvoice}
+        labal={"Feedbacks"}
+        to={"/dashboard/feedbacks"}
+        icon={MdFeedback}
+        onClick={closeSidebar}
+      />
+      <DashboardMenu
+        labal={"Contacts"}
+        to={"/dashboard/contacts"}
+        icon={MdMarkEmailUnread}
         onClick={closeSidebar}
       />
     </div>

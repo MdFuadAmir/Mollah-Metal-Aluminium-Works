@@ -3,7 +3,6 @@ import {
   FaPlusSquare,
   FaBoxOpen,
   FaCheckCircle,
-  FaFileInvoice,
   FaChevronDown,
   FaUserShield,
   FaUsers,
@@ -17,6 +16,7 @@ import {
 import { FiInbox } from "react-icons/fi";
 import DashboardMenu from "../../Common/DashboardMenu/DashboardMenu";
 import { useState } from "react";
+import { MdFeedback, MdMarkEmailUnread } from "react-icons/md";
 
 const AdminMenu = ({ closeSidebar }) => {
   const [openA, setOpenA] = useState(false);
@@ -136,17 +136,16 @@ const AdminMenu = ({ closeSidebar }) => {
           </div>
         )}
       </div>
-
       <DashboardMenu
-        labal={"All Receipts"}
-        to={"/dashboard/all-receipts"}
-        icon={FaFileInvoice}
+        labal={"Feedbacks"}
+        to={"/dashboard/feedbacks"}
+        icon={MdFeedback}
         onClick={closeSidebar}
       />
       <DashboardMenu
-        labal={"My Orders"}
-        to={"/dashboard/my-orders"}
-        icon={FaShoppingBag}
+        labal={"Contacts"}
+        to={"/dashboard/contacts"}
+        icon={MdMarkEmailUnread}
         onClick={closeSidebar}
       />
     </div>

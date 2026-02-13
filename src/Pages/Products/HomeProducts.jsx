@@ -21,9 +21,10 @@ const HomeProducts = () => {
   return (
     <div className="space-y-24">
       <Title
-        title={`MMAW Products`}
-        subTitle={`Factory direct aluminium kitchen utensils`}
+        title={`MMAW পণ্য`}
+        subTitle={`আপনার রান্নাঘরের জন্য প্রয়োজনীয় অ্যালুমিনিয়ামের সব পণ্য এক জায়গায়`}
       />
+
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {products.map((prod) => (
           <Product key={prod._id} prod={prod} />

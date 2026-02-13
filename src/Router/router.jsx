@@ -9,7 +9,6 @@ import DashboardForAll from "../Pages/Dashboard/Common/DashboardForAll/Dashboard
 import ManageUsers from "../Pages/Dashboard/Admin/UserManagement/ManageUsers/ManageUsers";
 import OurProducts from "../Pages/Dashboard/Admin/OurProducts/OurProducts";
 import AddProducts from "../Pages/Dashboard/Admin/AddProducts/AddProducts";
-import AllVautchers from "../Pages/Dashboard/Admin/AllVautchers/AllVautchers";
 import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Authentication/Login/Login";
 import SignUp from "../Authentication/SignUp/SignUp";
@@ -25,7 +24,6 @@ import Cart from "../Pages/Cart/Cart";
 import CheckOut from "../Pages/Cart/CheckOut";
 import MyOrders from "../Pages/Dashboard/User/MyOrders/MyOrders";
 import TrackOrder from "../Pages/Dashboard/User/MyOrders/TrackOrder";
-import Invoice from "../Pages/Dashboard/User/MyOrders/Invoice";
 import Receipt from "../Pages/Dashboard/User/Receipt/Receipt";
 import {
   PendingOrders,
@@ -37,6 +35,8 @@ import {
   RequestedOrders,
 } from "../Pages/Dashboard/Admin/OrdersManagement/OrdersTable/OrdersTable";
 import OrderDetails from "../Pages/Dashboard/Admin/OrdersManagement/OrderDetails/OrderDetails";
+import ManageContact from "../Pages/Dashboard/Admin/ManageContact/ManageContact";
+import ManageFeedbacks from "../Pages/Dashboard/Admin/ManageFeedbacks/ManageFeedbacks";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -131,14 +131,6 @@ const router = createBrowserRouter([
         element: (
           <RoleGuard allow={["user", "admin"]}>
             <TrackOrder />
-          </RoleGuard>
-        ),
-      },
-      {
-        path: "invoice/:id",
-        element: (
-          <RoleGuard allow={["user", "admin"]}>
-            <Invoice />
           </RoleGuard>
         ),
       },
@@ -247,18 +239,26 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "all-receipts",
-        element: (
-          <RoleGuard allow={["admin", "moderator"]}>
-            <AllVautchers />
-          </RoleGuard>
-        ),
-      },
-      {
         path: "order-details/:id",
         element: (
           <RoleGuard allow={["admin", "moderator"]}>
             <OrderDetails />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "feedbacks",
+        element: (
+          <RoleGuard allow={["admin", "moderator"]}>
+            <ManageFeedbacks />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: "contacts",
+        element: (
+          <RoleGuard allow={["admin", "moderator"]}>
+            <ManageContact />
           </RoleGuard>
         ),
       },

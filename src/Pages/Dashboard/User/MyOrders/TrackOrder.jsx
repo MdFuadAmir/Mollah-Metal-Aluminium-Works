@@ -12,7 +12,7 @@ const STATUS_CLASSES = {
   refund_pending: "bg-orange-500 text-white",
 };
 
-const STATUS_ORDER = ["requested","pending", "processing", "shipped", "delivered"];
+const STATUS_ORDER = ["requested","pending", "processing", "shipping", "delivered"];
 
 const TrackOrder = () => {
   const { id } = useParams();

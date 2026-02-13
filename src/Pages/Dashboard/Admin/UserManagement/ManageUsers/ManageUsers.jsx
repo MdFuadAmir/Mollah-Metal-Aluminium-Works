@@ -5,45 +5,58 @@ import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import useAxios from "../../../../../Hooks/useAxios";
+import Pagination from "../../../../../Components/Pagination/Pagination";
 
 const ManageUsers = () => {
   const axiosPublic = useAxios();
   const [selectedUser, setSelectedUser] = useState(null);
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  // ====== get user from database
+
+  // ✅ pagination state
+  const [page, setPage] = useState(1);
+  const limit = 30;
+
+  // ====== get user from database (with pagination)
   const {
-    data: users,
+    data = {},
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["normal-users"],
+    queryKey: ["normal-users", page],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/users/normal-users`);
+      const { data } = await axiosPublic.get(
+        `/users/normal-users?page=${page}&limit=${limit}`
+      );
       return data;
     },
   });
+
+  const { users = [], totalPages = 0 } = data;
+
   // ====== toggle block/unblock
   const toggleStatus = async (data) => {
-    console.log(data);
     try {
       await axiosPublic.patch(`/users/toggle-status/${data._id}`);
       toast.success(
-        `User ${user.status === "verified" ? "Blocked" : "Unblocked"}`
+        `User ${data.status === "verified" ? "Blocked" : "Unblocked"}`
       );
-      queryClient.invalidateQueries(["normal-users"]);
+      queryClient.invalidateQueries({ queryKey: ["normal-users"] });
     } catch (error) {
       toast.error(error.message);
     }
   };
+
   // ======= toggleRole
   const toggleRole = async (user) => {
     try {
-      const res = await axiosPublic.patch(`/users/make-moderator/${user._id}`);
+      const res = await axiosPublic.patch(
+        `/users/make-moderator/${user._id}`
+      );
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to Moderator");
-        queryClient.invalidateQueries(["normal-users"]);
+        queryClient.invalidateQueries({ queryKey: ["normal-users"] });
       } else {
         toast.error("Role change failed");
       }
@@ -59,6 +72,7 @@ const ManageUsers = () => {
   return (
     <div className="text-white p-6 md:p-8">
       <h2 className="text-2xl font-bold mb-6">ইউজার ম্যানেজমেন্ট</h2>
+
       <div className="overflow-x-auto bg-black/40 rounded-xl shadow">
         <table className="w-full text-sm text-left">
           <thead className="bg-black/70 text-gray-300">
@@ -79,40 +93,41 @@ const ManageUsers = () => {
                 key={us._id}
                 className="border-b border-gray-700 hover:bg-black/30"
               >
-                <td className="px-4 py-3">{index + 1}</td>
-                {/* name */}
+                <td className="px-4 py-3">
+                  {(page - 1) * limit + index + 1}
+                </td>
+
                 <td className="px-4 py-3">{us?.name || "N/A"}</td>
-                {/* email */}
                 <td className="px-4 py-3 text-gray-300">{us.email}</td>
-                {/* phone */}
                 <td className="px-4 py-3 text-gray-300">
                   {us.phone ? us.phone : "N/A"}
                 </td>
-                {/* role */}
+
                 <td className="px-4 py-3 capitalize text-blue-500">
                   {us.role}
                 </td>
-                {/* status */}
+
                 <td className="px-4 py-3">
                   {us.status === "verified" ? (
                     <span className="text-green-400 font-semibold">
                       Verified
                     </span>
                   ) : (
-                    <span className="text-red-400 font-semibold">Blocked</span>
+                    <span className="text-red-400 font-semibold">
+                      Blocked
+                    </span>
                   )}
                 </td>
-                {/* actions */}
+
                 <td className="px-4 py-3">
                   <div className="flex justify-center gap-3">
-                    {/* vtew details */}
                     <button
                       onClick={() => setSelectedUser(us)}
                       className="flex items-center gap-1 bg-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-700"
                     >
                       <FaEye /> View
                     </button>
-                    {/* make moderator */}
+
                     <button
                       onClick={() => toggleRole(us)}
                       className="flex items-center gap-1 bg-green-600/80 hover:bg-green-800 px-3 py-1 rounded text-xs"
@@ -120,7 +135,7 @@ const ManageUsers = () => {
                       <FaUserShield />
                       Moderator
                     </button>
-                    {/* block/unblock */}
+
                     <button
                       onClick={() => toggleStatus(us)}
                       className={`flex items-center gap-1 px-3 py-1 rounded text-xs ${
@@ -147,11 +162,19 @@ const ManageUsers = () => {
           </tbody>
         </table>
       </div>
+
+      {/* ✅ Pagination */}
+      <div className="mt-12">
+        <Pagination page={page} setPage={setPage} totalPages={totalPages} />
+      </div>
+
       {/* user details view modal */}
       {selectedUser && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
           <div className="bg-gray-900 p-6 rounded-xl w-96 space-y-1">
-            <h3 className="text-lg font-bold mb-3 text-center">User Details</h3>
+            <h3 className="text-lg font-bold mb-3 text-center">
+              User Details
+            </h3>
             <p>
               <b>Name:</b>{" "}
               <span className="text-gray-500">
@@ -160,7 +183,9 @@ const ManageUsers = () => {
             </p>
             <p>
               <b>Email:</b>{" "}
-              <span className="text-gray-500">{selectedUser.email}</span>
+              <span className="text-gray-500">
+                {selectedUser.email}
+              </span>
             </p>
             <p>
               <b>Phone:</b>{" "}
@@ -188,11 +213,15 @@ const ManageUsers = () => {
             </p>
             <p>
               <b>Role:</b>{" "}
-              <span className="text-gray-500">{selectedUser.role}</span>
+              <span className="text-gray-500">
+                {selectedUser.role}
+              </span>
             </p>
             <p>
               <b>Status:</b>{" "}
-              <span className="text-gray-500">{selectedUser.status}</span>
+              <span className="text-gray-500">
+                {selectedUser.status}
+              </span>
             </p>
 
             <button

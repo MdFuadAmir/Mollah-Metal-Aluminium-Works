@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { useQuery } from "@tanstack/react-query";
 import {
   FaUsers,
   FaUserShield,
@@ -18,40 +19,113 @@ import {
   BarChart,
   Bar,
 } from "recharts";
+import useAxios from "../../../../Hooks/useAxios";
+import Loading from "../../../../Components/Loading/Loading";
+import { Link } from "react-router";
 
 const AdminDashboard = () => {
-  const today = new Date().toLocaleDateString("en-GB", {
+  const axiosPublic = useAxios();
+    const today = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
   });
 
+  // =====
+  const { data: statss = {}, isLoading } = useQuery({
+    queryKey: ["admin-stats"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/admin/stats");
+      return res.data;
+    },
+  });
+  // =====
+  const { data: orderChartData = [], isLoading: ordersLoading } = useQuery({
+    queryKey: ["order-chart"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/admin/order-stats");
+      return res.data;
+    },
+  });
+  // =====
+  const { data: recentOrders = [], isLoading: recentLoading } = useQuery({
+    queryKey: ["recent-orders"],
+    queryFn: async () => {
+      const res = await axiosPublic.get("/admin/recent-orders");
+      return res.data;
+    },
+  });
+  // =====
+  const { data: totalSellChartData = [], isLoading: revinueLoading } = useQuery(
+    {
+      queryKey: ["revenue-chart"],
+      queryFn: async () => {
+        const res = await axiosPublic.get("/admin/revenue-stats");
+        return res.data;
+      },
+    },
+  );
+
+  const {
+    totalUsers,
+    totalAdmins,
+    totalModerators,
+    totalProducts,
+    totalOrders,
+    deliveredOrders,
+    requestedOrders,
+    totalRevenue,
+  } = statss;
+  const adminmoderator = totalAdmins + totalModerators;
+
+
+  // ===== cards =====
   const stats = [
-    { title: "Total Users", value: 1240, icon: FaUsers },
-    { title: "Moderators", value: 8, icon: FaUserShield },
-    { title: "Products", value: 540, icon: FaBox },
-    { title: "Total Orders", value: 3420, icon: FaShoppingCart },
-    { title: "Pending Orders", value: 120, icon: FaHourglassHalf },
-    { title: "Completed Orders", value: 3300, icon: FaCheckCircle },
-    { title: "Total Revenue", value: "৳ 123456789", icon: FaDollarSign },
+    {
+      title: "Total Users",
+      value: totalUsers,
+      icon: FaUsers,
+      path: "/dashboard/manage-users",
+    },
+    {
+      title: "Moderators",
+      value: adminmoderator,
+      icon: FaUserShield,
+      path: "/dashboard/manage-admin&moderators",
+    },
+    {
+      title: "Products",
+      value: totalProducts,
+      icon: FaBox,
+      path: "/dashboard/our-products",
+    },
+    {
+      title: "Total Orders",
+      value: totalOrders,
+      icon: FaShoppingCart,
+    },
+    {
+      title: "Requested Orders",
+      value: requestedOrders,
+      icon: FaHourglassHalf,
+      path: "/dashboard/requested-orders",
+    },
+    {
+      title: "Delivered Orders",
+      value: deliveredOrders,
+      icon: FaCheckCircle,
+      path: "/dashboard/delivered-orders",
+    },
+    {
+      title: "Total Sell",
+      value: `৳ ${(totalRevenue || 0).toLocaleString()}`,
+      icon: FaDollarSign,
+    },
   ];
 
-  const orderData = [
-    { name: "Mon", orders: 120 },
-    { name: "Tue", orders: 200 },
-    { name: "Wed", orders: 150 },
-    { name: "Thu", orders: 280 },
-    { name: "Fri", orders: 220 },
-    { name: "Sat", orders: 300 },
-  ];
-
-  const revenueData = [
-    { name: "Jan", revenue: 12000 },
-    { name: "Feb", revenue: 18000 },
-    { name: "Mar", revenue: 25000 },
-    { name: "Apr", revenue: 22000 },
-    { name: "May", revenue: 32000 },
-  ];
+  if (isLoading || revinueLoading || ordersLoading || recentLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="min-h-screen bg-black/70 px-6 md:px-8 py-12 text-white">
@@ -77,23 +151,23 @@ const AdminDashboard = () => {
         <div className="bg-gray-900 p-5 rounded-xl">
           <h3 className="mb-4 font-semibold">Orders Overview</h3>
           <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={orderData}>
+            <LineChart data={orderChartData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="orders" />
+              <Line type="monotone" dataKey="orders" stroke="#00FFAA" />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
         <div className="bg-gray-900 p-5 rounded-xl">
-          <h3 className="mb-4 font-semibold">Revenue Overview</h3>
+          <h3 className="mb-4 font-semibold">Total Sell Overview</h3>
           <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={revenueData}>
+            <BarChart data={totalSellChartData}>
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="revenue" />
+              <Bar dataKey="revenue" fill="#00FFAA" />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -114,24 +188,15 @@ const AdminDashboard = () => {
               </tr>
             </thead>
             <tbody>
-              <OrderRow
-                id="#ORD101"
-                name="Rakib"
-                amount="৳1200"
-                status="Pending"
-              />
-              <OrderRow
-                id="#ORD102"
-                name="Fuad"
-                amount="৳3500"
-                status="Completed"
-              />
-              <OrderRow
-                id="#ORD103"
-                name="Hasan"
-                amount="৳980"
-                status="Processing"
-              />
+              {recentOrders.map((o) => (
+                <OrderRow
+                  key={o._id}
+                  id={`#${o._id}`}
+                  name={o.userEmail}
+                  amount={`৳ ${o.totalPrice}`}
+                  status={o.status}
+                />
+              ))}
             </tbody>
           </table>
         </div>
@@ -142,29 +207,33 @@ const AdminDashboard = () => {
 
 export default AdminDashboard;
 
-const StatCard = ({ title, value, icon: Icon }) => (
-  <div className="bg-gray-900 p-4 rounded-xl flex justify-between items-center">
+// =========================
+const StatCard = ({ title, value, icon: Icon, path }) => (
+  <Link
+    to={path}
+    className="bg-gray-900 p-4 rounded-xl flex justify-between items-center"
+  >
     <div>
       <p className="text-xs text-gray-400">{title}</p>
       <h3 className="text-lg font-bold">{value}</h3>
     </div>
     <Icon className="text-2xl text-blue-500" />
-  </div>
+  </Link>
 );
 
 const OrderRow = ({ id, name, amount, status }) => {
   const color =
-    status === "Completed"
+    status === "delivered"
       ? "text-green-500"
-      : status === "Pending"
-      ? "text-yellow-500"
-      : "text-blue-500";
+      : status === "requested"
+        ? "text-yellow-500"
+        : "text-blue-500";
 
   return (
     <tr className="border-b border-gray-800">
       <td className="py-2">{id}</td>
       <td className="py-2">{name}</td>
-      <td className="py-2 ">{amount}</td>
+      <td className="py-2">{amount}</td>
       <td className={`py-2 font-medium ${color}`}>{status}</td>
     </tr>
   );

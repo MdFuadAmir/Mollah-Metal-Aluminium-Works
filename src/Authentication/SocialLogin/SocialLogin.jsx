@@ -11,25 +11,34 @@ const SocialLogin = () => {
   const from = location?.state?.from || "/";
   const axiosPublic = useAxios();
 
-  const handleGoogleLogin = () => {
-    loginWithGoogle()
-      .then(async (result) => {
-        const user = result.user;
-        const userInfo = {
-          name: user?.displayName,
-          email: user?.email,
-          role: "user",
-          status: "verified",
-          createdAt: new Date().toISOString(),
-          lastLogin: new Date().toISOString(),
-        };
+    const handleGoogleLogin = async () => {
+    try {
+      const result = await loginWithGoogle();
+      const user = result.user;
+
+      // Backend payload
+      const userInfo = {
+        name: user?.displayName,
+        email: user?.email,
+        role: "user",
+        status: "verified",
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+      };
+
+      // Send user to backend, but don't block navigate on error
+      try {
         await axiosPublic.post("/users", userInfo);
-        toast.success("Login Success !!");
-        navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        toast.error(error.message);
-      });
+      } catch (err) {
+        console.warn("Backend user creation failed, continue anyway.", err);
+      }
+
+      toast.success("Login Success !!");
+      navigate(from, { replace: true });
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message || "Login failed!");
+    }
   };
   return (
     <div className="pt-6">

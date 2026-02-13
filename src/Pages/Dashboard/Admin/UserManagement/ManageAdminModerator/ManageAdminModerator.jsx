@@ -5,6 +5,7 @@ import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import useAxios from "../../../../../Hooks/useAxios";
+import Pagination from "../../../../../Components/Pagination/Pagination";
 
 const ManageAdminModerator = () => {
   const axiosPublic = useAxios();
@@ -12,25 +13,34 @@ const ManageAdminModerator = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
 
+  // ✅ pagination state
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
   const {
-    data: users,
+    data = {},
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["admin-moderators"],
+    queryKey: ["admin-moderators", page],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/users/admin-moderators`);
+      const { data } = await axiosPublic.get(
+        `/users/admin-moderators?page=${page}&limit=${limit}`
+      );
       return data;
     },
   });
+
+  const { users = [], totalPages = 0 } = data;
+
   // ========= make admin
   const toggleAdmin = async (data) => {
     try {
       const res = await axiosPublic.patch(`/users/make-admin/${data._id}`);
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to Admin");
-        queryClient.invalidateQueries(["normal-moderators"]);
+        queryClient.invalidateQueries({ queryKey: ["admin-moderators"] });
       } else {
         toast.error("Role change failed");
       }
@@ -38,13 +48,14 @@ const ManageAdminModerator = () => {
       toast.error(error.message);
     }
   };
+
   //  ============ make user
   const toggleUser = async (data) => {
     try {
       const res = await axiosPublic.patch(`/users/make-user/${data._id}`);
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to User");
-        queryClient.invalidateQueries(["normal-moderators"]);
+        queryClient.invalidateQueries({ queryKey: ["admin-moderators"] });
       } else {
         toast.error("Role change failed");
       }
@@ -52,6 +63,7 @@ const ManageAdminModerator = () => {
       toast.error(error.message);
     }
   };
+
   if (isLoading) return <Loading />;
   if (isError)
     return <p className="text-red-400">ডাটা লোড করতে সমস্যা হয়েছে</p>;
@@ -61,6 +73,7 @@ const ManageAdminModerator = () => {
       <h2 className="text-2xl font-bold mb-6">
         সমস্ত অ্যাডমিন ও মডারেটর তালিকা
       </h2>
+
       <div className="overflow-x-auto bg-black/40 rounded-xl shadow">
         <table className="w-full text-sm text-left">
           <thead className="bg-black/70 text-gray-300">
@@ -81,13 +94,17 @@ const ManageAdminModerator = () => {
                 key={us._id}
                 className="border-b border-gray-700 hover:bg-black/30"
               >
-                <td className="px-4 py-3">{index + 1}</td>
+                <td className="px-4 py-3">
+                  {(page - 1) * limit + index + 1}
+                </td>
 
                 <td className="px-4 py-3">{us.name || "N/A"}</td>
 
                 <td className="px-4 py-3 text-gray-300">{us.email}</td>
 
-                <td className="px-4 py-3 text-gray-300">{us.phone}</td>
+                <td className="px-4 py-3 text-gray-300">
+                  {us.phone || "N/A"}
+                </td>
 
                 <td className="px-4 py-3 capitalize">
                   {us.role === "admin" ? (
@@ -105,19 +122,22 @@ const ManageAdminModerator = () => {
                       Verified
                     </span>
                   ) : (
-                    <span className="text-red-400 font-semibold">Blocked</span>
+                    <span className="text-red-400 font-semibold">
+                      Blocked
+                    </span>
                   )}
                 </td>
 
                 <td className="px-4 py-3">
                   <div className="flex justify-center gap-3">
-                    {/* vtew details */}
+                    {/* view details */}
                     <button
                       onClick={() => setSelectedUser(us)}
                       className="flex items-center gap-1 bg-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-700"
                     >
                       <FaEye /> View
                     </button>
+
                     {/* make admin */}
                     <button
                       onClick={() => toggleAdmin(us)}
@@ -126,7 +146,8 @@ const ManageAdminModerator = () => {
                       <FaUserShield />
                       Admin
                     </button>
-                    {/* make users */}
+
+                    {/* make user */}
                     <button
                       onClick={() => toggleUser(us)}
                       className="flex items-center gap-1 bg-orange-500 hover:bg-orange-600 px-3 py-1 rounded text-xs"
@@ -141,7 +162,7 @@ const ManageAdminModerator = () => {
 
             {users.length === 0 && (
               <tr>
-                <td colSpan="6" className="text-center py-6 text-gray-400">
+                <td colSpan="7" className="text-center py-6 text-gray-400">
                   কোনো ইউজার পাওয়া যায়নি
                 </td>
               </tr>
@@ -149,11 +170,19 @@ const ManageAdminModerator = () => {
           </tbody>
         </table>
       </div>
+
+      {/* ✅ Pagination */}
+      <div className="mt-12">
+        <Pagination page={page} setPage={setPage} totalPages={totalPages} />
+      </div>
+
       {/* view modal */}
       {selectedUser && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
           <div className="bg-gray-900 p-6 rounded-xl w-96 space-y-1">
-            <h3 className="text-lg font-bold mb-3 text-center">User Details</h3>
+            <h3 className="text-lg font-bold mb-3 text-center">
+              User Details
+            </h3>
             <p>
               <b>Name:</b>{" "}
               <span className="text-gray-500">
@@ -162,7 +191,9 @@ const ManageAdminModerator = () => {
             </p>
             <p>
               <b>Email:</b>{" "}
-              <span className="text-gray-500">{selectedUser.email}</span>
+              <span className="text-gray-500">
+                {selectedUser.email}
+              </span>
             </p>
             <p>
               <b>Phone:</b>{" "}
@@ -190,11 +221,15 @@ const ManageAdminModerator = () => {
             </p>
             <p>
               <b>Role:</b>{" "}
-              <span className="text-gray-500">{selectedUser.role}</span>
+              <span className="text-gray-500">
+                {selectedUser.role}
+              </span>
             </p>
             <p>
               <b>Status:</b>{" "}
-              <span className="text-gray-500">{selectedUser.status}</span>
+              <span className="text-gray-500">
+                {selectedUser.status}
+              </span>
             </p>
 
             <button
@@ -211,5 +246,3 @@ const ManageAdminModerator = () => {
 };
 
 export default ManageAdminModerator;
-
-

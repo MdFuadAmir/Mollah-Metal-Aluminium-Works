@@ -6,8 +6,7 @@ const News = () => {
       <p className="text-orange-500 font-bold uppercase bg-gray-700/40 py-3 px-2">News:-</p>
       <Marquee className="text-white" autoFill pauseOnHover>
         <p className="bg-gray-700/40 py-3 mr-8 px-4">
-          Mollah Metal Aluminium Works (MMAW) is a trusted name in metal &
-          aluminium fabrication, delivering quality, strength, and reliability.
+          মোল্লা মেটাল অ্যালুমিনিয়াম ওয়ার্কস (MMAW) ধাতু ও অ্যালুমিনিয়াম তৈরিতে একটি বিশ্বস্ত নাম, যা গুণমান, শক্তি এবং নির্ভরযোগ্যতা প্রদান করে।
         </p>
       </Marquee>
     </div>

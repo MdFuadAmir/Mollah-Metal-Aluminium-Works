@@ -1,7 +1,7 @@
 import { Link, Outlet, useNavigate } from "react-router";
 import bg from "../assets/bg-images/body.jpg";
 import MMAW from "../Shared/MMAW/MMAW";
-import { FaAlignJustify, FaSignOutAlt,FaUserCircle } from "react-icons/fa";
+import { FaAlignJustify, FaSignOutAlt, FaUserCircle } from "react-icons/fa";
 import AdminMenu from "../Pages/Dashboard/Admin/AdminMenu/AdminMenu";
 import UserMenu from "../Pages/Dashboard/User/UserMenu/UserMenu";
 import DashboardMenu from "../Pages/Dashboard/Common/DashboardMenu/DashboardMenu";
@@ -14,7 +14,7 @@ import ModaratorMenu from "../Pages/Dashboard/Modarator/ModaratorMenu/ModaratorM
 
 const DashboardLayout = () => {
   const { logOut } = useAuth();
-  const {role,roleLoading} = useRole();
+  const { role, roleLoading } = useRole();
   const navigate = useNavigate();
   console.log(role);
 
@@ -27,15 +27,15 @@ const DashboardLayout = () => {
     logOut()
       .then(() => {
         toast.success("LogOut Successfully !");
-        navigate("/login", { replace: true })
+        navigate("/login", { replace: true });
       })
       .catch((error) => {
         toast.error(error.message);
       });
   };
 
-  if(roleLoading){
-    return <Loading/>
+  if (roleLoading) {
+    return <Loading />;
   }
 
   return (
@@ -58,7 +58,7 @@ const DashboardLayout = () => {
             <label htmlFor="my-drawer-2" className="btn btn-square btn-ghost">
               <FaAlignJustify size={20} className="text-white" />
             </label>
-            <span className="mx-2 flex-1 text-green-600 font-semibold">
+            <span className="mx-2 flex-1 justify-center  text-green-600 font-semibold">
               <MMAW />
             </span>
           </div>
@@ -79,7 +79,7 @@ const DashboardLayout = () => {
             {/* navber top */}
             <div>
               <MMAW />
-              <div className="mt-6 space-y-2">
+              <div className="pt-2 space-y-2 border-t border-gray-500">
                 <DashboardMenu
                   labal={"Dashboard"}
                   to={"/dashboard"}
@@ -87,7 +87,9 @@ const DashboardLayout = () => {
                   onClick={closeSidebar}
                 />
                 {role === "admin" && <AdminMenu closeSidebar={closeSidebar} />}
-                {role === "moderator" && <ModaratorMenu closeSidebar={closeSidebar} />}
+                {role === "moderator" && (
+                  <ModaratorMenu closeSidebar={closeSidebar} />
+                )}
                 {role === "user" && <UserMenu closeSidebar={closeSidebar} />}
               </div>
             </div>
