@@ -22,7 +22,7 @@ const HomeProducts = () => {
     <div className="space-y-24">
       <Title
         title={`MMAW পণ্য`}
-        subTitle={`আপনার রান্নাঘরের জন্য প্রয়োজনীয় অ্যালুমিনিয়ামের সব পণ্য এক জায়গায়`}
+        subTitle={`আপনার রান্নাঘরের জন্য প্রয়োজনীয় সকল অ্যালুমিনিয়াম কুকওয়্যার পণ্য এখন এক জায়গায়, নির্ভরযোগ্য মানের নিশ্চয়তায়।`}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">

@@ -3,10 +3,12 @@ import AddProductForm from "./AddProductForm";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
-import useAxios from "../../../../Hooks/useAxios";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+// import useAxios from "../../../../Hooks/useAxios";
 
 const AddProducts = () => {
-  const axiosPublic = useAxios();
+  // const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const [productImages, setProductImages] = useState([]);
   const [uploading, setUploading] = useState(false);
 
@@ -51,7 +53,7 @@ const AddProducts = () => {
       rating: 0,
       sellType
     };
-    const res = await axiosPublic.post(`/products`, finalData);
+    const res = await axiosSecure.post(`/products`, finalData);
     if (res.data.insertedId) {
       toast.success("Product add successfully !");
       // reset();

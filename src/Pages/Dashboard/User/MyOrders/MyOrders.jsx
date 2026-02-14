@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import useAuth from "../../../../Hooks/useAuth";
-import useAxios from "../../../../Hooks/useAxios";
 import Loading from "../../../../Components/Loading/Loading";
 import toast from "react-hot-toast";
 import Pagination from "../../../../Components/Pagination/Pagination";
 import { useState } from "react";
+import ReviewModal from "./ReviewModal";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const STATUS_CLASSES = {
   requested: "bg-purple-500 text-white",
@@ -19,8 +20,9 @@ const STATUS_CLASSES = {
 
 const MyOrders = () => {
   const { user } = useAuth();
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
+  const [reviewOrder, setReviewOrder] = useState(null);
   const [page, setPage] = useState(1);
   const limit = 20;
 
@@ -28,7 +30,7 @@ const MyOrders = () => {
     queryKey: ["my-orders", page, user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosPublic.get(
+      const { data } = await axiosSecure.get(
         `/orders?email=${user.email}&page=${page}&limit=${limit}`,
       );
       return data;
@@ -86,7 +88,7 @@ const MyOrders = () => {
               onClick={async () => {
                 toast.dismiss(t.id);
                 try {
-                  const res = await axiosPublic.patch(`/orders/cancel/${id}`);
+                  const res = await axiosSecure.patch(`/orders/cancel/${id}`);
                   if (res.data.modifiedCount > 0) {
                     toast.success("Order canceled successfully");
                     refetch();
@@ -122,21 +124,20 @@ const MyOrders = () => {
   };
 
   const handleReturnRequest = async (id) => {
-  try {
-    const res = await axiosPublic.patch(`/orders/return/${id}`);
+    try {
+      const res = await axiosSecure.patch(`/orders/return/${id}`);
 
-    if (res.data.modifiedCount > 0) {
-      toast.success("Return request sent successfully");
-      refetch();
-    } else {
-      toast.error("Return request failed");
+      if (res.data.modifiedCount > 0) {
+        toast.success("Return request sent successfully");
+        refetch();
+      } else {
+        toast.error("Return request failed");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
     }
-  } catch (error) {
-    console.error(error);
-    toast.error("Something went wrong");
-  }
-};
-
+  };
 
   if (isLoading) return <Loading />;
 
@@ -273,9 +274,21 @@ const MyOrders = () => {
                     )}
                     {order.paymentStatus === "paid" &&
                       order.status === "delivered" && (
-                        <button onClick={() => handleReturnRequest(order._id)}
-                         className="px-2 py-1 bg-red-500/50 rounded hover:bg-red-600/50 text-xs font-semibold">
+                        <button
+                          onClick={() => handleReturnRequest(order._id)}
+                          className="px-2 py-1 bg-red-500/50 rounded hover:bg-red-600/50 text-xs font-semibold"
+                        >
                           Return Request
+                        </button>
+                      )}
+                    {/*  */}
+                    {order.status === "delivered" &&
+                      order.paymentStatus === "paid" && (
+                        <button
+                          onClick={() => setReviewOrder(order)}
+                          className="px-2 py-1 bg-purple-600 rounded hover:bg-purple-700 text-xs font-semibold"
+                        >
+                          Review Order
                         </button>
                       )}
                   </div>
@@ -298,6 +311,14 @@ const MyOrders = () => {
           <Pagination page={page} setPage={setPage} totalPages={totalPages} />
         </div>
       )}
+
+      {reviewOrder && (
+  <ReviewModal
+    order={reviewOrder}
+    onClose={() => setReviewOrder(null)}
+    onSubmitted={refetch} // refresh orders if needed
+  />
+)}
     </div>
   );
 };

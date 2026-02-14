@@ -4,11 +4,11 @@ import Loading from "../../../../../Components/Loading/Loading";
 import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import useAxios from "../../../../../Hooks/useAxios";
 import Pagination from "../../../../../Components/Pagination/Pagination";
+import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 
 const ManageUsers = () => {
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const [selectedUser, setSelectedUser] = useState(null);
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -26,7 +26,7 @@ const ManageUsers = () => {
     queryKey: ["normal-users", page],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosPublic.get(
+      const { data } = await axiosSecure.get(
         `/users/normal-users?page=${page}&limit=${limit}`
       );
       return data;
@@ -38,7 +38,7 @@ const ManageUsers = () => {
   // ====== toggle block/unblock
   const toggleStatus = async (data) => {
     try {
-      await axiosPublic.patch(`/users/toggle-status/${data._id}`);
+      await axiosSecure.patch(`/users/toggle-status/${data._id}`);
       toast.success(
         `User ${data.status === "verified" ? "Blocked" : "Unblocked"}`
       );
@@ -51,7 +51,7 @@ const ManageUsers = () => {
   // ======= toggleRole
   const toggleRole = async (user) => {
     try {
-      const res = await axiosPublic.patch(
+      const res = await axiosSecure.patch(
         `/users/make-moderator/${user._id}`
       );
       if (res.data.modifiedCount > 0) {

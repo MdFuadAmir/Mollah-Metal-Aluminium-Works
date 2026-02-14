@@ -1,11 +1,11 @@
 import { FaTrash, FaEye, FaCheckCircle } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../../Components/Loading/Loading";
-import useAxios from "../../../../../Hooks/useAxios";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import Pagination from "../../../../../Components/Pagination/Pagination";
+import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 
 // Status color map
 const statusColor = {
@@ -20,7 +20,7 @@ const statusColor = {
 
 const OrdersTable = ({ status }) => {
   const navigate = useNavigate();
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   const [page, setPage] = useState(1);
   const limit = 30;
@@ -28,8 +28,8 @@ const OrdersTable = ({ status }) => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["orders", status, page],
     queryFn: async () => {
-      const res = await axiosPublic.get(
-        `/admin/orders?status=${status}&page=${page}&limit=${limit}`
+      const res = await axiosSecure.get(
+        `/admin/orders?status=${status}&page=${page}&limit=${limit}`,
       );
       return res.data;
     },
@@ -50,7 +50,7 @@ const OrdersTable = ({ status }) => {
               onClick={async () => {
                 toast.dismiss(t.id);
                 try {
-                  const res = await axiosPublic.patch(`/orders/cancel/${id}`);
+                  const res = await axiosSecure.patch(`/orders/cancel/${id}`);
                   if (res.data.modifiedCount > 0) {
                     toast.success("Order canceled successfully");
                     refetch();
@@ -80,7 +80,7 @@ const OrdersTable = ({ status }) => {
           color: "#fff",
           border: "1px solid #374151",
         },
-      }
+      },
     );
   };
 
@@ -97,7 +97,7 @@ const OrdersTable = ({ status }) => {
   const handleNextStatus = async (id, currentStatus) => {
     const nextStatus = getNextStatus(currentStatus);
     if (!nextStatus) return;
-    await axiosPublic.patch(`/orders/update-status/${id}`, {
+    await axiosSecure.patch(`/orders/update-status/${id}`, {
       status: nextStatus,
     });
     refetch();

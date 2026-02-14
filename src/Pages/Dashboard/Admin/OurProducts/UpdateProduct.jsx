@@ -4,18 +4,18 @@ import Loading from "../../../../Components/Loading/Loading";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import toast from "react-hot-toast";
-import useAxios from "../../../../Hooks/useAxios";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const UpdateProduct = () => {
   const { id } = useParams();
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const { register, handleSubmit, reset } = useForm();
   const navigate = useNavigate();
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["update", id],
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/products/${id}`);
+      const { data } = await axiosSecure.get(`/products/${id}`);
       return data;
     },
     retry: false,
@@ -35,7 +35,7 @@ const UpdateProduct = () => {
   const onSubmit = async (data) => {
     try {
       const { _id, ...patchData } = data;
-      await axiosPublic.patch(`/products/${id}`, patchData);
+      await axiosSecure.patch(`/products/${id}`, patchData);
       toast.success("পণ্য সফলভাবে আপডেট করা হয়েছে");
       navigate("/dashboard/our-products");
     } catch (error) {

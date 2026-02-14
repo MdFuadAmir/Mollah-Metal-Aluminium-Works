@@ -31,8 +31,12 @@ const Products = () => {
 
   return (
     <div className="mt-6">
-      <Title title={"সমস্ত পণ্য"}/>
-
+      <Title
+        title={"সমস্ত পণ্য"}
+        subTitle={
+          "কারখানা থেকে সরাসরি সরবরাহকৃত অ্যালুমিনিয়াম কিচেন কুকওয়্যার পণ্যসমূহ"
+        }
+      />
       {/* ✅ Search Box (smooth) */}
       <div className="mb-6 flex justify-center">
         <input

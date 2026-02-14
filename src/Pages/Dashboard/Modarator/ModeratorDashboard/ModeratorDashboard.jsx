@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import {
   FaBox,
   FaShoppingCart,
@@ -13,12 +12,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import useAxios from "../../../../Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../Components/Loading/Loading";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const ModeratorDashboard = () => {
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const today = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
@@ -29,7 +28,7 @@ const ModeratorDashboard = () => {
   const { data: statss = {}, isLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/admin/stats");
+      const res = await axiosSecure.get("/admin/stats");
       return res.data;
     },
   });
@@ -37,7 +36,7 @@ const ModeratorDashboard = () => {
   const { data: orderChartData = [], isLoading: ordersLoading } = useQuery({
     queryKey: ["order-chart"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/admin/order-stats");
+      const res = await axiosSecure.get("/admin/order-stats");
       return res.data;
     },
   });
@@ -45,17 +44,13 @@ const ModeratorDashboard = () => {
   const { data: recentOrders = [], isLoading: recentLoading } = useQuery({
     queryKey: ["recent-orders"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/admin/recent-orders");
+      const res = await axiosSecure.get("/admin/recent-orders");
       return res.data;
     },
   });
 
-  const {
-    totalProducts,
-    totalOrders,
-    deliveredOrders,
-    requestedOrders,
-  } = statss;
+  const { totalProducts, totalOrders, deliveredOrders, requestedOrders } =
+    statss;
 
   const stats = [
     {
@@ -83,16 +78,7 @@ const ModeratorDashboard = () => {
     },
   ];
 
-  const orderData = [
-    { name: "Mon", orders: 120 },
-    { name: "Tue", orders: 200 },
-    { name: "Wed", orders: 150 },
-    { name: "Thu", orders: 280 },
-    { name: "Fri", orders: 220 },
-    { name: "Sat", orders: 300 },
-  ];
-
-    if (isLoading || ordersLoading || recentLoading) {
+  if (isLoading || ordersLoading || recentLoading) {
     return <Loading />;
   }
   return (
@@ -169,6 +155,7 @@ const ModeratorDashboard = () => {
 
 export default ModeratorDashboard;
 
+// eslint-disable-next-line no-unused-vars
 const StatCard = ({ title, value, icon: Icon }) => (
   <div className="bg-gray-900 p-4 rounded-xl flex justify-between items-center">
     <div>

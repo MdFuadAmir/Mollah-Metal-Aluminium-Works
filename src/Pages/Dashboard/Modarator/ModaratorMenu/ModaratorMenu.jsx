@@ -13,6 +13,7 @@ import {
 import { MdFeedback, MdMarkEmailUnread } from "react-icons/md";
 import DashboardMenu from "../../Common/DashboardMenu/DashboardMenu";
 import { useState } from "react";
+import { FiInbox } from "react-icons/fi";
 
 const ModaratorMenu = ({ closeSidebar }) => {
   const [openB, setOpenB] = useState(false);
@@ -50,6 +51,12 @@ const ModaratorMenu = ({ closeSidebar }) => {
         </button>
         {openB && (
           <div className="ml-6 mt-1 space-y-1">
+            <DashboardMenu
+              labal={"Requested Orders"}
+              to={"/dashboard/requested-orders"}
+              icon={FiInbox}
+              onClick={closeSidebar}
+            />
             <DashboardMenu
               labal={"Pending Orders"}
               to={"/dashboard/pending-orders"}

@@ -19,13 +19,13 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import useAxios from "../../../../Hooks/useAxios";
 import Loading from "../../../../Components/Loading/Loading";
 import { Link } from "react-router";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const AdminDashboard = () => {
-  const axiosPublic = useAxios();
-    const today = new Date().toLocaleDateString("en-GB", {
+  const axiosSecure = useAxiosSecure();
+  const today = new Date().toLocaleDateString("en-GB", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
   const { data: statss = {}, isLoading } = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/admin/stats");
+      const res = await axiosSecure.get("/admin/stats");
       return res.data;
     },
   });
@@ -43,7 +43,7 @@ const AdminDashboard = () => {
   const { data: orderChartData = [], isLoading: ordersLoading } = useQuery({
     queryKey: ["order-chart"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/admin/order-stats");
+      const res = await axiosSecure.get("/admin/order-stats");
       return res.data;
     },
   });
@@ -51,7 +51,7 @@ const AdminDashboard = () => {
   const { data: recentOrders = [], isLoading: recentLoading } = useQuery({
     queryKey: ["recent-orders"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/admin/recent-orders");
+      const res = await axiosSecure.get("/admin/recent-orders");
       return res.data;
     },
   });
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
     {
       queryKey: ["revenue-chart"],
       queryFn: async () => {
-        const res = await axiosPublic.get("/admin/revenue-stats");
+        const res = await axiosSecure.get("/admin/revenue-stats");
         return res.data;
       },
     },
@@ -77,7 +77,6 @@ const AdminDashboard = () => {
     totalRevenue,
   } = statss;
   const adminmoderator = totalAdmins + totalModerators;
-
 
   // ===== cards =====
   const stats = [

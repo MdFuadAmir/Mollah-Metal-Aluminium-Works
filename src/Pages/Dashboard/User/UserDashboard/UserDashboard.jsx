@@ -1,25 +1,32 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../../Hooks/useAxios";
 import { FaBox, FaClock, FaDollarSign, FaShoppingCart } from "react-icons/fa";
 import useAuth from "../../../../Hooks/useAuth";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import Loading from "../../../../Components/Loading/Loading";
 
 const UserDashboard = () => {
-  const axiosPublic = useAxios();
-  const { user } = useAuth(); // Logged-in user
+  const axiosSecure = useAxiosSecure();
+  const { user } = useAuth();
 
   const { data, isLoading } = useQuery({
     queryKey: ["user-stats", user?.email],
-    enabled: !!user?.email, // Only run if user.email exists
+    enabled: !!user?.email,
     queryFn: async () => {
-      const res = await axiosPublic.get(`/user/stats/${user?.email}`);
+      const res = await axiosSecure.get(`/user/stats/${user?.email}`);
       return res.data;
     },
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading />;
   if (!data) return <div>No data found</div>;
 
-  const { totalOrders, pendingOrders, deliveredOrders, totalSpend, recentOrders } = data;
+  const {
+    totalOrders,
+    pendingOrders,
+    deliveredOrders,
+    totalSpend,
+    recentOrders,
+  } = data;
 
   const stats = [
     { title: "Total Orders", value: totalOrders, icon: FaShoppingCart },
@@ -38,9 +45,12 @@ const UserDashboard = () => {
     <div className="min-h-screen bg-black/70 px-6 md:px-8 py-12 text-white">
       {/* Header */}
       <div className="flex justify-between items-center gap-3 mb-12">
-        <h1 className="text-xl font-bold uppercase text-green-500">
-          <span className="text-red-500/70">MMAW</span> User Dashboard
-        </h1>
+        <div>
+          <p className="font-bold text-gray-500">Welcome back Chif</p>
+          <h1 className="text-xl font-bold uppercase text-green-500">
+            <span className="text-sky-500">{user?.displayName}</span>
+          </h1>
+        </div>
         <p className="text-gray-400">
           Date: <span className="text-green-600 text-lg">{today}</span>
         </p>

@@ -18,7 +18,7 @@ const AboutUs = () => {
       <div className="grid md:grid-cols-3 gap-8 mb-20">
         <div className="bg-black/50 p-6 rounded-xl shadow">
           <FaIndustry className="text-4xl text-orange-500 mb-4" />
-          <h3 className="text-xl font-semibold mb-2 text-white">Who We Are</h3>
+          <h3 className="text-xl font-semibold mb-2 text-white">আমরা কে?</h3>
           <p className="text-sm text-gray-300">
             আমরা একটি অ্যালুমিনিয়াম ও ধাতব পণ্য প্রস্তুতকারক প্রতিষ্ঠান। আমরা তয়
             হাড়ি, ধামা, সেলনচি, ঘোড়া, কড়াই ঢাকনা, হাঁড়ির ঢাকনা এবং কাস্টম
@@ -28,7 +28,9 @@ const AboutUs = () => {
 
         <div className="bg-black/50 p-6 rounded-xl shadow">
           <FaTools className="text-4xl text-orange-500 mb-4" />
-          <h3 className="text-xl font-semibold mb-2 text-white">What We Do</h3>
+          <h3 className="text-xl font-semibold mb-2 text-white">
+            আমরা কি করি?
+          </h3>
           <p className="text-sm text-gray-300">
             কাঁচামাল সংগ্রহ থেকে শুরু করে চূড়ান্ত পণ্য তৈরি পর্যন্ত প্রতিটি ধাপে
             আমরা নিখুঁত কারিগরি দক্ষতা, টেকসই গঠন এবং আধুনিক ডিজাইন নিশ্চিত করি।
@@ -38,7 +40,7 @@ const AboutUs = () => {
         <div className="bg-black/50 p-6 rounded-xl shadow">
           <FaHandshake className="text-4xl text-orange-500 mb-4" />
           <h3 className="text-xl font-semibold mb-2 text-white">
-            Why Choose Us
+            কেন আমাদের ওপর আস্থা রাখবেন?
           </h3>
           <p className="text-sm text-gray-300">
             দক্ষ কারিগর, উন্নতমানের কাঁচামাল, ন্যায্য মূল্য এবং গ্রাহক
@@ -57,9 +59,7 @@ const AboutUs = () => {
             className="w-24 h-24 rounded-full object-cover border bg-white"
           />
           <div>
-            <h3 className="text-xl font-semibold text-gray-400">
-              Company Owner
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-400">Owner</h3>
             <p className="text-gray-300 mt-1">
               <b className="text-orange-500">মোঃ আমির হামজা</b> – মোল্লা মেটাল
               অ্যালুমিনিয়াম ওয়ার্কস-এর প্রতিষ্ঠাতা ও মালিক। অ্যালুমিনিয়াম
@@ -75,9 +75,7 @@ const AboutUs = () => {
             className="w-24 h-24 rounded-full object-cover border bg-white"
           />
           <div>
-            <h3 className="text-xl font-semibold text-gray-400">
-              Company Partner
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-400">Partner</h3>
             <p className="text-gray-300 mt-1">
               <b className="text-orange-500">আরেফিন কালাম</b> – মোল্লা মেটাল
               অ্যালুমিনিয়াম ওয়ার্কস-এর অংশীদার। তিনি ব্যবসায়িক উন্নয়ন, আর্থিক
@@ -95,9 +93,7 @@ const AboutUs = () => {
             className="w-24 h-24 rounded-full object-cover border bg-white"
           />
           <div>
-            <h3 className="text-xl font-semibold text-gray-400">
-              Company Adviser
-            </h3>
+            <h3 className="text-xl font-semibold text-gray-400">Adviser</h3>
             <p className="text-gray-300 mt-1">
               <b className="text-orange-500">মারুফ হাসান</b> – মোল্লা মেটাল
               অ্যালুমিনিয়াম ওয়ার্কস-এর উপদেষ্টা। তিনি ব্যবসায়িক কৌশল নির্ধারণ,
@@ -114,7 +110,7 @@ const AboutUs = () => {
           />
           <div>
             <h3 className="text-xl font-semibold text-gray-400">
-              Company Managing Director
+              Managing Director
             </h3>
             <p className="text-gray-300 mt-1">
               <b className="text-orange-500">শাহরিয়ার আরাফা</b> – মোল্লা মেটাল
@@ -132,14 +128,14 @@ const AboutUs = () => {
           alt="Developer"
           className="w-24 h-24 rounded-full object-cover border"
         />
+
         <div>
-          <h3 className="text-xl font-semibold text-gray-400">
-            Project Developer
-          </h3>
+          <h3 className="text-xl font-semibold text-gray-400">Web Manager</h3>
           <p className="text-gray-300 mt-1">
-            <b className="text-orange-500">মোঃ ফুয়াদ আমির</b> – একজন MERN Stack
-            ডেভেলপার। তিনি MMAW-এর সম্পূর্ণ ফুল-স্ট্যাক ই-কমার্স ওয়েবসাইট ডিজাইন
-            ও ডেভেলপ করেছেন।
+            <b className="text-orange-500">মোঃ ফুয়াদ আমির</b> – মোল্লা মেটাল
+            অ্যালুমিনিয়াম ওয়ার্কস-এর ব্যবসায়িক কার্যক্রম ও অনলাইন অর্ডার সিস্টেম
+            পরিচালনা করেন। তিনি ওয়েবসাইট ম্যানেজমেন্ট এবং ডিজিটাল সেবার মাধ্যমে
+            গ্রাহকদের সাথে সরাসরি সংযুক্ত থাকেন।
           </p>
         </div>
       </div>
@@ -149,5 +145,3 @@ const AboutUs = () => {
 
 export default AboutUs;
 
-// Managing Director
-// adviser

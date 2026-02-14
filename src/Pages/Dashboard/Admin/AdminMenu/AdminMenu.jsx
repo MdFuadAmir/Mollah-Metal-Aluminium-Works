@@ -148,6 +148,7 @@ const AdminMenu = ({ closeSidebar }) => {
         icon={MdMarkEmailUnread}
         onClick={closeSidebar}
       />
+      
     </div>
   );
 };

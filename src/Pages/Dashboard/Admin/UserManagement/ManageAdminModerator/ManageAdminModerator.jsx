@@ -4,11 +4,11 @@ import Loading from "../../../../../Components/Loading/Loading";
 import useAuth from "../../../../../Hooks/useAuth";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import useAxios from "../../../../../Hooks/useAxios";
 import Pagination from "../../../../../Components/Pagination/Pagination";
+import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
 
 const ManageAdminModerator = () => {
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const [selectedUser, setSelectedUser] = useState(null);
   const queryClient = useQueryClient();
   const { user } = useAuth();
@@ -25,7 +25,7 @@ const ManageAdminModerator = () => {
     queryKey: ["admin-moderators", page],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosPublic.get(
+      const { data } = await axiosSecure.get(
         `/users/admin-moderators?page=${page}&limit=${limit}`
       );
       return data;
@@ -37,7 +37,7 @@ const ManageAdminModerator = () => {
   // ========= make admin
   const toggleAdmin = async (data) => {
     try {
-      const res = await axiosPublic.patch(`/users/make-admin/${data._id}`);
+      const res = await axiosSecure.patch(`/users/make-admin/${data._id}`);
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to Admin");
         queryClient.invalidateQueries({ queryKey: ["admin-moderators"] });
@@ -52,7 +52,7 @@ const ManageAdminModerator = () => {
   //  ============ make user
   const toggleUser = async (data) => {
     try {
-      const res = await axiosPublic.patch(`/users/make-user/${data._id}`);
+      const res = await axiosSecure.patch(`/users/make-user/${data._id}`);
       if (res.data.modifiedCount > 0) {
         toast.success("User promoted to User");
         queryClient.invalidateQueries({ queryKey: ["admin-moderators"] });

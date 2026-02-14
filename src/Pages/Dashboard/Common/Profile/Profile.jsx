@@ -5,33 +5,34 @@ import Loading from "../../../../Components/Loading/Loading";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import axios from "axios";
-import useAxios from "../../../../Hooks/useAxios";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const Profile = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [photoURL, setPhotoURL] = useState("");
   const [uploading, setUploading] = useState(false);
   const { user } = useAuth();
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
+
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting },
   } = useForm();
-  // ===== GET PROFILE =====
-  const { data: profile ,isLoading} = useQuery({
-  queryKey: ["profile", user?.email],
-  enabled: !!user?.email,
-  queryFn: async () => {
-    const { data } = await axiosPublic.get("/users/profile", {
-      params: { email: user.email }
-    });
-    return data;
-  },
-});
 
-  console.log(profile);
+  // ===== GET PROFILE (from DB) =====
+  const { data: profile, isLoading,refetch } = useQuery({
+    queryKey: ["profile", user?.email],
+    enabled: !!user?.email,
+    queryFn: async () => {
+      const { data } = await axiosSecure.get("/users/profile", {
+        params: { email: user.email },
+      });
+      return data;
+    },
+  });
+
   // ===== image uploading =====
   const handleUploadeImage = async (e) => {
     const image = e.target.files[0];
@@ -46,9 +47,10 @@ const Profile = () => {
     setPhotoURL(res?.data?.data?.display_url);
     setUploading(false);
   };
-  // ===== SET DEFAULT VALUES =====
+
+  // ===== SET DEFAULT VALUES (DB first, then Auth) =====
   useEffect(() => {
-    if (profile) {
+    if (profile || user) {
       reset({
         name: profile?.name || user?.displayName || "",
         email: profile?.email || user?.email || "",
@@ -56,7 +58,7 @@ const Profile = () => {
         city: profile?.city || "",
         postCode: profile?.postCode || "",
         address: profile?.address || "",
-        photoURL: profile?.photoURL || user?.photoURL,
+        photoURL: profile?.photoURL || user?.photoURL || "",
       });
     }
   }, [profile, user, reset]);
@@ -68,9 +70,10 @@ const Profile = () => {
         ...formData,
         photoURL: photoURL || profile?.photoURL || user?.photoURL,
       };
-      await axiosPublic.put("/users/profile", payload);
+      await axiosSecure.put("/users/profile", payload);
       toast.success("Profile updated successfully");
       setIsEdit(false);
+      refetch();
     } catch (error) {
       toast.error(error.message);
     }
@@ -79,19 +82,14 @@ const Profile = () => {
   if (isLoading) {
     return <Loading />;
   }
+
   return (
     <div className="min-h-screen p-6 md:p-8 text-white">
       <div className="max-w-6xl mx-auto bg-gray-950/60 rounded-xl shadow-md grid grid-cols-1 md:grid-cols-4 p-6">
         {/* sidebar */}
         <div className="col-span-1 flex flex-col items-center md:border-r-2 p-2">
           <img
-            src={
-              profile?.photoURL
-                ? profile?.photoURL
-                : user?.photoURL
-                  ? user?.photoURL
-                  : "N/A"
-            }
+            src={profile?.photoURL || user?.photoURL || "N/A"}
             alt="photo"
             className="w-24 h-24 rounded-full border-2 border-green-500 p-1"
           />
@@ -102,28 +100,28 @@ const Profile = () => {
               <input type="file" hidden onChange={handleUploadeImage} />
             </label>
           )}
+
           <div className="mt-4 text-center">
             <h1 className="text-lg font-bold">
-              {profile?.displayName
-                ? profile?.displayName
-                : user?.displayName
-                  ? user?.displayName
-                  : "N/A"}
+              {profile?.name || user?.displayName || "N/A"}
             </h1>
-            <p className="text-gray-500">{profile?.email}</p>
+            <p className="text-gray-500">
+              {profile?.email || user?.email}
+            </p>
           </div>
+
           <button
-            onClick={() => {
-              setIsEdit(true);
-            }}
+            onClick={() => setIsEdit(true)}
             className="w-full px-4 py-2 rounded-lg mt-6 bg-gray-800 hover:bg-gray-700 duration-300"
           >
             Edit Profile
           </button>
         </div>
+
         {/* main content */}
         <div className="col-span-3 p-6">
           <h3 className="text-2xl font-semibold mb-6">Profile Information</h3>
+
           {/* ========== form ======== */}
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -139,6 +137,7 @@ const Profile = () => {
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
+
             {/* email */}
             <div>
               <label className="text-sm font-medium">Email</label>
@@ -149,6 +148,7 @@ const Profile = () => {
                 className="w-full cursor-not-allowed mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
+
             {/* phone */}
             <div>
               <label className="text-sm font-medium">Phone</label>
@@ -159,6 +159,7 @@ const Profile = () => {
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
+
             {/* city */}
             <div>
               <label className="text-sm font-medium">City</label>
@@ -169,6 +170,7 @@ const Profile = () => {
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
+
             {/* postCode */}
             <div>
               <label className="text-sm font-medium">PostCode</label>
@@ -179,6 +181,7 @@ const Profile = () => {
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800"
               />
             </div>
+
             {/* address */}
             <div className="md:col-span-2">
               <label className="text-sm font-medium">Full Address</label>
@@ -189,7 +192,8 @@ const Profile = () => {
                 className="w-full mt-1 p-2 border rounded-md disabled:bg-gray-800 overflow-scroll"
               />
             </div>
-            {/* saved & cancled btn */}
+
+            {/* buttons */}
             {isEdit && (
               <div className="md:col-span-2 mt-4 flex gap-3">
                 <button
@@ -203,6 +207,7 @@ const Profile = () => {
                     "Save Changes"
                   )}
                 </button>
+
                 <button
                   type="button"
                   disabled={isSubmitting}

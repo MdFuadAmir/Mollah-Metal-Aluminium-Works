@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../../Hooks/useAxios";
 import Loading from "../../../../Components/Loading/Loading";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const STATUS_CLASSES = {
   pending: "bg-yellow-500 text-black",
@@ -16,12 +16,12 @@ const STATUS_ORDER = ["requested","pending", "processing", "shipping", "delivere
 
 const TrackOrder = () => {
   const { id } = useParams();
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
 
   const { data: order = {}, isLoading } = useQuery({
     queryKey: ["track-order", id],
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/orders/${id}`);
+      const { data } = await axiosSecure.get(`/orders/${id}`);
       return data;
     },
   });

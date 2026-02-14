@@ -2,9 +2,9 @@ import toast from "react-hot-toast";
 import Loading from "../../../../Components/Loading/Loading";
 import useAuth from "../../../../Hooks/useAuth";
 import { useWishlist } from "../../../../Hooks/useWishlist";
-import useAxios from "../../../../Hooks/useAxios";
 import EmptyState from "../../../../Components/EmptyState/EmptyState";
 import { MdFavorite } from "react-icons/md";
+import useAxios from "../../../../Hooks/useAxios";
 
 const Wishlist = () => {
   const { user } = useAuth();

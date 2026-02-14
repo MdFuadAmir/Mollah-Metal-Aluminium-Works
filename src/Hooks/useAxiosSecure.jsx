@@ -1,49 +1,24 @@
 import axios from "axios";
-import { useEffect } from "react";
-import useAuth from "./useAuth";
-import { useNavigate } from "react-router";
-
-const axiosSecure = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
+import { getAuth } from "firebase/auth";
 
 const useAxiosSecure = () => {
-  const { logOut } = useAuth();
-  const navigate = useNavigate();
+  const instance = axios.create({
+    baseURL: import.meta.env.VITE_API_URL,
+  });
 
-  useEffect(() => {
-    // request interceptor
-    const requestInterceptor = axiosSecure.interceptors.request.use(
-      (config) => {
-        const token = localStorage.getItem("access-token");
-        if (token) {
-          config.headers.authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
+  instance.interceptors.request.use(async (config) => {
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-    // response interceptor
-    const responseInterceptor = axiosSecure.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        const status = error?.response?.status;
-        if (status === 401 || status === 403) {
-          logOut();
-          navigate("/login");
-        }
-        return Promise.reject(error);
-      }
-    );
+    if (user) {
+      const token = await user.getIdToken();
+      config.headers.authorization = `Bearer ${token}`;
+    }
 
-    return () => {
-      axiosSecure.interceptors.request.eject(requestInterceptor);
-      axiosSecure.interceptors.response.eject(responseInterceptor);
-    };
-  }, [logOut, navigate]);
+    return config;
+  });
 
-  return axiosSecure;
+  return instance;
 };
 
 export default useAxiosSecure;

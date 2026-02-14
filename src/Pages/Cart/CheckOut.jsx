@@ -1,12 +1,12 @@
 /* eslint-disable react-hooks/incompatible-library */
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import Loading from "../../Components/Loading/Loading";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import useAxiosSecure from "../../Hooks/useAxiosSecure";
 
 // ================= PRICE HELPER ==================
 const getPrices = (product, quantity) => {
@@ -46,7 +46,7 @@ const getPrices = (product, quantity) => {
 // ================= CHECKOUT PAGE ==================
 const CheckOut = () => {
   const { user } = useAuth();
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState("cash-on-delivery");
 
@@ -58,7 +58,7 @@ const CheckOut = () => {
     queryKey: ["checkout-cart", user?.email],
     enabled: !!user?.email,
     queryFn: async () => {
-      const { data } = await axiosPublic.get(
+      const { data } = await axiosSecure.get(
         `/carts-with-details?email=${user.email}`,
       );
       return data;
@@ -95,7 +95,7 @@ const CheckOut = () => {
       return;
     }
     try {
-      const orderRes = await axiosPublic.post("/orders", {
+      const orderRes = await axiosSecure.post("/orders", {
         userEmail: user.email,
         cartItems,
         totalPrice: totalDiscountPrice,

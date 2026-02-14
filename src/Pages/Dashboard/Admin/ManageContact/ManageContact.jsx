@@ -3,11 +3,11 @@ import toast from "react-hot-toast";
 import { MdMarkEmailUnread } from "react-icons/md";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
-import useAxios from "../../../../Hooks/useAxios";
 import Loading from "../../../../Components/Loading/Loading";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const ManageContact = () => {
-  const axiospublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
   // ===== Pagination state =====
@@ -17,13 +17,13 @@ const ManageContact = () => {
   const { data: messages = [], isLoading } = useQuery({
     queryKey: ["contacts"],
     queryFn: async () => {
-      const res = await axiospublic.get("/contacts");
+      const res = await axiosSecure.get("/contacts");
       return res.data.data;
     },
   });
 
   const deleteMutation = useMutation({
-    mutationFn: (id) => axiospublic.delete(`/contacts/${id}`),
+    mutationFn: (id) => axiosSecure.delete(`/contacts/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries(["contacts"]);
       toast.success("Message deleted!");
@@ -32,7 +32,7 @@ const ManageContact = () => {
   });
 
   const readMutation = useMutation({
-    mutationFn: (id) => axiospublic.patch(`/contacts/${id}`),
+    mutationFn: (id) => axiosSecure.patch(`/contacts/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries(["contacts"]);
       toast.success("Message marked as read!");
@@ -72,8 +72,8 @@ const ManageContact = () => {
       </Helmet>
 
       <h2 className="text-3xl font-semibold mb-6 flex items-center gap-3">
-        <MdMarkEmailUnread className="text-sky-500" /> 
-যোগাযোগ বার্তা
+        <MdMarkEmailUnread className="text-sky-500" />
+        যোগাযোগ বার্তা
         <span className="text-sm text-gray-400">({unreadCount} unread)</span>
       </h2>
 

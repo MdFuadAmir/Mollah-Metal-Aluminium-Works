@@ -28,32 +28,29 @@ const ProductDetails = () => {
       ? Number(product?.Pstock)
       : Number(product?.Kgstock);
 
-      
-
-const handleAddToCart = async (e) => {
-  e.preventDefault();
-  if (!user) {
-    return toast.error("Please login first");
-  }
-  // Prepare cart data based on category
-  const cartInfo = {
-    productId: product._id,
-    userEmail: user.email,
-    sellType: product.category === "metal" ? "kg" : "piece",
-    quantity: 1
-  };
-  try {
-    const res = await axiosPublic.post("/carts", cartInfo);
-    if (res.data.insertedId) {
-      toast.success("Added to cart");
-    } else {
-      toast(res.data.message);
+  const handleAddToCart = async (e) => {
+    e.preventDefault();
+    if (!user) {
+      return toast.error("Please login first");
     }
-  } catch (err) {
-    toast.error(err.message);
-  }
-};
-
+    // Prepare cart data based on category
+    const cartInfo = {
+      productId: product._id,
+      userEmail: user.email,
+      sellType: product.category === "metal" ? "kg" : "piece",
+      quantity: 1,
+    };
+    try {
+      const res = await axiosPublic.post("/carts", cartInfo);
+      if (res.data.insertedId) {
+        toast.success("Added to cart");
+      } else {
+        toast(res.data.message);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   if (isLoading) {
     return <Loading />;
@@ -219,24 +216,17 @@ const handleAddToCart = async (e) => {
               {product?.subCategory}
             </span>
           </p>
-          {/* short description */}
-          <p className="text-sm">
-            <span className="text-gray-400">Description:</span>
-            <span className="font-semibold text-white ml-1">
-              {product?.shortDescription}
-            </span>
-          </p>
           {/* reating todo*/}
           <p className="text-sm flex items-center">
             <span className="text-gray-400">Rating:</span>
             <span className="font-semibold text-orange-400 ml-1 flex items-center gap-2">
-              <IoStar/> <span className=" font-mono">(12)</span>
+              <IoStar /> <span className=" font-mono">({product?.rating})</span>
             </span>
           </p>
           {/* add to cart btn */}
           <div className="flex justify-between items-center gap-4 mt-6">
             <button
-            onClick={handleAddToCart}
+              onClick={handleAddToCart}
               disabled={stock === 0}
               className={`${
                 stock === 0
@@ -247,7 +237,7 @@ const handleAddToCart = async (e) => {
               Add To Cart
             </button>
             {/* wishlist button */}
-            <WishlistButton productId={id}/>
+            <WishlistButton productId={id} />
           </div>
         </div>
       </div>
@@ -273,4 +263,3 @@ const handleAddToCart = async (e) => {
 };
 
 export default ProductDetails;
-

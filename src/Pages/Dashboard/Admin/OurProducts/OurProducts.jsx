@@ -1,5 +1,5 @@
 import { FaEdit, FaTrash, FaEye } from "react-icons/fa";
-import useAxios from "../../../../Hooks/useAxios";
+// import useAxios from "../../../../Hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../Components/Loading/Loading";
 import toast from "react-hot-toast";
@@ -8,9 +8,10 @@ import ViewProductModal from "./ViewProductModal";
 import EmptyProductCard from "./EmptyProductCard";
 import { useNavigate } from "react-router";
 import Pagination from "../../../../Components/Pagination/Pagination";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
 const OurProducts = () => {
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const [page, setPage] = useState(1);
   const limit = 30;
   const [viewProduct, setViewProduct] = useState(null);
@@ -19,7 +20,7 @@ const OurProducts = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: ["products", page],
     queryFn: async () => {
-      const res = await axiosPublic.get(
+      const res = await axiosSecure.get(
         `/products?page=${page}&limit=${limit}`,
       );
       return res.data;
@@ -48,7 +49,7 @@ const OurProducts = () => {
               className="px-4 py-1 rounded bg-red-600 text-white text-sm"
               onClick={async () => {
                 try {
-                  await axiosPublic.delete(`/products/${id}`);
+                  await axiosSecure.delete(`/products/${id}`);
                   toast.success("Product deleted successfully");
                   refetch();
                   toast.dismiss(t.id);

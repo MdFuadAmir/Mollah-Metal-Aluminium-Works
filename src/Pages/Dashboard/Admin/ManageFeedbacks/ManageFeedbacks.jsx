@@ -2,14 +2,16 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import Loading from "../../../../Components/Loading/Loading";
 import { MdDelete } from "react-icons/md";
 import toast from "react-hot-toast";
-import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 import { IoStar } from "react-icons/io5";
 import { Helmet } from "react-helmet";
 import { useState } from "react";
-import Pagination from "../../../../Components/Pagination/Pagination"; // ✅ তোমার pagination
+import Pagination from "../../../../Components/Pagination/Pagination";
+import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
+import useAxios from "../../../../Hooks/useAxios";
 
 const ManageFeedbacks = () => {
   const axiosSecure = useAxiosSecure();
+  const axiosPublic = useAxios();
 
   /* ===== PAGINATION STATE ===== */
   const [page, setPage] = useState(1);
@@ -22,7 +24,7 @@ const ManageFeedbacks = () => {
   } = useQuery({
     queryKey: ["feedbacks"],
     queryFn: async () => {
-      const res = await axiosSecure.get("/feedbacks");
+      const res = await axiosPublic.get("/feedbacks");
       return res.data;
     },
   });
@@ -117,7 +119,9 @@ const ManageFeedbacks = () => {
               </div>
 
               <div className="flex justify-between items-center gap-4 mt-2">
-                <p className="text-gray-500">{new Date(feedback.createdAt).toLocaleDateString()}</p>
+                <p className="text-gray-500">
+                  {new Date(feedback.createdAt).toLocaleDateString()}
+                </p>
                 <div className="flex items-center gap-4">
                   {feedback?.status === "requested" ? (
                     <button
