@@ -134,7 +134,8 @@ const CheckOut = () => {
           Cash on Delivery
         </button>
         <button
-          className={`px-4 py-2 rounded ${
+          disabled
+          className={`px-4 py-2 rounded disabled:cursor-not-allowed ${
             paymentMethod === "stripe" ? "bg-blue-600" : "bg-gray-700"
           }`}
           onClick={() => setPaymentMethod("stripe")}
