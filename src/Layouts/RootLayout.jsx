@@ -15,7 +15,7 @@ const RootLayout = () => {
         <div className="absolute inset-0 bg-black/30 " />
       </div>
       <Navbar />
-      <main className="min-h-screen  max-w-650 mx-auto px-4 pt-22 md:px-10 lg:px-20">
+      <main className="min-h-screen  max-w-650 mx-auto pt-22">
         <Outlet />
       </main>
       <Footer />

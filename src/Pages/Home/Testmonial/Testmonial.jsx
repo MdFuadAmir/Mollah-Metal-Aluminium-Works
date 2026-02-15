@@ -84,7 +84,9 @@ const Testimonial = () => {
               <p className="text-gray-400">{selected.email}</p>
 
               {/* ⭐ rating in modal */}
-              <div className="mt-2 flex gap-1">{renderStars(selected.rating)}</div>
+              <div className="mt-2 flex gap-1">
+                {renderStars(selected.rating)}
+              </div>
 
               <p className="text-gray-300 mt-4">{selected.feedback}</p>
             </div>

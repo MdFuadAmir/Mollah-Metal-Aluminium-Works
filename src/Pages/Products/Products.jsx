@@ -30,7 +30,7 @@ const Products = () => {
   const { products = [], totalPages = 0 } = data;
 
   return (
-    <div className="mt-6">
+    <div className="px-4 md:px-10 lg:px-20">
       <Title
         title={"সমস্ত পণ্য"}
         subTitle={

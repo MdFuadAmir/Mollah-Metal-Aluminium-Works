@@ -7,9 +7,8 @@ import arefin from "../../assets/owners/arefin.jpg";
 import Title from "../../Shared/Title/Title";
 const AboutUs = () => {
   return (
-    <div className="py-8 overflow-hidden">
+    <div className="py-8 overflow-hidden px-4  md:px-10 lg:px-20">
       {/* Header */}
-
       <Title
         title={"MMAW সম্পর্কে"}
         subTitle={`মোল্লা মেটাল অ্যালুমিনিয়াম ওয়ার্কস (MMAW) একটি বিশ্বস্ত প্রতিষ্ঠান, যা মানসম্মত, টেকসই ও নির্ভরযোগ্য অ্যালুমিনিয়াম রান্নার সামগ্রী উৎপাদন ও সরবরাহ করে।`}

@@ -15,7 +15,7 @@ const Footer = () => {
     >
       <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
         {/* col-1 */}
-        <div className="flex flex-col col-span-2">
+        <div className="flex flex-col items-center col-span-2">
           <MMAW />
           <p className="font-bold text-gray-300 mt-4 text-center">
             <b className="text-xl leading-tight bg-linear-to-r from-orange-500 via-indigo-500 to-indigo-600 bg-clip-text text-transparent">
@@ -27,6 +27,7 @@ const Footer = () => {
               নির্ভরযোগ্য ঠিকানা।
             </span>
           </p>
+
           <div className="flex items-center gap-6 mt-8">
             <a
               href="https://www.facebook.com/mahafuzurrohman.fuad"
@@ -51,7 +52,7 @@ const Footer = () => {
             </a>
           </div>
         </div>
-        <div className="col-span-4 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <div className="col-span-4 grid grid-cols-2 lg:grid-cols-4 gap-6">
           {/* col-2 */}
           <nav className="flex flex-col space-y-2 text-gray-500">
             <h6 className="font-bold text-lg  text-gray-300">Services</h6>
@@ -86,22 +87,20 @@ const Footer = () => {
             <a className="link link-hover">ডেলিভারি তথ্য</a>
           </nav>
           {/* col-5 */}
-          <nav className="flex flex-col space-y-2 text-gray-300">
-            <p>
-              <span className="text-white">ঠিকানা:</span> কুষ্টিয়া কাটাইখানা
-              মোড় কুষ্টিয়া, বাংলাদেশ
-            </p>
+          <nav className="flex flex-col space-y-2 text-gray-500">
+            <h6 className="font-bold text-lg  text-gray-300">আমাদের ঠিকানা</h6>
+            <p>কুষ্টিয়া কাটাইখানা মোড় কুষ্টিয়া, বাংলাদেশ</p>
             <p>
               <span className="text-white">ফোন:</span> +8801705470131
             </p>
-            <p>
+            <p className="flex gap-1">
               <span className="text-white">ইমেইল:</span> mdfuadamir@gmail.com
             </p>
           </nav>
         </div>
       </div>
-      <div className="mt-6">
-        <p className="text-center p-4 text-gray-300">
+      <div className="mt-12">
+        <p className="text-center p-4 text-gray-400">
           Copyright © {new Date().getFullYear()} মোল্লা মেটাল অ্যালুমিনিয়াম
           ওয়ার্কস | সর্বস্বত্ব সংরক্ষিত
         </p>

@@ -122,32 +122,28 @@ const ModeratorDashboard = () => {
       </div>
 
       {/* Recent Orders */}
-      <div className="bg-gray-900 p-5 rounded-xl">
-        <h3 className="mb-4 font-semibold">Recent Orders</h3>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="border-b border-gray-700 text-gray-400">
-              <tr>
-                <th className="py-2 text-left">Order ID</th>
-                <th className="py-2 text-left">Customer</th>
-                <th className="py-2 text-left">Amount</th>
-                <th className="py-2 text-left">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {recentOrders.map((o) => (
-                <OrderRow
-                  key={o._id}
-                  id={`#${o._id}`}
-                  name={o.userEmail}
-                  amount={`৳ ${o.totalPrice}`}
-                  status={o.status}
-                />
-              ))}
-            </tbody>
-          </table>
-        </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm table">
+          <thead className="border-b border-gray-700 text-gray-400">
+            <tr>
+              <th className="py-2 text-left">Order ID</th>
+              <th className="py-2 text-left">Customer</th>
+              <th className="py-2 text-left">Amount</th>
+              <th className="py-2 text-left">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recentOrders.map((o) => (
+              <OrderRow
+                key={o._id}
+                id={`#${o._id}`}
+                name={o.userEmail}
+                amount={`৳ ${o.totalPrice}`}
+                status={o.status}
+              />
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

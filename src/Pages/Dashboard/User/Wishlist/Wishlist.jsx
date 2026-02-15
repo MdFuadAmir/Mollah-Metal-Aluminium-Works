@@ -76,7 +76,7 @@ const Wishlist = () => {
                 return (
                   <tr
                     key={item._id}
-                    className="hover:bg-gray-800 transition text-center"
+                    className="hover:bg-gray-800 transition text-center "
                   >
                     <td className="p-3 border-b border-gray-700">
                       <img
@@ -89,16 +89,20 @@ const Wishlist = () => {
                     <td className="p-3 border-b border-gray-700">
                       {product?.productName}
                     </td>
-
                     <td className="p-3 border-b border-gray-700 text-emerald-400 font-semibold">
-                      ৳{product?.PretailDiscountPrice || product?.PretailPrice}
+                      ৳
+                      {product?.category === "metal"
+                        ? product?.KgretailDiscountPrice ||
+                          product?.KgretailPrice
+                        : product?.PretailDiscountPrice ||
+                          product?.PretailPrice}
                     </td>
 
-                    <td className="p-3 border-b border-gray-700 text-center space-x-2">
+                    <td className="p-3 border-gray-700 flex flex-col gap-2 items-center justify-center">
                       {/* ADD TO CART */}
                       <button
                         onClick={() => handleAddToCart(item)}
-                        className="bg-emerald-500 px-3 py-1 rounded hover:bg-emerald-600"
+                        className="bg-emerald-500 px-3 py-1 text-xs rounded hover:bg-emerald-600"
                       >
                         Add to Cart
                       </button>
@@ -106,7 +110,7 @@ const Wishlist = () => {
                       {/* REMOVE FROM WISHLIST */}
                       <button
                         onClick={() => removeFromWishlist.mutate(item._id)}
-                        className="bg-red-500 px-3 py-1 rounded hover:bg-red-600"
+                        className="bg-red-500 px-3 py-1 rounded text-xs hover:bg-red-600"
                       >
                         Remove
                       </button>

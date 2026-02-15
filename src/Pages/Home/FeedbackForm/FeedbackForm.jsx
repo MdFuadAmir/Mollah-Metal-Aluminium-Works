@@ -35,7 +35,7 @@ const FeedbackForm = () => {
           name: "",
           email: "",
           feedback: "",
-          rating: 5, 
+          rating: 5,
         });
 
         setRating(5);
@@ -46,7 +46,7 @@ const FeedbackForm = () => {
   };
 
   return (
-    <section className="py-20 px-6 md:px-10 lg:px-20 overflow-hidden">
+    <section className="py-20 px-4 md:px-10 lg:px-20 overflow-hidden">
       <Helmet>
         <title>Feedback | MMAW</title>
         <meta name="description" content="Feedback MMAW" />

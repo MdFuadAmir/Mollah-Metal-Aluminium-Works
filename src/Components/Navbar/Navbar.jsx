@@ -7,7 +7,6 @@ import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { RiAccountCircleFill } from "react-icons/ri";
 import useAuth from "../../Hooks/useAuth";
 import toast from "react-hot-toast";
-import Loading from "../Loading/Loading";
 import useCart from "../../Hooks/useCart";
 
 const Navbar = () => {
@@ -26,68 +25,73 @@ const Navbar = () => {
   };
   const handleLoginFirst = () => {
     toast.error("Please login !");
-  };
+  };  
+const navLinks = (
+  <>
+    <li>
+      <NavLink
+        to={"/"}
+        onClick={() => setOpen(false)}
+        className={({ isActive }) =>
+          `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+            isActive
+              ? "border-b-orange-500 text-orange-500"
+              : "border-transparent text-gray-400 hover:text-orange-500 hover:border-b-orange-500"
+          }`
+        }
+      >
+        Home
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to={"/products"}
+        onClick={() => setOpen(false)}
+        className={({ isActive }) =>
+          `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+            isActive
+              ? "border-b-orange-500 text-orange-500"
+              : "border-transparent text-gray-400 hover:text-orange-500 hover:border-b-orange-500"
+          }`
+        }
+      >
+        Products
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to={"/about"}
+        onClick={() => setOpen(false)}
+        className={({ isActive }) =>
+          `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+            isActive
+              ? "border-b-orange-500 text-orange-500"
+              : "border-transparent text-gray-400 hover:text-orange-500 hover:border-b-orange-500"
+          }`
+        }
+      >
+        About
+      </NavLink>
+    </li>
+    <li>
+      <NavLink
+        to={"/contact"}
+        onClick={() => setOpen(false)}
+        className={({ isActive }) =>
+          `pb-1 border-b-2 transition-all duration-300 rounded-none ${
+            isActive
+              ? "border-b-orange-500 text-orange-500"
+              : "border-transparent text-gray-400 hover:text-orange-500 hover:border-b-orange-500"
+          }`
+        }
+      >
+        Contact
+      </NavLink>
+    </li>
+  </>
+);
 
-  const navLinks = (
-    <>
-      <li>
-        <NavLink
-          to={"/"}
-          className={({ isActive }) =>
-            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
-              isActive
-                ? "border-b-orange-500 text-orange-500"
-                : "border-transparent text-gray-400 hover:text-orange-500 hover:border-b-orange-500"
-            }`
-          }
-        >
-          Home
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to={"/products"}
-          className={({ isActive }) =>
-            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
-              isActive
-                ? "border-b-orange-500 text-orange-500"
-                : "border-transparent text-gray-400 hover:text-orange-500 hover:border-b-orange-500"
-            }`
-          }
-        >
-          Products
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to={"/about"}
-          className={({ isActive }) =>
-            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
-              isActive
-                ? "border-b-orange-500 text-orange-500"
-                : "border-transparent text-gray-400 hover:text-orange-500 hover:border-b-orange-500"
-            }`
-          }
-        >
-          About
-        </NavLink>
-      </li>
-      <li>
-        <NavLink
-          to={"/contact"}
-          className={({ isActive }) =>
-            `pb-1 border-b-2 transition-all duration-300 rounded-none ${
-              isActive
-                ? "border-b-orange-500 text-orange-500"
-                : "border-transparent text-gray-400  hover:text-orange-500 hover:border-b-orange-500"
-            }`
-          }
-        >
-          Contact
-        </NavLink>
-      </li>
-    </>
-  );
+
   return (
     <div>
       <div className="fixed top-0 left-0 z-50 w-full flex justify-between items-center py-2 px-4 md:px-10 lg:px-20 bg-black/60  backdrop-blur-sm">
@@ -120,14 +124,14 @@ const Navbar = () => {
           {!user ? (
             <Link
               to={"/login"}
-              className="text-green-500 px-4 py-1 rounded border hover:bg-green-200/40 duration-300"
+              className="text-green-500 px-3 py-1 rounded border hover:bg-green-200/40 duration-300 text-xs"
             >
               Login
             </Link>
           ) : (
             <Link
               onClick={handleLogOut}
-              className="text-red-500 px-4 py-1 rounded border hover:bg-red-200/40 duration-300"
+              className="text-red-500 px-3 py-1 rounded border hover:bg-red-200/40 duration-300 text-xs"
             >
               LogOut
             </Link>
@@ -152,9 +156,10 @@ const Navbar = () => {
         </div>
       </div>
       {/* mobile menu */}
+
       <div
-        className={`lg:hidden bg-black/30  backdrop-blur-sm  px-4 overflow-hidden transition-all duration-300 w-56 text-center rounded-b-xl
-  ${open ? "mt-12 max-h-fit py-4" : "max-h-0"}`}
+        className={`lg:hidden absolute top-16 left-4 bg-black/80 backdrop-blur-md px-4 overflow-hidden transition-all duration-300 w-56 text-center rounded-xl z-50
+  ${open ? "max-h-125 py-4" : "max-h-0 py-0"}`}
       >
         <ul className="flex flex-col items-center gap-6 mt-6 text-gray-700  font-semibold">
           {navLinks}

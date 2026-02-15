@@ -28,7 +28,7 @@ const Reviews = () => {
   if (isLoading) return <p className="animate-pulse">Loading...</p>;
 
   return (
-    <div className="p-6">
+    <div className="">
       <h2 className="text-2xl font-bold mb-4">Customer Reviews</h2>
 
       {reviewsData.length === 0 && (
@@ -36,23 +36,22 @@ const Reviews = () => {
       )}
 
       {reviewsData.map((orderReview) => (
-        <div key={orderReview._id} className="border-t p-4 mb-4 bg-gray-900">
-          <div>
-            <p className="text-sm text-gray-400">{orderReview.userEmail}</p>
-            <p className="text-xs text-gray-500 mt-2">
-              {new Date(orderReview.createdAt).toLocaleString()}
-            </p>
-          </div>
-
-          <div className="mt-3 space-y-3">
+        <div key={orderReview._id} className="border-t p-4  bg-gray-900">
+          <div className="space-y-3">
             {orderReview.reviews
               .filter((r) => r.productId === id)
               .map((item, index) => (
-                <div key={index} className="pl-6">
+                <div key={index} className="pl-2"> 
                   <div className="flex justify-between items-center gap-4">
-                    <p className="text-gray-300 mt-1">{item.comment}</p>
-
-                    <div className="flex items-center gap-1 text-yellow-400">
+                    <div>
+                      <p className="text-sm text-gray-400">
+                        {orderReview.userEmail}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {new Date(orderReview.createdAt).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center text-yellow-500/70">
                       {[1, 2, 3, 4, 5].map((star) =>
                         star <= item.rating ? (
                           <IoStar key={star} />
@@ -62,6 +61,7 @@ const Reviews = () => {
                       )}
                     </div>
                   </div>
+                  <p className="text-gray-300 mt-1">{item.comment}</p>
                 </div>
               ))}
           </div>

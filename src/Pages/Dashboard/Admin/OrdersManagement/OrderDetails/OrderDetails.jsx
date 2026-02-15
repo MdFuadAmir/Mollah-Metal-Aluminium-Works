@@ -1,8 +1,9 @@
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import useAxios from "../../../../../Hooks/useAxios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import useAxiosSecure from "../../../../../Hooks/useAxiosSecure";
+import Loading from "../../../../../Components/Loading/Loading";
 
 const STATUS_CLASSES = {
   requested: "bg-blue-500 text-white",
@@ -20,7 +21,7 @@ const PAYMENT_CLASSES = {
 
 const OrderDetails = () => {
   const { id } = useParams();
-  const axiosPublic = useAxios();
+  const axiosSecure = useAxiosSecure();
   const [quantities, setQuantities] = useState({});
 
   const {
@@ -31,14 +32,14 @@ const OrderDetails = () => {
   } = useQuery({
     queryKey: ["order-details", id],
     queryFn: async () => {
-      const { data } = await axiosPublic.get(`/admin/order/${id}`);
+      const { data } = await axiosSecure.get(`/admin/order/${id}`);
       return data;
     },
     enabled: !!id,
   });
 
   if (isLoading)
-    return <p className="text-white text-center mt-10">Loading...</p>;
+    return <Loading/>;
   if (error)
     return (
       <p className="text-red-500 text-center mt-10">Error loading order</p>
@@ -61,7 +62,7 @@ const OrderDetails = () => {
     }
 
     try {
-      const res = await axiosPublic.patch(
+      const res = await axiosSecure.patch(
         `/admin/update-order-item/${order._id}/${item._id}`,
         { quantity: newQty },
       );
@@ -99,7 +100,7 @@ const OrderDetails = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:p-6 lg:p-8">
+    <div className="max-w-5xl mx-auto px-4 sm:p-6 lg:p-8">
       <div className="bg-gray-900 rounded-lg shadow-md p-6 sm:p-8 space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
@@ -145,9 +146,9 @@ const OrderDetails = () => {
               return (
                 <div
                   key={item._id}
-                  className="flex flex-col sm:flex-row justify-between bg-gray-800 p-4 rounded-md gap-4"
+                  className="flex flex-col md:flex-row justify-between bg-gray-800 p-4 rounded-md gap-4"
                 >
-                  <div className="flex items-center space-x-4">
+                  <div className="flex flex-col md:flex-row space-x-4 space-y-2">
                     <img
                       src={item.productDetails.images[0]}
                       alt={item.productDetails.productName}

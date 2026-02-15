@@ -177,7 +177,7 @@ const AdminDashboard = () => {
         <h3 className="mb-4 font-semibold">Recent Orders</h3>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm table">
             <thead className="border-b border-gray-700 text-gray-400">
               <tr>
                 <th className="py-2 text-left">Order ID</th>
@@ -186,7 +186,7 @@ const AdminDashboard = () => {
                 <th className="py-2 text-left">Status</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody >
               {recentOrders.map((o) => (
                 <OrderRow
                   key={o._id}
@@ -199,6 +199,8 @@ const AdminDashboard = () => {
             </tbody>
           </table>
         </div>
+        
+
       </div>
     </div>
   );

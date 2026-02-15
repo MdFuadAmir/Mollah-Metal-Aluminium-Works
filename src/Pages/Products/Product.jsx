@@ -42,7 +42,7 @@ const Product = ({ prod }) => {
       className="bg-gray-900/50 border border-gray-700/50 rounded-xl overflow-hidden shadow-md transition"
     >
       {/* Image */}
-      <div className="h-44 overflow-hidden p-3 rounded-t-xl">
+      <div className="h-56 md:h-44 overflow-hidden p-3 rounded-t-xl">
         <img
           src={prod.images?.[0]}
           alt={prod.productName}
