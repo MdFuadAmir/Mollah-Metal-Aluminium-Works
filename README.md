@@ -1,41 +1,103 @@
-# MMAW - E-Commerce Web Application
-
-![MMAW Logo](./public/logo.png)
-
-**MMAW** হল একটি **modern E-Commerce Web Application**, যা **MERN Stack** এবং **Firebase Authentication** ব্যবহার করে তৈরি করা হয়েছে।  
-এটি Admin, Moderator এবং User/Buyer roles সমর্থন করে এবং ব্যবহারকারীর জন্য সম্পূর্ণ ই-কমার্স experience প্রদান করে।
+# MMAW - MERN Multivendor E-commerce Platform
 
 ---
 
-## 🚀 Features
+## **Project Overview**
+
+**MMAW** is a full-featured **multivendor e-commerce platform** built with the **MERN stack** (MongoDB, Express.js, React.js, Node.js) and **Firebase Authentication**.  
+It supports **user, moderator, and admin roles**, allowing users to browse and purchase products, leave reviews, and admins/moderators to manage the platform.  
+
+Key highlights:
+
+- Real-time authentication with **Firebase**.
+- **Role-based access control** for users, moderators, and admins.
+- Secure API requests using **JWT tokens**.
+- Dynamic product reviews with aggregation of **ratings**.
+- Analytics dashboards for admins (orders, revenue, stats).
+- Fully responsive frontend using **React** and **Tailwind CSS**.
+
+---
+
+## **Tech Stack**
+
+| Layer         | Technology / Libraries                         |
+|---------------|-----------------------------------------------|
+| Frontend      | React, Tailwind CSS, React Router, React Query, React Hook Form |
+| Backend       | Node.js, Express.js, MongoDB                  |
+| Authentication| Firebase Authentication + JWT                 |
+| HTTP Client   | Axios, Axios Secure (with Firebase token)    |
+| Notifications | react-hot-toast                               |
+| Versioning    | Git & GitHub                                  |
+| Environment   | dotenv                                        |
+
+---
+
+## **Features**
 
 ### User Features
-- **Login/Register** with Firebase Authentication
-- Browse **Products** with images, retail & discount prices
-- **Wishlist**: Add/remove products, view wishlist
-- Track **Order Status**: Pending → Processing → Shipping → Delivered
-- View **Profile**, update information
-- Smooth **responsive UI** with TailwindCSS
+- User registration and login (email/password + Google sign-in)
+- Profile management (update name, address, phone, photo)
+- Browse products by category/subcategory
+- Add to cart and place orders
+- Review products (rating + comment)
+- Secure endpoints with **JWT authentication**
 
 ### Admin Features
-- Manage **Users**: promote/demote roles, toggle active/blocked
-- Manage **Products**: Add, Update, Delete
-- View all **Orders** and track status
-- Analytics and dashboard overview
+- View platform analytics (total users, moderators, products, revenue)
+- Recent orders and order stats
+- Revenue tracking by month
+- Full access to manage products, users, and orders
+- Secure admin-only routes using `verifyToken` + `verifyAdmin` middleware
 
 ### Moderator Features
-- Manage **Products** (Add/Update/Delete)
-- View Users (without role management)
+- Manage orders assigned to moderators
+- Moderate reviews and content
+- Limited access to admin dashboards (via `verifyModerator` middleware)
+
+### Backend Features
+- Role-based access control middleware (`verifyToken`, `verifyAdmin`, `verifyModerator`)
+- Secure product and order APIs
+- Aggregated product ratings
+- JWT-based secure endpoints for sensitive actions
+- MongoDB aggregation pipelines for analytics
 
 ---
 
-## 🛠 Tech Stack
+## **Project Structure**
+MMAW-Server/
+├─ src/
+│ ├─ DB/
+│ │ └─ db.js # MongoDB collections
+│ ├─ Middlewares/
+│ │ ├─ verifyToken.js # Firebase JWT verification
+│ │ ├─ verifyAdmin.js # Admin role verification
+│ │ └─ verifyModerator.js# Moderator role verification
+│ ├─ Models/
+│ │ ├─ Profile.js # Profile APIs
+│ │ ├─ Users.js # User APIs
+│ │ └─ Products.js # Product & review APIs
+│ ├─ firebaseAdmin.js # Firebase admin initialization
+│ └─ index.js # Server entry
+├─ client/
+│ ├─ src/
+│ │ ├─ Components/
+│ │ ├─ Hooks/
+│ │ │ ├─ useAxios.js
+│ │ │ └─ useAxiosSecure.js
+│ │ ├─ Pages/
+│ │ └─ AuthProvider.js
+├─ .env
+├─ package.json
+└─ README.md
 
-- **Frontend**: React, TailwindCSS, React Query, React Icons
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB
-- **Authentication**: Firebase Auth (ID Tokens verified via Firebase Admin SDK)
-- **Hosting/Env**: Vite, .env
 
 ---
+
+
+
+---
+
+If you want, I can also **add extra shields for Firebase, MongoDB, and Node versions** so your README looks very modern and visually appealing.  
+
+Do you want me to do that next?
 
