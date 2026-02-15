@@ -1,5 +1,4 @@
 import { FaExclamationTriangle } from "react-icons/fa";
-import { NavLink } from "react-router";
 
 const Error = () => {
   return (

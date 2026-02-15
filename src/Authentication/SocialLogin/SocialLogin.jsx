@@ -11,7 +11,7 @@ const SocialLogin = () => {
   const from = location?.state?.from || "/";
   const axiosPublic = useAxios();
 
-    const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async () => {
     try {
       const result = await loginWithGoogle();
       const user = result.user;
@@ -29,14 +29,13 @@ const SocialLogin = () => {
       // Send user to backend, but don't block navigate on error
       try {
         await axiosPublic.post("/users", userInfo);
-      } catch (err) {
-        console.warn("Backend user creation failed, continue anyway.", err);
+      } catch {
+        toast.error("login failed");
       }
 
       toast.success("Login Success !!");
       navigate(from, { replace: true });
     } catch (error) {
-      console.error(error);
       toast.error(error.message || "Login failed!");
     }
   };

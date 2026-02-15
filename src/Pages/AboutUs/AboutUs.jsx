@@ -51,7 +51,12 @@ const AboutUs = () => {
       {/* Owner & Developer Section */}
       <div className="grid md:grid-cols-2 gap-10">
         {/* Owner */}
-        <div className="bg-black/50 p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center">
+        <a
+          href="https://www.facebook.com/mdamir.hamza.37604"
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" bg-black/50 cursor-pointer p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center"
+        >
           <img
             src={amirHanza}
             alt="Owner"
@@ -65,9 +70,14 @@ const AboutUs = () => {
               রান্নার সামগ্রী উৎপাদনে তার রয়েছে দীর্ঘদিনের অভিজ্ঞতা।
             </p>
           </div>
-        </div>
+        </a>
         {/* partner */}
-        <div className="bg-black/50 p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center">
+        <a
+          href="https://www.facebook.com/arefin.kalam.7"
+          target="_blank"
+          rel="noopener noreferrer"
+          className=" cursor-pointer bg-black/50 p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center"
+        >
           <img
             src={arefin}
             alt="Company Partner"
@@ -82,10 +92,15 @@ const AboutUs = () => {
               করছেন।
             </p>
           </div>
-        </div>
+        </a>
 
         {/* adviser */}
-        <div className="bg-black/50 p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center">
+        <a
+          href="https://www.facebook.com/marufkst"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-black/50 cursor-pointer p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center"
+        >
           <img
             src={maruf}
             alt="Adviser"
@@ -99,9 +114,14 @@ const AboutUs = () => {
               দিকনির্দেশনা এবং দীর্ঘমেয়াদি পরিকল্পনায় পরামর্শ প্রদান করেন।
             </p>
           </div>
-        </div>
+        </a>
         {/* Managing Director */}
-        <div className="bg-black/50 p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center">
+        <a
+          href="https://www.facebook.com/arafakst1"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-black/50 cursor-pointer p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center"
+        >
           <img
             src={arafa}
             alt="Managing Director"
@@ -118,10 +138,15 @@ const AboutUs = () => {
               সময়মতো পণ্য সরবরাহ নিশ্চিত করেন।
             </p>
           </div>
-        </div>
+        </a>
       </div>
       {/* Developer */}
-      <div className="bg-black/50 p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center w-full md:w-1/2 mt-10 mx-auto">
+      <a
+        href="https://www.facebook.com/mahafuzurrohman.fuad"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="bg-black/50 cursor-pointer p-6 rounded-xl flex flex-col lg:flex-row gap-6 items-center w-full md:w-1/2 mt-10 mx-auto"
+      >
         <img
           src={fuad}
           alt="Developer"
@@ -137,10 +162,9 @@ const AboutUs = () => {
             গ্রাহকদের সাথে সরাসরি সংযুক্ত থাকেন।
           </p>
         </div>
-      </div>
+      </a>
     </div>
   );
 };
 
 export default AboutUs;
-

@@ -11,8 +11,8 @@ const Home = () => {
     <div className="space-y-12 md:space-y-32">
       <Banner />
       <News />
-      <AboutUs />
       <HomeProducts/>
+      <AboutUs />
       <FeedbackForm/>
       <Testmonial/>
       <ContactUs />

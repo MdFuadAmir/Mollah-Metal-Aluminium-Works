@@ -37,9 +37,8 @@ const Wishlist = () => {
       } else {
         toast(res.data.message || "Already in cart");
       }
-    } catch (err) {
+    } catch {
       toast.error("Failed to add to cart");
-      console.error(err);
     }
   };
 

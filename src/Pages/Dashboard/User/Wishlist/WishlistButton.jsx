@@ -26,8 +26,7 @@ const WishlistButton = ({ productId }) => {
         await addToWishlist.mutateAsync(productId);
         toast.success("Added to wishlist");
       }
-    } catch (err) {
-      console.error(err);
+    } catch{
       toast.error("Something went wrong");
     }
   };

@@ -30,8 +30,7 @@ const ReviewModal = ({ order, onClose, onSubmitted }) => {
       toast.success("Reviews submitted successfully");
       onSubmitted();
       onClose();
-    } catch (err) {
-      console.error(err);
+    } catch{
       toast.error("Failed to submit reviews");
     }
   };

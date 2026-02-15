@@ -16,7 +16,7 @@ const DashboardLayout = () => {
   const { logOut } = useAuth();
   const { role, roleLoading } = useRole();
   const navigate = useNavigate();
-  console.log(role);
+
 
   const closeSidebar = () => {
     const drawer = document.getElementById("my-drawer-2");

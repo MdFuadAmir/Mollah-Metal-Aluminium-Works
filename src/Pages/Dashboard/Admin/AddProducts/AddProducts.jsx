@@ -4,10 +4,8 @@ import { useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
-// import useAxios from "../../../../Hooks/useAxios";
 
 const AddProducts = () => {
-  // const axiosPublic = useAxios();
   const axiosSecure = useAxiosSecure();
   const [productImages, setProductImages] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -18,7 +16,7 @@ const AddProducts = () => {
     formState: { errors },
     setValue,
     control,
-    // reset,
+    reset,
   } = useForm();
 
   const selectedCategory = useWatch({ control, name: "category" });
@@ -56,7 +54,7 @@ const AddProducts = () => {
     const res = await axiosSecure.post(`/products`, finalData);
     if (res.data.insertedId) {
       toast.success("Product add successfully !");
-      // reset();
+      reset();
       setProductImages([]);
       setValue("images", []);
     }

@@ -93,7 +93,7 @@ const Footer = () => {
             <p>
               <span className="text-white">ফোন:</span> +8801705470131
             </p>
-            <p className="flex gap-1">
+            <p className="flex flex-wrap gap-1">
               <span className="text-white">ইমেইল:</span> mdfuadamir@gmail.com
             </p>
           </nav>

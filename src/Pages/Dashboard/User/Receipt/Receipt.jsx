@@ -1,7 +1,6 @@
 import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../../Components/Loading/Loading";
-// import domtoimage from "dom-to-image";
 import logo from "../../../../assets/mmaw.png";
 import useAxiosSecure from "../../../../Hooks/useAxiosSecure";
 
@@ -17,26 +16,9 @@ const Receipt = () => {
     },
   });
 
-  // const handleDownloadImage = async () => {
-  //   const node = document.getElementById("receipt-area");
-  //   if (!node) return;
-
-  //   try {
-  //     // div কে PNG হিসেবে capture করা
-  //     const dataUrl = await domtoimage.toPng(node);
-
-  //     // download link create করা
-  //     const link = document.createElement("a");
-  //     link.download = `receipt-${order._id}.png`;
-  //     link.href = dataUrl;
-  //     link.click();
-  //   } catch (err) {
-  //     console.error("Error capturing image:", err);
-  //   }
-  // };
-const handlePrintPDF = () => {
-  window.print();
-};
+  const handlePrintPDF = () => {
+    window.print();
+  };
 
   if (isLoading) return <Loading />;
   const getPrices = (product, quantity, sellType) => {
@@ -161,19 +143,12 @@ const handlePrintPDF = () => {
           received.
         </p>
       </div>
-      {/* <button
-        onClick={handleDownloadImage}
-        className="mt-6 w-full bg-emerald-600 py-2 rounded hover:bg-emerald-700 font-semibold"
-      >
-        Download Receipt Image
-      </button> */}
       <button
-  onClick={handlePrintPDF}
-  className="mt-6 w-full bg-emerald-600 py-2 rounded hover:bg-emerald-700 font-semibold print:hidden"
->
-  Download Receipt PDF
-</button>
-
+        onClick={handlePrintPDF}
+        className="mt-6 w-full bg-emerald-600 py-2 rounded hover:bg-emerald-700 font-semibold print:hidden"
+      >
+        Download Receipt PDF
+      </button>
     </div>
   );
 };

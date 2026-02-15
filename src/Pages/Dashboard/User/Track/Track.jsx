@@ -38,10 +38,9 @@ const Track = () => {
   const [orderId, setOrderId] = useState("");
   const [status, setStatus] = useState(null);
 
-  // 🔹 Demo (backend হলে API call)
   const handleSearch = () => {
     if (!orderId) return;
-    setStatus("shipping"); // demo status
+    setStatus("shipping");
   };
 
   const activeIndex = steps.findIndex((s) => s.key === status);

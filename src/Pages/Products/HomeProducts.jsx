@@ -25,7 +25,7 @@ const HomeProducts = () => {
         subTitle={`আপনার রান্নাঘরের জন্য প্রয়োজনীয় সকল অ্যালুমিনিয়াম কুকওয়্যার পণ্য এখন এক জায়গায়, নির্ভরযোগ্য মানের নিশ্চয়তায়।`}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {products.map((prod) => (
           <Product key={prod._id} prod={prod} />
         ))}

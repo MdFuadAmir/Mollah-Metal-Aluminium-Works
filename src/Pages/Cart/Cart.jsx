@@ -3,6 +3,7 @@ import useAxios from "../../Hooks/useAxios";
 import useAuth from "../../Hooks/useAuth";
 import Loading from "../../Components/Loading/Loading";
 import { useNavigate } from "react-router";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const axiosPublic = useAxios();
@@ -65,8 +66,8 @@ const Cart = () => {
         ? wholesaleDiscount
         : wholesalePrice
       : discountPrice > 0
-      ? discountPrice
-      : retailPrice;
+        ? discountPrice
+        : retailPrice;
 
     return {
       price: isWholesale ? wholesalePrice : retailPrice,
@@ -77,15 +78,26 @@ const Cart = () => {
   if (isLoading) return <Loading />;
 
   // ================= ORDER SUMMARY =================
-  const totalItems = cartItems.reduce((sum, i) => sum + (Number(i.quantity) || 0), 0);
+  const totalItems = cartItems.reduce(
+    (sum, i) => sum + (Number(i.quantity) || 0),
+    0,
+  );
 
   const totalPrice = cartItems.reduce((sum, i) => {
-    const { price } = getPrices(i.productDetails, Number(i.quantity) || 0, i.sellType);
+    const { price } = getPrices(
+      i.productDetails,
+      Number(i.quantity) || 0,
+      i.sellType,
+    );
     return sum + price * (Number(i.quantity) || 0);
   }, 0);
 
   const totalDiscountPrice = cartItems.reduce((sum, i) => {
-    const { discountPrice } = getPrices(i.productDetails, Number(i.quantity) || 0, i.sellType);
+    const { discountPrice } = getPrices(
+      i.productDetails,
+      Number(i.quantity) || 0,
+      i.sellType,
+    );
     return sum + discountPrice * (Number(i.quantity) || 0);
   }, 0);
 
@@ -95,7 +107,7 @@ const Cart = () => {
       await axiosPublic.delete(`/carts/${id}`);
       refetch();
     } catch (err) {
-      console.log(err);
+      toast.error(err);
     }
   };
 
@@ -111,7 +123,11 @@ const Cart = () => {
             const product = item.productDetails;
             const quantity = Number(item.quantity) || 0;
 
-            const { price, discountPrice } = getPrices(product, quantity, item.sellType);
+            const { price, discountPrice } = getPrices(
+              product,
+              quantity,
+              item.sellType,
+            );
 
             const finalPrice = discountPrice || price;
             const safePrice = Number(finalPrice) * quantity;
@@ -189,7 +205,9 @@ const Cart = () => {
 
                   <p className="text-sm font-bold">
                     Total:{" "}
-                    <span className="text-emerald-400 font-mono">৳{safePrice}</span>
+                    <span className="text-emerald-400 font-mono">
+                      ৳{safePrice}
+                    </span>
                   </p>
                 </div>
               </div>
@@ -209,7 +227,9 @@ const Cart = () => {
 
             <div className="flex justify-between">
               <span>Total Price</span>
-              <span className="line-through text-gray-400 font-mono">৳{totalPrice}</span>
+              <span className="line-through text-gray-400 font-mono">
+                ৳{totalPrice}
+              </span>
             </div>
 
             <div className="flex justify-between text-emerald-400 font-semibold">

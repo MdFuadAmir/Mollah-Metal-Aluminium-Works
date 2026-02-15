@@ -25,7 +25,7 @@ const ContactUs = () => {
     }
   };
   return (
-    <div className="text-gray-800 dark:text-gray-100 py-8 overflow-hidden">
+    <div className="text-gray-800 dark:text-gray-100 py-8 overflow-hidden px-4">
       {/* Header */}
       <Title
         title={`

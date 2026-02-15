@@ -98,16 +98,17 @@ const Product = ({ prod }) => {
               <IoStar />
               <span className="text-gray-500">(100)</span>
             </div>
+
           </div>
-          <div className="flex flex-col items-center gap-3">
-            <WishlistButton productId={prod._id} />
-            <Link
-              onClick={handleAddToCart}
-              className="text-xl  text-gray-300 rounded-full p-2 hover:scale-125 duration-200"
-            >
-              <FaCartPlus />
-            </Link>
-          </div>
+            <div className="flex items-center gap-3">
+                <WishlistButton productId={prod._id} />
+                <button
+                  onClick={handleAddToCart}
+                  className="text-2xl  text-gray-300 rounded-full p-2 hover:scale-125 duration-200"
+                >
+                  <FaCartPlus />
+                </button>
+              </div>
         </div>
       </div>
     </Link>
